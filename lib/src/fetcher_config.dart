@@ -28,11 +28,8 @@ class FetcherConfig {
 
 
   static FetcherConfig defaultConfig = FetcherConfig(
-    fetchingBuilder: (_) => const AspectRatio(
-      aspectRatio: 1,   // Needed when inside a tiny space
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+    fetchingBuilder: (_) => const Center(
+      child: CircularProgressIndicator(),
     ),
     fadeDuration: const Duration(milliseconds: 250),
     errorBuilder: (_, retry) => FetchBuilderErrorWidget(onRetry: retry),

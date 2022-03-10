@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:fetcher/fetcher.dart';
 
 void main() {
@@ -12,12 +14,19 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetcher Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return DefaultFetcherConfig(
+      config: FetcherConfig(
+        showError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error.toString()),
+        )),
       ),
-      home: const MyHomePage(),
+      child: MaterialApp(
+        title: 'Fetcher Example',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(),
+      ),
     );
   }
 }
@@ -26,8 +35,9 @@ class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   Future<String> fetchTask() async {
+    final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Europe/Paris'));
     await Future.delayed(const Duration(seconds: 2));
-    return DateTime.now().toIso8601String();
+    return json.decode(response.body)['datetime'];
   }
 
   @override

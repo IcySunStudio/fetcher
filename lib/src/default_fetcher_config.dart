@@ -14,11 +14,8 @@ class DefaultFetcherConfig extends InheritedWidget {
   /// Returns the closest [FetcherConfig] which encloses the given context.
   /// If not found, return [FetcherConfig.defaultConfig].
   static FetcherConfig of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<DefaultFetcherConfig>()?.config ?? FetcherConfig.defaultConfig;
+      context.findAncestorWidgetOfExactType<DefaultFetcherConfig>()?.config ?? FetcherConfig.defaultConfig;
 
   @override
-  bool updateShouldNotify(covariant DefaultFetcherConfig oldWidget) {
-    // TODO: implement updateShouldNotify
-    throw UnimplementedError();
-  }
+  bool updateShouldNotify(covariant DefaultFetcherConfig oldWidget) => config != oldWidget.config;
 }
