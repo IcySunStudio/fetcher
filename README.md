@@ -13,6 +13,8 @@ and the Flutter guide for
 
 Fetch and display asynchronous data easily !
 
+Doc, examples and more to come.
+
 TODO: Put a short description of the package here that helps potential users
 know whether this package might be useful for them.
 
