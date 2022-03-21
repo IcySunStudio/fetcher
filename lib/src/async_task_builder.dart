@@ -5,8 +5,7 @@ import 'fetcher_config.dart';
 import 'utils.dart';
 import 'widgets/activity_barrier.dart';
 
-typedef ToDo<T> = void Function([AsyncTask<T>? task]);
-typedef AsyncTaskChildBuilder<T> = Widget Function(ToDo<T> runTask);
+typedef AsyncTaskChildBuilder<T> = DataWidgetBuilder<TaskRunnerCallback<T>>;
 
 /// A widget that allow to run an async task and handle all states (loading, errors, onSuccess).
 class AsyncTaskBuilder<T> extends StatefulWidget {
@@ -22,7 +21,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   final FetcherConfig? config;
 
   /// Task to be executed.
-  /// If not provided here, it must be provided when calling [runTask] provided by [builder].
+  /// Will be overridden by task passed when calling [runTask] provided by [builder].
   final AsyncTask<T>? task;
 
   /// Widget builder, that provides a [runTask] callback.
@@ -55,7 +54,7 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
       duration: config.fadeDuration!,
       busyBuilder: config.fetchingBuilder!,
       isBusy: _isBusy,
-      child: widget.builder(_runTask),
+      child: widget.builder(context, _runTask),
     );
   }
 
@@ -70,7 +69,7 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
 
     try {
       // Run task
-      final result = await (widget.task ?? task!)();
+      final result = await (task ?? widget.task!)();
 
       // Update UI
       if (mounted) await widget.onSuccess?.call(result);

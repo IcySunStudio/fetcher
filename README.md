@@ -11,7 +11,7 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-Fetch and display asynchronous data easily !
+Fetch and display asynchronous data easily.
 
 Doc, examples and more to come.
 
