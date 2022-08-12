@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'default_fetcher_config.dart';
@@ -5,7 +6,7 @@ import 'fetcher_config.dart';
 import 'utils.dart';
 import 'widgets/activity_barrier.dart';
 
-typedef AsyncTaskChildBuilder<T> = DataWidgetBuilder<TaskRunnerCallback<T>>;
+typedef AsyncTaskChildBuilder<T> = Widget Function(BuildContext context, TaskRunnerCallback<T> runTask);
 
 /// A widget that allow to run an async task and handle all states (loading, errors, onSuccess).
 class AsyncTaskBuilder<T> extends StatefulWidget {
@@ -22,7 +23,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
 
   /// Task to be executed.
   /// Will be overridden by task passed when calling [runTask] provided by [builder].
-  final AsyncTask<T>? task;
+  final AsyncValueGetter<T>? task;
 
   /// Widget builder, that provides a [runTask] callback.
   /// You may pass a [task] to run, that will override widget's [task].
@@ -32,7 +33,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   final AsyncValueChanged<T>? onSuccess;
 
   @override
-  _AsyncTaskBuilderState createState() => _AsyncTaskBuilderState<T>();
+  State<AsyncTaskBuilder<T>> createState() => _AsyncTaskBuilderState<T>();
 }
 
 class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
@@ -58,7 +59,7 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
     );
   }
 
-  void _runTask([AsyncTask<T>? task]) async {
+  void _runTask([AsyncValueGetter<T>? task]) async {
     assert(widget.task != null || task != null);
 
     // Skip if disposed or already busy

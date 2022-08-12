@@ -1,4 +1,5 @@
 import 'package:fetcher/src/default_fetcher_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -18,7 +19,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     Key? key,
     FetcherConfig? config,
     FetchBuilderControllerBase<Never, R?>? controller,
-    required AsyncTask<R> task,
+    required AsyncValueGetter<R> task,
     bool fetchAtInit = true,
     DataWidgetBuilder<R>? builder,
     AsyncValueChanged<R>? onSuccess,
@@ -90,7 +91,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
   final ValueChanged<R>? saveToCache;
 
   @override
-  _FetchBuilderState createState() => _FetchBuilderState<T, R>();
+  State<FetchBuilder<T, R>> createState() => _FetchBuilderState<T, R>();
 }
 
 class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
@@ -122,7 +123,6 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
   @override
   Widget build(BuildContext context) {
-    final defaultConfig = DefaultFetcherConfig.of(context);
     return ValueStreamBuilder<_DataWrapper<R>?>(
       stream: data,
       builder: (context, snapshot) {
@@ -192,12 +192,14 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     // Run post tasks
     try {
       // Save to cache
-      if (isTaskValid())
+      if (isTaskValid()) {
         widget.saveToCache?.call(result);
+      }
 
       // Call onSuccess
-      if (isTaskValid())
+      if (isTaskValid()) {
         await widget.onSuccess?.call(result);
+      }
 
       // Update UI
       if (isTaskValid()) {
@@ -248,8 +250,9 @@ abstract class FetchBuilderControllerBase<T, R> {
     /// the state of the new widget is first initialised,
     /// then the state of the old widget is disposed.
     /// So we need to unmount state only if it hasn't changed since.
-    if (_state == state)
+    if (_state == state) {
       _state = null;
+    }
   }
 
   Future<R?> refresh();

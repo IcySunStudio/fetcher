@@ -22,7 +22,7 @@ class FadedAnimatedSwitcher extends StatelessWidget {
     return AnimatedSwitcher(
       duration: duration,
       transitionBuilder: sizeAnimation == true
-          ? (child, animation) => FadeTransition(child: SizeTransition(child: child, sizeFactor: animation, axisAlignment: -1), opacity: animation)
+          ? (child, animation) => FadeTransition(opacity: animation, child: SizeTransition(sizeFactor: animation, axisAlignment: -1, child: child))
           : AnimatedSwitcher.defaultTransitionBuilder,
       layoutBuilder: _animatedSwitcherLayoutBuilder,
       child: child,
@@ -33,11 +33,11 @@ class FadedAnimatedSwitcher extends StatelessWidget {
   static Widget _animatedSwitcherLayoutBuilder(Widget? currentChild, List<Widget> previousChildren) {
     return Stack(
       fit: StackFit.passthrough,
+      alignment: Alignment.topLeft,
       children: <Widget>[
         ...previousChildren,
         if (currentChild != null) currentChild,
       ],
-      alignment: Alignment.topLeft,
     );
   }
 }

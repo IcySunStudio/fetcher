@@ -5,13 +5,13 @@ import 'package:fetcher/src/utils.dart';
 import '../async_task_builder.dart';
 import 'clear_focus_background.dart';
 
-typedef AsyncTaskChildBuilder = Widget Function(BuildContext context, VoidCallback validate);
+typedef AsyncFormChildBuilder = Widget Function(BuildContext context, VoidCallback validate);
 
 class AsyncForm extends StatelessWidget {
   const AsyncForm({Key? key, required this.builder, this.onValidated, this.onSuccess}) : super(key: key);
 
   /// Child widget builder that provide a [validate] callback to be called when needed.
-  final AsyncTaskChildBuilder builder;
+  final AsyncFormChildBuilder builder;
 
   /// Called when the form has been validated
   final AsyncCallback? onValidated;
