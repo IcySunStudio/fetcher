@@ -30,7 +30,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   final AsyncTaskChildBuilder<T> builder;
 
   /// Called after task is successfully executed.
-  final AsyncValueChanged<T>? onSuccess;
+  final AsyncValueSetter<T>? onSuccess;
 
   @override
   State<AsyncTaskBuilder<T>> createState() => _AsyncTaskBuilderState<T>();

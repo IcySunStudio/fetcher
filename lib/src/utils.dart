@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef TaskRunnerCallback<T> = void Function([AsyncValueGetter<T>? task]);
-typedef AsyncValueChanged<T> = Future<void> Function(T value);
 typedef DataWidgetBuilder<T> = Widget Function(BuildContext context, T data);
 typedef ParameterizedAsyncTask<T, R> = Future<R> Function(T? param);
 

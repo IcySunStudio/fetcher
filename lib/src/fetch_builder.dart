@@ -22,7 +22,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     required AsyncValueGetter<R> task,
     bool fetchAtInit = true,
     DataWidgetBuilder<R>? builder,
-    AsyncValueChanged<R>? onSuccess,
+    AsyncValueSetter<R>? onSuccess,
     bool isDense = false,
     bool fade = true,
     ValueGetter<R?>? getFromCache,
@@ -70,7 +70,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
   final DataWidgetBuilder<R>? builder;
 
   /// Called when [task] has completed with success
-  final AsyncValueChanged<R>? onSuccess;
+  final AsyncValueSetter<R>? onSuccess;
 
   /// A controller used to programmatically show the refresh indicator and call the [onRefresh] callback.
   final FetchBuilderControllerBase<T, R?>? controller;
