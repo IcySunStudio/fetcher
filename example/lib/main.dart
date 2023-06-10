@@ -55,7 +55,7 @@ class MyHomePage extends StatelessWidget {
             children: [
               Text(
                 'Data is fetched :',
-                style: Theme.of(context).textTheme.subtitle1,
+                style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
               Text(

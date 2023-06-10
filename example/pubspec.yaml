@@ -13,7 +13,7 @@ dependencies:
   fetcher:
     path: ../
 
-  http: ^0.13.5
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_lints: ^2.0.1
