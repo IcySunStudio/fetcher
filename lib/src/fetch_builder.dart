@@ -1,12 +1,11 @@
 import 'package:fetcher/src/default_fetcher_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:value_stream/value_stream.dart';
 
 import 'exceptions/connectivity_exception.dart';
 import 'fetcher_config.dart';
 import 'widgets/faded_animated_switcher.dart';
-import 'widgets/value_stream_builder.dart';
 import 'utils.dart';
 
 /// Widget that fetch data asynchronously, and display it when available.
@@ -96,7 +95,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
 
 class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   late final FetcherConfig config;
-  final data = BehaviorSubject<_DataWrapper<R>?>();
+  final data = EventStream<_DataWrapper<R>?>();
 
   @override
   void initState() {
@@ -109,7 +108,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     // Get from cache
     try {
       final cachedData = widget.getFromCache?.call();
-      if (cachedData != null) data.addNotNull(_DataWrapper(cachedData));
+      if (cachedData != null) data.add(_DataWrapper(cachedData));
     } catch(e, s) {
       config.reportError!(e, s);
     }
@@ -123,7 +122,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueStreamBuilder<_DataWrapper<R>?>(
+    return EventStreamBuilder<_DataWrapper<R>?>(
       stream: data,
       builder: (context, snapshot) {
         final child = () {
@@ -174,7 +173,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       // Update UI
       if (isTaskValid()) {
         // Broadcast error, but not if there already is data and it's just a [ConnectivityException]
-        if (e is! ConnectivityException || data.value == null) {
+        if (e is! ConnectivityException || data.valueOrNull == null) {
           data.addError(FetchException(e, () => _fetch(param: param, showErrors: true)));
         }
 
@@ -209,6 +208,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     } catch(e, s) {
       config.reportError!(e, s);
     }
+    return null;
   }
 
   @override

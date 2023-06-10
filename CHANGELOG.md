@@ -1,3 +1,7 @@
+## 0.0.4
+* Replace rxdart dependency by value_stream
+* Remove ValueStreamBuilder (use EventStreamBuilder from value_stream)
+
 ## 0.0.3
 * New AsyncForm widget
 * Code clean-up
