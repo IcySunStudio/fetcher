@@ -9,7 +9,9 @@ import 'widgets/faded_animated_switcher.dart';
 class EventFetchBuilder<T> extends StatefulWidget {
   const EventFetchBuilder({super.key, required this.stream, this.builder, this.config, this.isDense = false, this.fade = true});
 
-  ///
+  /// The [EventStream] to listen to.
+  /// A progress indicator will be displayed while waiting for first emitted value.
+  /// If [stream] already has a value, it will be displayed directly.
   final EventStream<T> stream;
 
   /// Child to display when data is available

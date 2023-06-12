@@ -11,6 +11,56 @@ class EventFetchBuilderPage extends StatefulWidget {
 }
 
 class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
+  int _refreshKey = 0;
+  bool withInitialValue = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Settings
+        CheckboxListTile(
+          title: const Text('With initial value'),
+          value: withInitialValue,
+          onChanged: (value) {
+            setState(() {
+              withInitialValue = value!;
+            });
+          },
+        ),
+
+        // Button
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _refreshKey++;
+            });
+          },
+          child: const Text('Refresh'),
+        ),
+
+        // Content
+        Expanded(
+          child: _EventFetchBuilderPageContent(
+            key: ValueKey(_refreshKey),
+            initialValue: withInitialValue ? 'Initial value' : null,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _EventFetchBuilderPageContent extends StatefulWidget {
+  const _EventFetchBuilderPageContent({super.key, this.initialValue});
+
+  final String? initialValue;
+
+  @override
+  State<_EventFetchBuilderPageContent> createState() => _EventFetchBuilderPageContentState();
+}
+
+class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageContent> {
   late final EventStream<String> stream;
   late final Timer timer;
 
@@ -29,7 +79,7 @@ class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
   @override
   void initState() {
     super.initState();
-    stream = EventStream();
+    stream = EventStream(widget.initialValue);
     timer = Timer.periodic(const Duration(seconds: 5), (timer) => tick());
     tick();
   }

@@ -54,7 +54,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           },
         ),
 
-        // Buttons
+        // Button
         ElevatedButton(
           onPressed: () => _fetchController.refresh(clearDataFirst: dataClear, param: withError),
           child: const Text('Refresh'),
