@@ -86,7 +86,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
 
   @override
   Widget build(BuildContext context) {
-    return EventFetchBuilder<String>(
+    return EventFetchBuilder<String>.fromEvent(
       stream: stream,
       builder: (context, data) {
         return Column(
