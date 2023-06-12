@@ -127,7 +127,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       builder: (context, snapshot) {
         final child = () {
           if (snapshot.hasError) {
-            return config.errorBuilder!(context, (snapshot.error as FetchException).retry);
+            return config.errorBuilder!(context, widget.isDense, (snapshot.error as FetchException).retry);
           } else if (!snapshot.hasData) {
             return config.fetchingBuilder!(context);
           } else {

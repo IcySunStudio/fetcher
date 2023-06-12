@@ -18,7 +18,7 @@ class FetcherConfig {
   final Duration? fadeDuration;
 
   /// [FetchBuilder] only
-  final Widget Function(BuildContext context, VoidCallback retry)? errorBuilder;
+  final Widget Function(BuildContext context, bool isDense, VoidCallback retry)? errorBuilder;
 
   ///
   final void Function(Object exception, StackTrace stack, {dynamic reason})? reportError;
@@ -32,7 +32,7 @@ class FetcherConfig {
       child: CircularProgressIndicator(),
     ),
     fadeDuration: const Duration(milliseconds: 250),
-    errorBuilder: (_, retry) => FetchBuilderErrorWidget(onRetry: retry),
+    errorBuilder: (_, isDense, retry) => FetchBuilderErrorWidget(isDense: isDense, onRetry: retry),
     reportError: (e, s, {reason}) => debugPrint('[Fetcher] report error: $e'),
     showError: (_, error) => debugPrint('[Fetcher] display error: $error'),
   );
