@@ -12,8 +12,6 @@ class FetchBuilderContent<T> extends StatelessWidget {
     required this.snapshot,
     this.builder,
     this.config,
-    this.isDense = false,
-    this.fade = true,
   });
 
   final AsyncSnapshot<T> snapshot;
@@ -24,20 +22,13 @@ class FetchBuilderContent<T> extends StatelessWidget {
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
 
-  /// Whether this widget is in a low space environment
-  /// Will affect default error widget density
-  final bool isDense;
-
-  /// Whether to enable a fading transition
-  final bool fade;
-
   @override
   Widget build(BuildContext context) {
     final config = DefaultFetcherConfig.of(context).apply(this.config);
 
     final child = () {
       if (snapshot.hasError) {
-        return config.errorBuilder!(context, isDense, (snapshot.error as FetchException).retry);
+        return config.errorBuilder!(context, config.isDense == true, (snapshot.error as FetchException).retry);
       } else if (!snapshot.hasData) {
         return config.fetchingBuilder!(context);
       } else {
@@ -45,7 +36,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       }
     } ();
 
-    if (fade) {
+    if (config.fade == true) {
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
         child: child,

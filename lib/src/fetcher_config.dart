@@ -4,20 +4,29 @@ import 'package:flutter/material.dart';
 @immutable
 class FetcherConfig {
   const FetcherConfig({
-    this.fetchingBuilder,
+    this.isDense,
+    this.fade,
     this.fadeDuration,
+    this.fetchingBuilder,
     this.errorBuilder,
     this.reportError,
     this.showError,
   });
 
+  /// Whether fetcher is in a low space environment.
+  /// Will affect default error widget density.
+  final bool? isDense;
+
+  /// Whether to enable a fading transition between states
+  final bool? fade;
+
+  /// Duration of the [fade] transition
+  final Duration? fadeDuration;
+
   /// Widget to display while fetching
   final WidgetBuilder? fetchingBuilder;
 
-  ///
-  final Duration? fadeDuration;
-
-  /// [FetchBuilder] only
+  /// Widget to display on error
   final Widget Function(BuildContext context, bool isDense, VoidCallback retry)? errorBuilder;
 
   ///
@@ -26,12 +35,14 @@ class FetcherConfig {
   ///
   final void Function(BuildContext context, Object error)? showError;
 
-
+  /// Default [FetcherConfig] values.
   static FetcherConfig defaultConfig = FetcherConfig(
+    isDense: false,
+    fade: true,
+    fadeDuration: const Duration(milliseconds: 250),
     fetchingBuilder: (_) => const Center(
       child: CircularProgressIndicator(),
     ),
-    fadeDuration: const Duration(milliseconds: 250),
     errorBuilder: (_, isDense, retry) => FetchBuilderErrorWidget(isDense: isDense, onRetry: retry),
     reportError: (e, s, {reason}) => debugPrint('[Fetcher] report error: $e'),
     showError: (_, error) => debugPrint('[Fetcher] display error: $error'),
@@ -41,8 +52,10 @@ class FetcherConfig {
   FetcherConfig apply(FetcherConfig? config) {
     if (config == null) return this;
     return FetcherConfig(
-      fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
+      isDense: config.isDense ?? isDense,
+      fade: config.fade ?? fade,
       fadeDuration: config.fadeDuration ?? fadeDuration,
+      fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       errorBuilder: config.errorBuilder ?? errorBuilder,
       reportError: config.reportError ?? reportError,
       showError: config.showError ?? showError,

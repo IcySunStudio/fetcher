@@ -23,8 +23,6 @@ class FetchBuilder<T, R> extends StatefulWidget {
     bool fetchAtInit = true,
     DataWidgetBuilder<R>? builder,
     AsyncValueSetter<R>? onSuccess,
-    bool isDense = false,
-    bool fade = true,
     ValueGetter<R?>? getFromCache,
     ValueChanged<R>? saveToCache,
   }) => FetchBuilder.parameterized(
@@ -35,8 +33,6 @@ class FetchBuilder<T, R> extends StatefulWidget {
     fetchAtInit: fetchAtInit,
     builder: builder,
     onSuccess: onSuccess,
-    isDense: isDense,
-    fade: fade,
     getFromCache: getFromCache,
     saveToCache: saveToCache,
   );
@@ -50,8 +46,6 @@ class FetchBuilder<T, R> extends StatefulWidget {
     this.fetchAtInit = true,
     this.builder,
     this.onSuccess,
-    this.isDense = false,
-    this.fade = true,
     this.getFromCache,
     this.saveToCache,
   });
@@ -74,13 +68,6 @@ class FetchBuilder<T, R> extends StatefulWidget {
 
   /// A controller used to programmatically show the refresh indicator and call the [onRefresh] callback.
   final FetchBuilderControllerBase<T, R?>? controller;
-
-  /// Whether this widget is in a low space environment
-  /// Will affect default error widget density
-  final bool isDense;
-
-  /// Whether to enable a fading transition
-  final bool fade;
 
   /// Optional function to provide data from cache at creation.
   /// If available, data will be displayed instantly, while fetching newer data from [task].
@@ -126,8 +113,6 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
           snapshot: snapshot,
           builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),
           config: widget.config,
-          isDense: widget.isDense,
-          fade: widget.fade,
         );
       },
     );

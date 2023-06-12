@@ -10,11 +10,11 @@ import 'widgets/fetch_builder_content.dart';
 /// Handle all possible states: loading, loaded, errors.
 class EventFetchBuilder<T> extends StatelessWidget {
   /// Build a new [EventFetchBuilder] from a classic [Stream], with optional [initialData]
-  const EventFetchBuilder({super.key, required this.stream, this.initialData, this.builder, this.config, this.isDense = false, this.fade = true});
+  const EventFetchBuilder({super.key, required this.stream, this.initialData, this.builder, this.config});
 
   /// Build a new [EventFetchBuilder] from an [EventStream]
   /// If stream already has a value, it will be displayed directly.
-  EventFetchBuilder.fromEvent({super.key, required EventStream<T> stream, this.builder, this.config, this.isDense = false, this.fade = true}) :
+  EventFetchBuilder.fromEvent({super.key, required EventStream<T> stream, this.builder, this.config}) :
         stream = stream.innerStream, initialData = stream.valueOrNull;
 
   /// The [Stream] to listen to.
@@ -30,13 +30,6 @@ class EventFetchBuilder<T> extends StatelessWidget {
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
 
-  /// Whether this widget is in a low space environment
-  /// Will affect default error widget density
-  final bool isDense;
-
-  /// Whether to enable a fading transition
-  final bool fade;
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<T>(
@@ -47,8 +40,6 @@ class EventFetchBuilder<T> extends StatelessWidget {
           snapshot: snapshot,
           builder: builder,
           config: config,
-          isDense: isDense,
-          fade: fade,
         );
       },
     );

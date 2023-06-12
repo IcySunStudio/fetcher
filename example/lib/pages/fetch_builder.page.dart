@@ -91,7 +91,9 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
         ),
         FetchBuilder.basic<String>(
           task: () async => throw Exception('Error !!'),
-          isDense: true,
+          config: const FetcherConfig(
+            isDense: true,
+          ),
           builder: (context, data) => throw StateError('Should never reach this code'),
         ),
       ],
