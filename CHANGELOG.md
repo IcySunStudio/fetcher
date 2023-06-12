@@ -1,5 +1,6 @@
 ## 0.0.5
 * Default FetchBuilderErrorWidget now handles isDense parameter
+* New EventFetchBuilder widget
 
 ## 0.0.4
 * Replace rxdart dependency by value_stream
@@ -10,5 +11,4 @@
 * Code clean-up
 
 ## 0.0.1-dev1
-
 * Initial dev version

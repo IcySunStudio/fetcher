@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:value_stream/value_stream.dart';
 
 import 'exceptions/connectivity_exception.dart';
+import 'exceptions/fetch_exception.dart';
 import 'fetcher_config.dart';
 import 'widgets/faded_animated_switcher.dart';
 import 'utils.dart';
@@ -225,13 +226,6 @@ class _DataWrapper<T> {
   const _DataWrapper(this.data);
 
   final T data;
-}
-
-class FetchException {
-  const FetchException(this.innerException, this.retry);
-
-  final Object innerException;
-  final VoidCallback retry;
 }
 
 /// A controller for an [FetchBuilder].
