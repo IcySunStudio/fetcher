@@ -1,3 +1,6 @@
+## 0.0.5
+* Default FetchBuilderErrorWidget now handles isDense parameter
+
 ## 0.0.4
 * Replace rxdart dependency by value_stream
 * Remove ValueStreamBuilder (use EventStreamBuilder from value_stream)
