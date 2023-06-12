@@ -94,7 +94,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       final cachedData = widget.getFromCache?.call();
       if (cachedData != null) data.add(_DataWrapper(cachedData));
     } catch(e, s) {
-      config.reportError!(e, s);
+      config.onError!(e, s);
     }
 
     // Init controller
@@ -139,7 +139,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       result = await widget.task(param);
     } catch(e, s) {
       // Report error first
-      config.reportError!(e, s);
+      config.onError!(e, s);
 
       // Update UI
       if (isTaskValid()) {
@@ -151,7 +151,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
         // Display error to user, if asked.
         // Default to false, to avoid displaying error when fetch has been started from code: user may be on another screen.
         if (showErrors == true) {
-          config.showError!(context, e);
+          config.onDisplayError!(context, e);
         }
       }
 
@@ -177,7 +177,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
         return result;
       }
     } catch(e, s) {
-      config.reportError!(e, s);
+      config.onError!(e, s);
     }
     return null;
   }

@@ -3,6 +3,7 @@
 * New EventFetchBuilder widget
 * Move isDense and fade inside FetcherConfig
 * Expose ClearFocusBackground
+* Rename reportError to onError AND showError to onDisplayError
 
 ## 0.0.4
 * Replace rxdart dependency by value_stream

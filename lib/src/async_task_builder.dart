@@ -67,10 +67,10 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
       if (mounted) await widget.onSuccess?.call(result);
     } catch (e, s) {
       // Report error first
-      config.reportError!(e, s);
+      config.onError!(e, s);
 
       // Update UI
-      if (mounted) config.showError!(context, e);
+      if (mounted) config.onDisplayError!(context, e);
     } finally {
       if (mounted) setIsBusy(false);
     }

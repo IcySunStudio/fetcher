@@ -9,8 +9,8 @@ class FetcherConfig {
     this.fadeDuration,
     this.fetchingBuilder,
     this.errorBuilder,
-    this.reportError,
-    this.showError,
+    this.onError,
+    this.onDisplayError,
   });
 
   /// Whether fetcher is in a low space environment.
@@ -29,11 +29,13 @@ class FetcherConfig {
   /// Widget to display on error
   final Widget Function(BuildContext context, bool isDense, VoidCallback retry)? errorBuilder;
 
-  ///
-  final void Function(Object exception, StackTrace stack, {dynamic reason})? reportError;
+  /// Called when an error occurred.
+  /// Usually used to report error.
+  final void Function(Object exception, StackTrace stack, {dynamic reason})? onError;
 
-  ///
-  final void Function(BuildContext context, Object error)? showError;
+  /// Called when an error should be displayed to user.
+  /// Usually used with a SnackBar system or equivalent.
+  final void Function(BuildContext context, Object error)? onDisplayError;
 
   /// Default [FetcherConfig] values.
   static FetcherConfig defaultConfig = FetcherConfig(
@@ -44,8 +46,8 @@ class FetcherConfig {
       child: CircularProgressIndicator(),
     ),
     errorBuilder: (_, isDense, retry) => FetchBuilderErrorWidget(isDense: isDense, onRetry: retry),
-    reportError: (e, s, {reason}) => debugPrint('[Fetcher] report error: $e'),
-    showError: (_, error) => debugPrint('[Fetcher] display error: $error'),
+    onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
+    onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
   );
 
   /// Creates a copy of this config where each fields are overridden by each non-null field of [config].
@@ -57,8 +59,8 @@ class FetcherConfig {
       fadeDuration: config.fadeDuration ?? fadeDuration,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       errorBuilder: config.errorBuilder ?? errorBuilder,
-      reportError: config.reportError ?? reportError,
-      showError: config.showError ?? showError,
+      onError: config.onError ?? onError,
+      onDisplayError: config.onDisplayError ?? onDisplayError,
     );
   }
 }

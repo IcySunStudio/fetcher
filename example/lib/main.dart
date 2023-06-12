@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultFetcherConfig(
       config: FetcherConfig(
-        showError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        onDisplayError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.toString()),
         )),
       ),
