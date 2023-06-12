@@ -95,16 +95,12 @@ class FetchBuilder<T, R> extends StatefulWidget {
 }
 
 class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
-  late final FetcherConfig config;
+  late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
   final data = EventStream<_DataWrapper<R>?>();
 
   @override
   void initState() {
     super.initState();
-
-    // Build config
-    final defaultConfig = DefaultFetcherConfig.of(context);
-    config = widget.config?.applyDefaults(defaultConfig) ?? defaultConfig;
 
     // Get from cache
     try {

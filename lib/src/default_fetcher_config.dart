@@ -6,7 +6,7 @@ class DefaultFetcherConfig extends InheritedWidget {
     super.key,
     required FetcherConfig config,
     required super.child,
-  }) : config = config.applyDefaults(FetcherConfig.defaultConfig);
+  }) : config = FetcherConfig.defaultConfig.apply(config);
 
   final FetcherConfig config;
 

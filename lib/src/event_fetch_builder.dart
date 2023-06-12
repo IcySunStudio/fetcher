@@ -7,6 +7,7 @@ import 'fetcher_config.dart';
 import 'widgets/faded_animated_switcher.dart';
 
 /// Widget that listen to a Stream and display data.
+/// It's like [FetchBuilder] but instead of directly calling a task once, it will listen to a stream and his updates.
 /// Handle all possible states: loading, loaded, errors.
 class EventFetchBuilder<T> extends StatefulWidget {
   /// Build a new [EventFetchBuilder] from a classic [Stream], with optional [initialData]
@@ -42,16 +43,7 @@ class EventFetchBuilder<T> extends StatefulWidget {
 }
 
 class _EventFetchBuilderState<T> extends State<EventFetchBuilder<T>> {
-  late final FetcherConfig config;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Build config
-    final defaultConfig = DefaultFetcherConfig.of(context);
-    config = widget.config?.applyDefaults(defaultConfig) ?? defaultConfig;
-  }
+  late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
 
   @override
   Widget build(BuildContext context) {

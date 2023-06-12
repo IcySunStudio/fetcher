@@ -37,13 +37,15 @@ class FetcherConfig {
     showError: (_, error) => debugPrint('[Fetcher] display error: $error'),
   );
 
-  FetcherConfig applyDefaults(FetcherConfig defaultConfig) {
+  /// Creates a copy of this config where each fields are overridden by each non-null field of [config].
+  FetcherConfig apply(FetcherConfig? config) {
+    if (config == null) return this;
     return FetcherConfig(
-      fetchingBuilder: fetchingBuilder ?? defaultConfig.fetchingBuilder,
-      fadeDuration: fadeDuration ?? defaultConfig.fadeDuration,
-      errorBuilder: errorBuilder ?? defaultConfig.errorBuilder,
-      reportError: reportError ?? defaultConfig.reportError,
-      showError: showError ?? defaultConfig.showError,
+      fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
+      fadeDuration: config.fadeDuration ?? fadeDuration,
+      errorBuilder: config.errorBuilder ?? errorBuilder,
+      reportError: config.reportError ?? reportError,
+      showError: config.showError ?? showError,
     );
   }
 }

@@ -37,17 +37,8 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
 }
 
 class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
-  late final FetcherConfig config;
+  late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
   bool _isBusy = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Build config
-    final defaultConfig = DefaultFetcherConfig.of(context);
-    config = widget.config?.applyDefaults(defaultConfig) ?? defaultConfig;
-  }
 
   @override
   Widget build(BuildContext context) {
