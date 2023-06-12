@@ -2,7 +2,7 @@ import 'package:fetcher/src/utils.dart';
 import 'package:flutter/material.dart';
 
 class ClearFocusBackground extends StatelessWidget {
-  const ClearFocusBackground({Key? key, this.child}) : super(key: key);
+  const ClearFocusBackground({super.key, this.child});
 
   final Widget? child;
 

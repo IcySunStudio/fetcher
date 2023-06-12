@@ -2,11 +2,11 @@ import 'package:flutter/widgets.dart';
 
 class FadedAnimatedSwitcher extends StatelessWidget {
   const FadedAnimatedSwitcher({
-    Key? key,
+    super.key,
     required this.duration,
     this.child,
     this.sizeAnimation = false,
-  }) : super(key: key);
+  });
 
   final Duration duration;
 

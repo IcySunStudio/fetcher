@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FetchBuilderErrorWidget extends StatelessWidget {
-  const FetchBuilderErrorWidget({Key? key, this.onRetry}) : super(key: key);
+  const FetchBuilderErrorWidget({super.key, this.onRetry});
 
   final VoidCallback? onRetry;
 

@@ -42,7 +42,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
 
   /// A [FetchBuilder] where [FetchBuilderControllerBase.refresh] takes a parameter that will be passed to [task].
   const FetchBuilder.parameterized({
-    Key? key,
+    super.key,
     this.config,
     this.controller,
     required this.task,
@@ -53,7 +53,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     this.fade = true,
     this.getFromCache,
     this.saveToCache,
-  }) : super(key: key);
+  });
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
@@ -159,7 +159,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     if (!mounted) return null;
 
     // Clear current data
-    clearDataFirst ??= data.hasError == true;
+    clearDataFirst ??= data.hasError;
     if (clearDataFirst) data.add(null);
 
     // Run task

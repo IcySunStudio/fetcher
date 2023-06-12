@@ -4,13 +4,13 @@ import 'package:flutter/widgets.dart';
 class ActivityBarrier extends StatelessWidget {
   /// Creates a widget that add an activity indicator overlay that prevents the user from interacting with widgets behind itself.
   const ActivityBarrier({
-    Key? key,
+    super.key,
     required this.duration,
     this.barrierColor,
     required this.busyBuilder,
     this.isBusy = false,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Duration duration;
   final Color? barrierColor;

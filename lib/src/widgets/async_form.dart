@@ -8,7 +8,7 @@ import 'clear_focus_background.dart';
 typedef AsyncFormChildBuilder = Widget Function(BuildContext context, VoidCallback validate);
 
 class AsyncForm extends StatelessWidget {
-  const AsyncForm({Key? key, required this.builder, this.onValidated, this.onSuccess}) : super(key: key);
+  const AsyncForm({super.key, required this.builder, this.onValidated, this.onSuccess});
 
   /// Child widget builder that provide a [validate] callback to be called when needed.
   final AsyncFormChildBuilder builder;

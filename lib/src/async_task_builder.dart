@@ -11,12 +11,12 @@ typedef AsyncTaskChildBuilder<T> = Widget Function(BuildContext context, TaskRun
 /// A widget that allow to run an async task and handle all states (loading, errors, onSuccess).
 class AsyncTaskBuilder<T> extends StatefulWidget {
   const AsyncTaskBuilder({
-    Key? key,
+    super.key,
     this.config,
     this.task,
     required this.builder,
     this.onSuccess,
-  }) : super(key: key);
+  });
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;

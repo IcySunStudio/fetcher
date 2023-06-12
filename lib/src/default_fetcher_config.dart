@@ -3,11 +3,10 @@ import 'package:flutter/widgets.dart';
 
 class DefaultFetcherConfig extends InheritedWidget {
   DefaultFetcherConfig({
-    Key? key,
+    super.key,
     required FetcherConfig config,
-    required Widget child,
-  }) : config = config.applyDefaults(FetcherConfig.defaultConfig),
-       super(key: key, child: child);
+    required super.child,
+  }) : config = config.applyDefaults(FetcherConfig.defaultConfig);
 
   final FetcherConfig config;
 
