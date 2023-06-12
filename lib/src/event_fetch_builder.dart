@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 
 import 'default_fetcher_config.dart';
-import 'exceptions/fetch_exception.dart';
 import 'fetcher_config.dart';
-import 'widgets/faded_animated_switcher.dart';
+import 'widgets/fetch_builder_content.dart';
 
 /// Widget that listen to a Stream and display data.
 /// It's like [FetchBuilder] but instead of directly calling a task once, it will listen to a stream and his updates.
 /// Handle all possible states: loading, loaded, errors.
-class EventFetchBuilder<T> extends StatefulWidget {
+class EventFetchBuilder<T> extends StatelessWidget {
   /// Build a new [EventFetchBuilder] from a classic [Stream], with optional [initialData]
   const EventFetchBuilder({super.key, required this.stream, this.initialData, this.builder, this.config, this.isDense = false, this.fade = true});
 
@@ -39,36 +38,18 @@ class EventFetchBuilder<T> extends StatefulWidget {
   final bool fade;
 
   @override
-  State<EventFetchBuilder<T>> createState() => _EventFetchBuilderState<T>();
-}
-
-class _EventFetchBuilderState<T> extends State<EventFetchBuilder<T>> {
-  late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<T>(
-      stream: widget.stream,
-      initialData: widget.initialData,
+      stream: stream,
+      initialData: initialData,
       builder: (context, snapshot) {
-        final child = () {
-          if (snapshot.hasError) {
-            return config.errorBuilder!(context, widget.isDense, (snapshot.error as FetchException).retry);
-          } else if (!snapshot.hasData) {
-            return config.fetchingBuilder!(context);
-          } else {
-            return widget.builder?.call(context, snapshot.data as T) ?? const SizedBox();
-          }
-        } ();
-
-        if (widget.fade) {
-          return FadedAnimatedSwitcher(
-            duration: config.fadeDuration!,
-            child: child,
-          );
-        }
-
-        return child;
+        return FetchBuilderContent<T>(
+          snapshot: snapshot,
+          builder: builder,
+          config: config,
+          isDense: isDense,
+          fade: fade,
+        );
       },
     );
   }

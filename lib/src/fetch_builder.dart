@@ -6,8 +6,8 @@ import 'package:value_stream/value_stream.dart';
 import 'exceptions/connectivity_exception.dart';
 import 'exceptions/fetch_exception.dart';
 import 'fetcher_config.dart';
-import 'widgets/faded_animated_switcher.dart';
 import 'utils.dart';
+import 'widgets/fetch_builder_content.dart';
 
 /// Widget that fetch data asynchronously, and display it when available.
 /// Handle all possible states: loading, loaded, errors.
@@ -122,24 +122,13 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     return EventStreamBuilder<_DataWrapper<R>?>(
       stream: data,
       builder: (context, snapshot) {
-        final child = () {
-          if (snapshot.hasError) {
-            return config.errorBuilder!(context, widget.isDense, (snapshot.error as FetchException).retry);
-          } else if (!snapshot.hasData) {
-            return config.fetchingBuilder!(context);
-          } else {
-            return widget.builder?.call(context, snapshot.data!.data) ?? const SizedBox();
-          }
-        } ();
-
-        if (widget.fade) {
-          return FadedAnimatedSwitcher(
-            duration: config.fadeDuration!,
-            child: child,
-          );
-        }
-
-        return child;
+        return FetchBuilderContent<_DataWrapper<R>?>(
+          snapshot: snapshot,
+          builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),
+          config: widget.config,
+          isDense: widget.isDense,
+          fade: widget.fade,
+        );
       },
     );
   }
