@@ -10,11 +10,15 @@ class FetchBuilderContent<T> extends StatelessWidget {
   const FetchBuilderContent({
     super.key,
     required this.snapshot,
+    this.initBuilder,
     this.builder,
     this.config,
   });
 
   final AsyncSnapshot<T> snapshot;
+
+  /// Widget to display when snapshot is in [ConnectionState.none] state (before fetching has started).
+  final WidgetBuilder? initBuilder;
 
   /// Child to display when data is available
   final DataWidgetBuilder<T>? builder;
@@ -27,7 +31,9 @@ class FetchBuilderContent<T> extends StatelessWidget {
     final config = DefaultFetcherConfig.of(context).apply(this.config);
 
     final child = () {
-      if (snapshot.hasError) {
+      if (snapshot.connectionState == ConnectionState.none) {
+        return initBuilder?.call(context) ?? const SizedBox();
+      } else if (snapshot.hasError) {
         return config.errorBuilder!(context, config.isDense == true, (snapshot.error as FetchException).retry);
       } else if (!snapshot.hasData) {
         return config.fetchingBuilder!(context);

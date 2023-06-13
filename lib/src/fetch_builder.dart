@@ -21,6 +21,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     FetchBuilderControllerBase<Never, R?>? controller,
     required AsyncValueGetter<R> task,
     bool fetchAtInit = true,
+    WidgetBuilder? initBuilder,
     DataWidgetBuilder<R>? builder,
     AsyncValueSetter<R>? onSuccess,
     ValueGetter<R?>? getFromCache,
@@ -31,6 +32,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     controller: controller,
     task: (_) => task(),
     fetchAtInit: fetchAtInit,
+    initBuilder: initBuilder,
     builder: builder,
     onSuccess: onSuccess,
     getFromCache: getFromCache,
@@ -44,6 +46,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     this.controller,
     required this.task,
     this.fetchAtInit = true,
+    this.initBuilder,
     this.builder,
     this.onSuccess,
     this.getFromCache,
@@ -59,6 +62,9 @@ class FetchBuilder<T, R> extends StatefulWidget {
 
   /// Whether to automatically start [task] when widget is initialised
   final bool fetchAtInit;
+
+  /// When [fetchAtInit] is true, child to display before fetching starts.
+  final WidgetBuilder? initBuilder;
 
   /// Child to display when data is available
   final DataWidgetBuilder<R>? builder;
@@ -83,18 +89,34 @@ class FetchBuilder<T, R> extends StatefulWidget {
 
 class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
-  final data = EventStream<_DataWrapper<R>?>();
+
+  EventStream<_DataWrapper<R>?>? _stream;
+
+  /// Only init stream when needed.
+  /// This allows to properly display [widget.initBuilder].
+  EventStream<_DataWrapper<R>?> _initStream() {
+    if (_stream == null) {
+      setState(() {
+        _stream = EventStream();
+      });
+    }
+    return _stream!;
+  }
 
   @override
   void initState() {
     super.initState();
 
     // Get from cache
-    try {
-      final cachedData = widget.getFromCache?.call();
-      if (cachedData != null) data.add(_DataWrapper(cachedData));
-    } catch(e, s) {
-      config.onError!(e, s);
+    if (widget.getFromCache != null) {
+      try {
+        final cachedData = widget.getFromCache!();
+        if (cachedData != null) {
+          _initStream().add(_DataWrapper(cachedData));
+        }
+      } catch (e, s) {
+        config.onError!(e, s);
+      }
     }
 
     // Init controller
@@ -107,10 +129,11 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   @override
   Widget build(BuildContext context) {
     return EventStreamBuilder<_DataWrapper<R>?>(
-      stream: data,
+      stream: _stream,   // When stream is null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
         return FetchBuilderContent<_DataWrapper<R>?>(
           snapshot: snapshot,
+          initBuilder: widget.initBuilder,
           builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),
           config: widget.config,
         );
@@ -129,12 +152,15 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     // Skip if disposed
     if (!mounted) return null;
 
+    // Init stream
+    final stream = _initStream();
+
     // Clear current data
-    clearDataFirst ??= data.hasError;
-    if (clearDataFirst) data.add(null);
+    clearDataFirst ??= stream.hasError;
+    if (clearDataFirst) stream.add(null);
 
     // Run task
-    R result;
+    final R result;
     try {
       result = await widget.task(param);
     } catch(e, s) {
@@ -144,8 +170,8 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       // Update UI
       if (isTaskValid()) {
         // Broadcast error, but not if there already is data and it's just a [ConnectivityException]
-        if (e is! ConnectivityException || data.valueOrNull == null) {
-          data.addError(FetchException(e, () => _fetch(param: param, showErrors: true)));
+        if (e is! ConnectivityException || stream.valueOrNull == null) {
+          stream.addError(FetchException(e, () => _fetch(param: param, showErrors: true)));
         }
 
         // Display error to user, if asked.
@@ -173,7 +199,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
       // Update UI
       if (isTaskValid()) {
-        data.add(_DataWrapper(result));
+        stream.add(_DataWrapper(result));
         return result;
       }
     } catch(e, s) {
@@ -185,7 +211,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   @override
   void dispose() {
     widget.controller?._unmountState(this);
-    data.close();
+    _stream?.close();
     super.dispose();
   }
 }

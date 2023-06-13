@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   # Framework Tools
-  value_stream: 0.0.2
+  value_stream: 0.0.3
 
 dev_dependencies:
   flutter_test:

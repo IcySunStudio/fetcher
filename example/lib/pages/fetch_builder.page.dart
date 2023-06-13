@@ -11,7 +11,8 @@ class FetchBuilderPage extends StatefulWidget {
 }
 
 class _FetchBuilderPageState extends State<FetchBuilderPage> {
-  final _fetchController = ParameterizedFetchBuilderController<bool, String>();
+  final _fetchController1 = ParameterizedFetchBuilderController<bool, String>();
+  final _fetchController2 = BasicFetchBuilderController<String>();
 
   bool withError = false;
   bool dataClear = false;
@@ -29,10 +30,8 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
       children: [
 
         // Header
-        const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text('Fetcher with parameters'),
-        ),
+        const SizedBox(height: 20),
+        const _Title(title: 'Fetcher with parameters'),
 
         // Settings
         CheckboxListTile(
@@ -56,14 +55,14 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
         // Button
         ElevatedButton(
-          onPressed: () => _fetchController.refresh(clearDataFirst: dataClear ? true : null, param: withError),
+          onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError),
           child: const Text('Refresh'),
         ),
 
-        // Fetcher
+        // Parameterized Fetcher
         Expanded(
           child: FetchBuilder<bool, String>.parameterized(
-            controller: _fetchController,
+            controller: _fetchController1,
             task: fetchTask,
             builder: (context, data) {
               return Column(
@@ -84,10 +83,12 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
             },
           ),
         ),
+
+        // Dense Fetcher
         const Separator(),
         const Padding(
           padding: EdgeInsets.all(10),
-          child: Text('Dense Fetcher with Error'),
+          child: _Title(title: 'Dense Fetcher with Error'),
         ),
         FetchBuilder.basic<String>(
           task: () async => throw Exception('Error !!'),
@@ -96,6 +97,28 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           ),
           builder: (context, data) => throw StateError('Should never reach this code'),
         ),
+
+        // Delayed Fetcher without builder
+        const Separator(),
+        const Padding(
+          padding: EdgeInsets.all(10),
+          child: _Title(title: 'Delayed Fetcher without builder'),
+        ),
+        ElevatedButton(
+          onPressed: () => _fetchController2.refresh(),
+          child: const Text('Fetch'),
+        ),
+        const SizedBox(height: 20),
+        FetchBuilder.basic<String>(
+          controller: _fetchController2,
+          fetchAtInit: false,
+          task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
+          onSuccess: (result) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+            body: Center(child: Text(result)),
+          ))),
+          initBuilder: (_) => const Text('Press Fetch to start'),
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -109,6 +132,20 @@ class Separator extends StatelessWidget {
     return Container(
       height: 1,
       color: Colors.grey,
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  const _Title({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.titleMedium,
     );
   }
 }
