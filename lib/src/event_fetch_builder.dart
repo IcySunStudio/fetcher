@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 
-import 'default_fetcher_config.dart';
-import 'fetcher_config.dart';
+import 'config/default_fetcher_config.dart';
+import 'config/fetcher_config.dart';
 import 'widgets/fetch_builder_content.dart';
 
 /// Widget that listen to a Stream and display data.

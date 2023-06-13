@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-import 'default_fetcher_config.dart';
-import 'fetcher_config.dart';
+import 'config/default_fetcher_config.dart';
+import 'config/fetcher_config.dart';
 import 'utils.dart';
 import 'widgets/activity_barrier.dart';
 

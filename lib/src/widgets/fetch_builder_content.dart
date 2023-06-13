@@ -1,6 +1,6 @@
-import 'package:fetcher/src/default_fetcher_config.dart';
+import 'package:fetcher/src/config/default_fetcher_config.dart';
 import 'package:fetcher/src/exceptions/fetch_exception.dart';
-import 'package:fetcher/src/fetcher_config.dart';
+import 'package:fetcher/src/config/fetcher_config.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 

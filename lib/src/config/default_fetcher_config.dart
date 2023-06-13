@@ -1,4 +1,4 @@
-import 'package:fetcher/src/fetcher_config.dart';
+import 'package:fetcher/src/config/fetcher_config.dart';
 import 'package:flutter/widgets.dart';
 
 class DefaultFetcherConfig extends InheritedWidget {

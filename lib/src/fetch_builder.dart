@@ -1,11 +1,11 @@
-import 'package:fetcher/src/default_fetcher_config.dart';
+import 'package:fetcher/src/config/default_fetcher_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:value_stream/value_stream.dart';
 
 import 'exceptions/connectivity_exception.dart';
 import 'exceptions/fetch_exception.dart';
-import 'fetcher_config.dart';
+import 'config/fetcher_config.dart';
 import 'utils.dart';
 import 'widgets/fetch_builder_content.dart';
 
