@@ -29,7 +29,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   /// You may pass a [task] to run, that will override widget's [task].
   final AsyncTaskChildBuilder<T> builder;
 
-  /// Called after task is successfully executed.
+  /// Called after [task] is successfully executed.
   final AsyncValueSetter<T>? onSuccess;
 
   @override

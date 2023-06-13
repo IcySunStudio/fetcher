@@ -9,12 +9,16 @@ import 'faded_animated_switcher.dart';
 class FetchBuilderContent<T> extends StatelessWidget {
   const FetchBuilderContent({
     super.key,
+    this.config,
     required this.snapshot,
     this.initBuilder,
     this.builder,
-    this.config,
   });
 
+  /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
+  final FetcherConfig? config;
+
+  /// Data snapshot
   final AsyncSnapshot<T> snapshot;
 
   /// Widget to display when snapshot is in [ConnectionState.none] state (before fetching has started).
@@ -22,9 +26,6 @@ class FetchBuilderContent<T> extends StatelessWidget {
 
   /// Child to display when data is available
   final DataWidgetBuilder<T>? builder;
-
-  /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
-  final FetcherConfig? config;
 
   @override
   Widget build(BuildContext context) {

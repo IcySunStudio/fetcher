@@ -37,9 +37,9 @@ class EventFetchBuilder<T> extends StatelessWidget {
       initialData: initialData,
       builder: (context, snapshot) {
         return FetchBuilderContent<T>(
+          config: config,
           snapshot: snapshot,
           builder: builder,
-          config: config,
         );
       },
     );

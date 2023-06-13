@@ -132,10 +132,10 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       stream: _stream,   // When stream is null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
         return FetchBuilderContent<_DataWrapper<R>?>(
+          config: widget.config,
           snapshot: snapshot,
           initBuilder: widget.initBuilder,
           builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),
-          config: widget.config,
         );
       },
     );

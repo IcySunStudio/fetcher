@@ -1,8 +1,10 @@
-import 'package:example/pages/async_task_builder.page.dart';
-import 'package:example/pages/event_fetch_builder.page.dart';
-import 'package:example/pages/fetch_builder.page.dart';
 import 'package:flutter/material.dart';
 import 'package:fetcher/fetcher.dart';
+
+import 'pages/fetch_builder.page.dart';
+import 'pages/async_task_builder.page.dart';
+import 'pages/event_fetch_builder.page.dart';
+import 'pages/async_edit_builder.page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -58,22 +60,27 @@ class _MyHomePageState extends State<MyHomePage> {
         destinations: const <Widget>[
           NavigationDestination(
             icon: Icon(Icons.download),
-            label: 'FetchBuilder',
+            label: 'Fetch',
           ),
           NavigationDestination(
             icon: Icon(Icons.keyboard_double_arrow_down),
-            label: 'EventFetchBuilder',
+            label: 'EventFetch',
           ),
           NavigationDestination(
             icon: Icon(Icons.upload),
-            label: 'AsyncTaskBuilder',
+            label: 'AsyncTask',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.sync),
+            label: 'AsyncEdit',
           ),
         ],
       ),
       body: <Widget>[
         const FetchBuilderPage(),
         const EventFetchBuilderPage(),
-        const AsyncTaskBuilderPage()
+        const AsyncTaskBuilderPage(),
+        const AsyncEditBuilderPage(),
       ][currentPageIndex],
     );
   }
