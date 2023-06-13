@@ -1,4 +1,5 @@
 
+import 'package:example/pages/async_task_builder.page.dart';
 import 'package:example/pages/event_fetch_builder.page.dart';
 import 'package:example/pages/fetch_builder.page.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       config: FetcherConfig(
         onDisplayError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.toString()),
+          backgroundColor: Colors.red,
         )),
       ),
       child: MaterialApp(
@@ -60,14 +62,19 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'FetchBuilder',
           ),
           NavigationDestination(
-            icon: Icon(Icons.sync),
+            icon: Icon(Icons.keyboard_double_arrow_down),
             label: 'EventFetchBuilder',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.upload),
+            label: 'AsyncTaskBuilder',
           ),
         ],
       ),
       body: <Widget>[
         const FetchBuilderPage(),
         const EventFetchBuilderPage(),
+        const AsyncTaskBuilderPage()
       ][currentPageIndex],
     );
   }

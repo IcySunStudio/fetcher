@@ -34,10 +34,36 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
 
   @override
   State<AsyncTaskBuilder<T>> createState() => _AsyncTaskBuilderState<T>();
+
+  /// Safely run a async task.
+  /// Headless version of [AsyncTaskBuilder].
+  static Future<void> runTask<T>({
+    required BuildContext context,
+    required AsyncValueGetter<T> task,
+    FetcherConfig? config,
+    AsyncValueSetter<T>? onSuccess,
+  }) async {
+    try {
+      // Run task
+      final result = await task();
+
+      // Success callback
+      onSuccess?.call(result);
+    } catch(e, s) {
+      // Get config
+      config = DefaultFetcherConfig.of(context).apply(config);
+
+      // Error callback
+      config.onError?.call(e, s);
+
+      // Display error callback
+      if (context.mounted) config.onDisplayError?.call(context, e);
+    }
+  }
 }
 
 class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
-  late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
+  late final config = DefaultFetcherConfig.of(context).apply(widget.config);
   bool _isBusy = false;
 
   @override
@@ -59,21 +85,20 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
     // Update UI
     setIsBusy(true);
 
-    try {
-      // Run task
-      final result = await (task ?? widget.task!)();
+    // Run task
+    await AsyncTaskBuilder.runTask<T>(
+      context: context,
+      config: config,
+      task: task ?? widget.task!,
+      onSuccess: (result) async {
+        if (mounted) {
+          await widget.onSuccess?.call(result);
+        }
+      },
+    );
 
-      // Update UI
-      if (mounted) await widget.onSuccess?.call(result);
-    } catch (e, s) {
-      // Report error first
-      config.onError!(e, s);
-
-      // Update UI
-      if (mounted) config.onDisplayError!(context, e);
-    } finally {
-      if (mounted) setIsBusy(false);
-    }
+    // Update UI
+    if (mounted) setIsBusy(false);
   }
 
   void setIsBusy(bool value) {
