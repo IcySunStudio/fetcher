@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:fetcher/src/utils.dart';
+import 'package:fetcher/src/utils/utils.dart';
 import '../async_task_builder.dart';
 import 'clear_focus_background.dart';
 

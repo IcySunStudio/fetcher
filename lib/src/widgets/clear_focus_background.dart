@@ -1,4 +1,4 @@
-import 'package:fetcher/src/utils.dart';
+import 'package:fetcher/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class ClearFocusBackground extends StatelessWidget {

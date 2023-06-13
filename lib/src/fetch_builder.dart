@@ -6,7 +6,7 @@ import 'package:value_stream/value_stream.dart';
 import 'exceptions/connectivity_exception.dart';
 import 'exceptions/fetch_exception.dart';
 import 'config/fetcher_config.dart';
-import 'utils.dart';
+import 'utils/utils.dart';
 import 'widgets/fetch_builder_content.dart';
 
 /// Widget that fetch data asynchronously, and display it when available.

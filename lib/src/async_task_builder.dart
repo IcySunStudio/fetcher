@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import 'config/default_fetcher_config.dart';
 import 'config/fetcher_config.dart';
-import 'utils.dart';
+import 'utils/utils.dart';
 import 'widgets/activity_barrier.dart';
 
 typedef AsyncTaskChildBuilder<T> = Widget Function(BuildContext context, TaskRunnerCallback<T> runTask);
