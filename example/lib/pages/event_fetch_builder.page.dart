@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:example/pages/fetch_builder.page.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +62,12 @@ class _EventFetchBuilderPageContent extends StatefulWidget {
 }
 
 class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageContent> {
-  late final EventStream<String> stream;
+  late final stream = EventStream<String>(widget.initialValue);
+
+  late final nullableStream = EventStream<int?>();
+  static const _nullableStreamValues = [ null, 1, 2, null, 3, null, 5, 6, 7, 8, null, 9];
+  int _nullableStreamIndex = 0;
+
   late final Timer timer;
 
   Future<String> fetchTask() async {
@@ -73,38 +79,70 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
     print('new fetch - starting');
     final value = await fetchTask();
     stream.add(value, skipIfClosed: true);
+    nullableStream.add(_nullableStreamValues[_nullableStreamIndex++ % _nullableStreamValues.length], skipIfClosed: true);
     print('new fetch - over');
   }
 
   @override
   void initState() {
     super.initState();
-    stream = EventStream(widget.initialValue);
     timer = Timer.periodic(const Duration(seconds: 5), (timer) => tick());
     tick();
   }
 
   @override
   Widget build(BuildContext context) {
-    return EventFetchBuilder<String>.fromEvent(
-      stream: stream,
-      builder: (context, data) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Data is fetched :',
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              data,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        );
-      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: EventFetchBuilder<String>.fromEvent(
+            stream: stream,
+            builder: (context, data) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Data is fetched :',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    data,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        const Separator(),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: EventFetchBuilder<int?>.fromEvent(
+            stream: nullableStream,
+            builder: (context, data) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Nullable data is fetched :',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    data?.toString() ?? 'null',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -112,6 +150,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
   void dispose() {
     timer.cancel();
     stream.close();
+    nullableStream.close();
     super.dispose();
   }
 }

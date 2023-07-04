@@ -1,3 +1,4 @@
+import 'package:fetcher/src/utils/data_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 
@@ -32,14 +33,14 @@ class EventFetchBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<T>(
-      stream: stream,
-      initialData: initialData,
+    return StreamBuilder<DataWrapper<T>>(
+      stream: stream.map(DataWrapper.new),
+      initialData: initialData != null ? DataWrapper(initialData as T) : null,
       builder: (context, snapshot) {
-        return FetchBuilderContent<T>(
+        return FetchBuilderContent<DataWrapper<T>>(
           config: config,
           snapshot: snapshot,
-          builder: builder,
+          builder: builder != null ? (context, value) => builder!(context, value.data) : null,
         );
       },
     );

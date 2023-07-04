@@ -1,3 +1,6 @@
+## 0.0.7
+* fix EventFetchBuilder when using stream with null values
+
 ## 0.0.6
 * Add FetchBuilder.initBuilder param (to be used with fetchAtInit false)
 * New static AsyncTaskBuilder.runTask method that allows to run headless task safely

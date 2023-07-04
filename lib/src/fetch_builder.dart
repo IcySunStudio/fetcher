@@ -6,6 +6,7 @@ import 'package:value_stream/value_stream.dart';
 import 'exceptions/connectivity_exception.dart';
 import 'exceptions/fetch_exception.dart';
 import 'config/fetcher_config.dart';
+import 'utils/data_wrapper.dart';
 import 'utils/utils.dart';
 import 'widgets/fetch_builder_content.dart';
 
@@ -90,11 +91,11 @@ class FetchBuilder<T, R> extends StatefulWidget {
 class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
 
-  EventStream<_DataWrapper<R>?>? _stream;
+  EventStream<DataWrapper<R>?>? _stream;
 
   /// Only init stream when needed.
   /// This allows to properly display [widget.initBuilder].
-  EventStream<_DataWrapper<R>?> _initStream() {
+  EventStream<DataWrapper<R>?> _initStream() {
     if (_stream == null) {
       setState(() {
         _stream = EventStream();
@@ -112,7 +113,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       try {
         final cachedData = widget.getFromCache!();
         if (cachedData != null) {
-          _initStream().add(_DataWrapper(cachedData));
+          _initStream().add(DataWrapper(cachedData));
         }
       } catch (e, s) {
         config.onError!(e, s);
@@ -128,10 +129,10 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
   @override
   Widget build(BuildContext context) {
-    return EventStreamBuilder<_DataWrapper<R>?>(
+    return EventStreamBuilder<DataWrapper<R>?>(
       stream: _stream,   // When stream is null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
-        return FetchBuilderContent<_DataWrapper<R>?>(
+        return FetchBuilderContent<DataWrapper<R>?>(
           config: widget.config,
           snapshot: snapshot,
           initBuilder: widget.initBuilder,
@@ -199,7 +200,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
       // Update UI
       if (isTaskValid()) {
-        stream.add(_DataWrapper(result));
+        stream.add(DataWrapper(result));
         return result;
       }
     } catch(e, s) {
@@ -214,14 +215,6 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
     _stream?.close();
     super.dispose();
   }
-}
-
-/// Small data wrapper, that allow data to be null when himself isn't.
-/// Allow to properly handle loading state when data may be null.
-class _DataWrapper<T> {
-  const _DataWrapper(this.data);
-
-  final T data;
 }
 
 /// A controller for an [FetchBuilder].
