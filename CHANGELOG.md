@@ -1,3 +1,6 @@
+## 0.0.8
+* Parameter retry of FetcherConfig.errorBuilder is now optional, to correctly handle EventFetchBuilder stream errors
+
 ## 0.0.7
 * fix EventFetchBuilder when using stream with null values
 

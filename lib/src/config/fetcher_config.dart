@@ -27,7 +27,7 @@ class FetcherConfig {
   final WidgetBuilder? fetchingBuilder;
 
   /// Widget to display on error
-  final Widget Function(BuildContext context, bool isDense, VoidCallback retry)? errorBuilder;
+  final Widget Function(BuildContext context, bool isDense, VoidCallback? retry)? errorBuilder;
 
   /// Called when an error occurred.
   /// Usually used to report error.
