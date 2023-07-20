@@ -41,16 +41,17 @@ class AsyncEditBuilder<T> extends StatefulWidget {
 }
 
 class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
-  late final config = DefaultFetcherConfig.of(context).apply(widget.config);
   final _fetcherController = ParameterizedFetchBuilderController<T, T>();
 
   @override
   Widget build(BuildContext context) {
     return FetchBuilder<T, T>.parameterized(
       controller: _fetcherController,
+      config: widget.config,
       task: (value) async => value ?? await widget.fetchTask(),
       builder: (context, data) {
         return AsyncTaskBuilder<T>(
+          config: widget.config,
           onSuccess: (data) => _fetcherController.refresh(param: data),
           builder: (context, runTask) => widget.builder(
             context,

@@ -1,3 +1,6 @@
+## 0.0.9
+* fix [AsyncEditBuilder] to correctly pass config
+
 ## 0.0.8
 * Parameter retry of FetcherConfig.errorBuilder is now optional, to correctly handle EventFetchBuilder stream errors
 
