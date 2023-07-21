@@ -1,3 +1,6 @@
+## 0.0.10
+* update to value_stream 0.0.4
+
 ## 0.0.9
 * fix [AsyncEditBuilder] to correctly pass config
 

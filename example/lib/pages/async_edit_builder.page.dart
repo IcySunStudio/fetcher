@@ -37,6 +37,9 @@ class AsyncEditBuilderPage extends StatelessWidget {
                 throw Exception('An error occured on commit : value is preserved');
               }
             },
+            config: FetcherConfig(
+              fetchingBuilder: (context) => Text('Loading...'),
+            ),
             builder: (context, selected, commit) {
               return ToggleButtons(
                 isSelected: values.map((value) => value == selected).toList(growable: false),

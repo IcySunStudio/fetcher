@@ -1,6 +1,6 @@
 name: fetcher
 description: Flutter package to Fetch and display asynchronous data easily
-version: 0.0.9
+version: 0.0.10
 repository: https://github.com/IcySunStudio/fetcher
 issue_tracker: https://github.com/IcySunStudio/fetcher/issues
 
@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
 
   # Framework Tools
-  value_stream: 0.0.3
+  value_stream: 0.0.4
 
 dev_dependencies:
   flutter_test:
