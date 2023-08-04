@@ -40,6 +40,12 @@ class AsyncEditBuilderPage extends StatelessWidget {
             config: FetcherConfig(
               fetchingBuilder: (context) => Text('Loading...'),
             ),
+            onEditSuccess: (data) async {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Commit success : $data'),
+              ));
+              await Future.delayed(const Duration(seconds: 1));
+            },
             builder: (context, selected, commit) {
               return ToggleButtons(
                 isSelected: values.map((value) => value == selected).toList(growable: false),

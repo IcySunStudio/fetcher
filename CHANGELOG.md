@@ -1,3 +1,6 @@
+## 0.0.11
+* fix AsyncEditBuilder.onEditSuccess not called
+
 ## 0.0.10
 * update to value_stream 0.0.4
 

@@ -48,7 +48,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
       final result = await task();
 
       // Success callback
-      onSuccess?.call(result);
+      await onSuccess?.call(result);
     } catch(e, s) {
       // Get config
       config = DefaultFetcherConfig.of(context).apply(config);

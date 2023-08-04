@@ -52,7 +52,10 @@ class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
       builder: (context, data) {
         return AsyncTaskBuilder<T>(
           config: widget.config,
-          onSuccess: (data) => _fetcherController.refresh(param: data),
+          onSuccess: (data) async {
+            await widget.onEditSuccess?.call(data);
+            await _fetcherController.refresh(param: data);
+          },
           builder: (context, runTask) => widget.builder(
             context,
             data,
