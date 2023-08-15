@@ -13,6 +13,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   const AsyncTaskBuilder({
     super.key,
     this.config,
+    this.runTaskOnStart = false,
     this.task,
     required this.builder,
     this.onSuccess,
@@ -20,6 +21,10 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
+
+  /// Whether to run the task on start.
+  /// Default to false.
+  final bool runTaskOnStart;
 
   /// Task to be executed.
   /// Will be overridden by task passed when calling [runTask] provided by [builder].
@@ -65,6 +70,14 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
 class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
   late final config = DefaultFetcherConfig.of(context).apply(widget.config);
   bool _isBusy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.runTaskOnStart) {
+      _runTask();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

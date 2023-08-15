@@ -1,3 +1,6 @@
+## 0.1.0
+* Add AsyncTaskBuilder.runTaskOnStart parameter
+
 ## 0.0.11
 * fix AsyncEditBuilder.onEditSuccess not called
 
