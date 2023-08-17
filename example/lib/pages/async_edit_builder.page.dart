@@ -67,6 +67,7 @@ class _PageContent extends StatelessWidget {
                   ));
                 },
                 fetchingBuilder: (context) => const _FavoriteButton(
+                  key: ValueKey('fetching'),    // Avoid fade blinking
                   selected: false,
                 ),
                 config: FetcherConfig(
@@ -78,7 +79,6 @@ class _PageContent extends StatelessWidget {
                       strokeWidth: iconButtonLoadingStrokeWidth,
                     ),
                   ),
-                  fade: false,
                 ),
                 builder: (context, selected, commit) {
                   return _FavoriteButton(
