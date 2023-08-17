@@ -32,7 +32,6 @@ class ActivityBarrier extends StatelessWidget {
             child: isBusy
               ? Container(
                   color: barrierColor ?? const Color(0x99FFFFFF),
-                  padding: const EdgeInsets.all(5),
                   alignment: Alignment.center,
                   child: busyBuilder(context),
                 )

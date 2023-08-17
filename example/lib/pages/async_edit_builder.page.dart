@@ -1,13 +1,46 @@
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
-class AsyncEditBuilderPage extends StatelessWidget {
+class AsyncEditBuilderPage extends StatefulWidget {
   const AsyncEditBuilderPage({super.key});
+
+  @override
+  State<AsyncEditBuilderPage> createState() => _AsyncEditBuilderPageState();
+}
+
+class _AsyncEditBuilderPageState extends State<AsyncEditBuilderPage> {
+  int _refreshKey = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+
+        FilledButton(
+          onPressed: () => setState(() => _refreshKey++),
+          child: const Text('Refresh widgets'),
+        ),
+
+        // Content
+        Expanded(
+          child: _PageContent(
+            key: ValueKey(_refreshKey),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PageContent extends StatelessWidget {
+  const _PageContent({super.key});
 
   static const values = [0, 2, 4, 8, 10];
 
   @override
   Widget build(BuildContext context) {
+    const iconButtonSize = 50.0;
+    const iconButtonLoadingStrokeWidth = 5.0;
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -15,48 +48,126 @@ class AsyncEditBuilderPage extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
 
-          // Text
+          // Simple toggle
           const Text(
-            'Tap on a cell to commit value.\nThe last cell throws an error.'
+            'Simple Toggle example',
           ),
           const SizedBox(height: 20),
-
-          // Content
-          AsyncEditBuilder<int>(
-            fetchTask: () async {
-              // Task that fetch data
-              await Future.delayed(const Duration(seconds: 2));
-              return values.first;
-            },
-            commitTask: (data) async {
-              // Task that commit data
-              await Future.delayed(const Duration(seconds: 1));
-
-              // Throw error (to test)
-              if (data == values.last) {
-                throw Exception('An error occured on commit : value is preserved');
-              }
-            },
-            config: FetcherConfig(
-              fetchingBuilder: (context) => Text('Loading...'),
+          SizedBox(
+            width: iconButtonSize,
+            height: iconButtonSize,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(500)), // Circular border to avoid ActivityBarrier overflow
+              child: AsyncEditBuilder<bool>(
+                fetchTask: () => Future.delayed(const Duration(seconds: 2), () => false),
+                commitTask: (data) => Future.delayed(const Duration(seconds: 1)),
+                onEditSuccess: (data) async {   // Use block body to force showSnackBar NOT to be awaited
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Commit success : $data'),
+                  ));
+                },
+                fetchingBuilder: (context) => const _FavoriteButton(
+                  selected: false,
+                ),
+                config: FetcherConfig(
+                  fetchingBuilder: (context) => const SizedBox(   // Force CircularProgressIndicator to be at the border
+                    width: iconButtonSize - iconButtonLoadingStrokeWidth / 2,
+                    height: iconButtonSize - iconButtonLoadingStrokeWidth / 2,
+                    child: CircularProgressIndicator(
+                      color: Colors.green,
+                      strokeWidth: iconButtonLoadingStrokeWidth,
+                    ),
+                  ),
+                  fade: false,
+                ),
+                builder: (context, selected, commit) {
+                  return _FavoriteButton(
+                    selected: selected,
+                    onPressed: () => commit(!selected),
+                  );
+                },
+              ),
             ),
-            onEditSuccess: (data) async {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Commit success : $data'),
-              ));
-              await Future.delayed(const Duration(seconds: 1));
-            },
-            builder: (context, selected, commit) {
-              return ToggleButtons(
-                isSelected: values.map((value) => value == selected).toList(growable: false),
-                onPressed: (index) => commit(values[index]),
-                children: values.map((value) {
-                  return Text(value.toString());
-                }).toList(growable: false),
-              );
-            },
           ),
+
+          // ToggleButtons
+          const SizedBox(height: 80),
+          const Text(
+            'Tap on a cell to commit value.\nThe last cell throws an error.',
+          ),
+          const SizedBox(height: 20),
+          Container(
+            height: 50,     // Avoids loading jumps
+            alignment: Alignment.center,
+            child: AsyncEditBuilder<int>(
+              fetchTask: () async {
+                // Task that fetch data
+                await Future.delayed(const Duration(seconds: 3));
+                return values.first;
+              },
+              commitTask: (data) async {
+                // Task that commit data
+                await Future.delayed(const Duration(seconds: 1));
+
+                // Throw error (to test)
+                if (data == values.last) {
+                  throw Exception('An error occured on commit : value is preserved');
+                }
+              },
+              config: FetcherConfig(
+                fetchingBuilder: (context) => Text('Loading...'),
+              ),
+              onEditSuccess: (data) async {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Commit success : $data'),
+                ));
+                await Future.delayed(const Duration(seconds: 1));   // Loading state will stay until [onEditSuccess] finished
+              },
+              builder: (context, selected, commit) {
+                return ToggleButtons(
+                  isSelected: values.map((value) => value == selected).toList(growable: false),
+                  onPressed: (index) => commit(values[index]),
+                  children: values.map((value) {
+                    return Text(value.toString());
+                  }).toList(growable: false),
+                );
+              },
+            ),
+          ),
+
         ],
+      ),
+    );
+  }
+}
+
+class _FavoriteButton extends StatelessWidget {
+  const _FavoriteButton({super.key, required this.selected, this.onPressed});
+
+  final bool selected;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    const size = 50.0;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Card(
+        margin: EdgeInsets.zero,
+        elevation: 0,
+        shape: const CircleBorder(),
+        color: onPressed == null ? Colors.grey : Theme.of(context).primaryColor,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onPressed,
+          child: Center(
+            child: Icon(
+              selected ? Icons.favorite : Icons.favorite_border,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+        ),
       ),
     );
   }

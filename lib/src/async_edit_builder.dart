@@ -13,6 +13,7 @@ class AsyncEditBuilder<T> extends StatefulWidget {
   const AsyncEditBuilder({
     super.key,
     this.config,
+    this.fetchingBuilder,
     required this.fetchTask,
     required this.commitTask,
     required this.builder,
@@ -20,7 +21,13 @@ class AsyncEditBuilder<T> extends StatefulWidget {
   });
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
+  /// Config is applied to both [FetchBuilder] and [AsyncTaskBuilder]
   final FetcherConfig? config;
+
+  /// Widget to display while fetching
+  /// Default to [config.fetchingBuilder]
+  /// If you want to change the committing widget, you should use [config.fetchingBuilder] instead.
+  final WidgetBuilder? fetchingBuilder;
 
   /// Task that fetch value
   /// If task throws, it will be properly handled
@@ -42,12 +49,17 @@ class AsyncEditBuilder<T> extends StatefulWidget {
 
 class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
   final _fetcherController = ParameterizedFetchBuilderController<T, T>();
+  late final _fetchBuilderConfig = () {
+    if (widget.fetchingBuilder == null) return widget.config;
+    final fetchingBuilderConfig = FetcherConfig(fetchingBuilder: widget.fetchingBuilder);
+    return widget.config == null ? fetchingBuilderConfig : widget.config!.apply(fetchingBuilderConfig);
+  } ();
 
   @override
   Widget build(BuildContext context) {
     return FetchBuilder<T, T>.parameterized(
       controller: _fetcherController,
-      config: widget.config,
+      config: _fetchBuilderConfig,
       task: (value) async => value ?? await widget.fetchTask(),
       builder: (context, data) {
         return AsyncTaskBuilder<T>(

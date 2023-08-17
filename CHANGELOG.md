@@ -1,3 +1,6 @@
+## 0.2.0
+* Add AsyncEditBuilder.fetchingBuilder parameter, to customize the fetching widget independently from the committing widget
+
 ## 0.1.0
 * Add AsyncTaskBuilder.runTaskOnStart parameter
 
