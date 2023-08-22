@@ -73,7 +73,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
   /// Called when [task] has completed with success
   final AsyncValueSetter<R>? onSuccess;
 
-  /// A controller used to programmatically show the refresh indicator and call the [onRefresh] callback.
+  /// A controller used to manually refresh data.
   final FetchBuilderControllerBase<T, R?>? controller;
 
   /// Optional function to provide data from cache at creation.

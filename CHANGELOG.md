@@ -1,3 +1,6 @@
+## 0.3.0
+* New PagedListViewFetcher widget, that fetches a paginated list of data, page by page.
+
 ## 0.2.0
 * Add AsyncEditBuilder.fetchingBuilder parameter, to customize the fetching widget independently from the committing widget
 

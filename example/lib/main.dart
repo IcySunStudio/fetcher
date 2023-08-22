@@ -5,6 +5,7 @@ import 'pages/fetch_builder.page.dart';
 import 'pages/async_task_builder.page.dart';
 import 'pages/event_fetch_builder.page.dart';
 import 'pages/async_edit_builder.page.dart';
+import 'pages/paged_fetcher_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -64,15 +65,19 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           NavigationDestination(
             icon: Icon(Icons.keyboard_double_arrow_down),
-            label: 'EventFetch',
+            label: 'Event',
           ),
           NavigationDestination(
             icon: Icon(Icons.upload),
-            label: 'AsyncTask',
+            label: 'Task',
           ),
           NavigationDestination(
             icon: Icon(Icons.sync),
-            label: 'AsyncEdit',
+            label: 'Edit',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.numbers),
+            label: 'Paged',
           ),
         ],
       ),
@@ -81,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const EventFetchBuilderPage(),
         const AsyncTaskBuilderPage(),
         const AsyncEditBuilderPage(),
+        const PagedFetcherPage(),
       ][currentPageIndex],
     );
   }

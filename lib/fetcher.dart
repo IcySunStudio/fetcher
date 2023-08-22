@@ -7,6 +7,7 @@ export 'src/fetch_builder.dart';
 export 'src/event_fetch_builder.dart';
 export 'src/async_task_builder.dart';
 export 'src/async_edit_builder.dart';
+export 'src/paged_list_view_fetcher.dart';
 
 export 'src/widgets/async_form.dart';
 export 'src/widgets/clear_focus_background.dart';
