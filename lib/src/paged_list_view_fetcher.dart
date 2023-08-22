@@ -18,6 +18,7 @@ class PagedListViewFetcher<T, P> extends StatefulWidget {
     this.emptyWidget,
     this.padding,
     this.itemExtent,
+    this.reverse = false,
   }) : assert(separator == null || itemExtent == null);
 
   /// A controller used to manually refresh data.
@@ -41,6 +42,9 @@ class PagedListViewFetcher<T, P> extends StatefulWidget {
   /// The extent the item will have.
   /// Only work if [separator] is null.
   final double? itemExtent;
+
+  /// If true, the list will be reversed.
+  final bool reverse;
 
   @override
   State<PagedListViewFetcher<T, P>> createState() => _PagedListViewFetcherState<T, P>();
@@ -107,6 +111,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
         if (widget.separator != null) {
           return ListView.separated(
             padding: widget.padding,
+            reverse: widget.reverse,
             itemCount: itemCount,
             separatorBuilder: (_, __) => widget.separator!,
             itemBuilder: _itemBuilder,
@@ -114,6 +119,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
         } else {
           return ListView.builder(
             padding: widget.padding,
+            reverse: widget.reverse,
             itemCount: itemCount,
             itemExtent: widget.itemExtent,
             itemBuilder: _itemBuilder,
