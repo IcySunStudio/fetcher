@@ -39,7 +39,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.9"
+    version: "0.4.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -150,10 +150,10 @@ packages:
     dependency: transitive
     description:
       name: value_stream
-      sha256: df6edf6fbc3c1e1b34c34855a7509b56b40463b238345dc8962f2d7d8fa7c44e
+      sha256: aad843f2dab2fa167a26c1b99c4d077340241c9f2c2f41c2e643a3c60daf4f04
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.4"
+    version: "0.1.0"
   vector_math:
     dependency: transitive
     description:

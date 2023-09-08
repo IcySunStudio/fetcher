@@ -10,20 +10,13 @@ import 'widgets/fetch_builder_content.dart';
 /// It's like [FetchBuilder] but instead of directly calling a task once, it will listen to a stream and his updates.
 /// Handle all possible states: loading, loaded, errors.
 class EventFetchBuilder<T> extends StatelessWidget {
-  /// Build a new [EventFetchBuilder] from a classic [Stream], with optional [initialData]
-  const EventFetchBuilder({super.key, required this.stream, this.initialData, this.builder, this.config});
-
   /// Build a new [EventFetchBuilder] from an [EventStream]
-  /// If stream already has a value, it will be displayed directly.
-  EventFetchBuilder.fromEvent({super.key, required EventStream<T> stream, this.builder, this.config}) :
-        stream = stream.innerStream, initialData = stream.valueOrNull;
+  /// If stream already has a value or an error, it will be displayed directly.
+  const EventFetchBuilder({super.key, required this.stream, this.builder, this.config});
 
   /// The [Stream] to listen to.
   /// A progress indicator will be displayed while waiting for first emitted value.
-  final Stream<T> stream;
-
-  /// Initial value
-  final T? initialData;
+  final EventStream<T> stream;
 
   /// Child to display when data is available
   final DataWidgetBuilder<T>? builder;
@@ -33,9 +26,10 @@ class EventFetchBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DataWrapper<T>>(
-      stream: stream.map(DataWrapper.new),
-      initialData: initialData != null ? DataWrapper(initialData as T) : null,
+    return EventStreamBuilder<DataWrapper<T>>.fromStream(   // OPTI use default EventStreamBuilder constructor instead (cleaner). But need to a implement EventStream.map method, which is no easy task.
+      stream: stream.innerStream.map(DataWrapper.new),
+      initialData: stream.valueOrNull != null ? DataWrapper(stream.valueOrNull as T) : null,
+      initialError: stream.error,
       builder: (context, snapshot) {
         return FetchBuilderContent<DataWrapper<T>>(
           config: config,

@@ -14,6 +14,7 @@ class EventFetchBuilderPage extends StatefulWidget {
 class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
   int _refreshKey = 0;
   bool withInitialValue = false;
+  bool withInitialError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,15 @@ class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
           onChanged: (value) {
             setState(() {
               withInitialValue = value!;
+            });
+          },
+        ),
+        CheckboxListTile(
+          title: const Text('With initial error'),
+          value: withInitialError,
+          onChanged: (value) {
+            setState(() {
+              withInitialError = value!;
             });
           },
         ),
@@ -45,6 +55,7 @@ class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
           child: _EventFetchBuilderPageContent(
             key: ValueKey(_refreshKey),
             initialValue: withInitialValue ? 'Initial value' : null,
+            initialError: withInitialError ? Error() : null,
           ),
         ),
       ],
@@ -53,9 +64,10 @@ class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
 }
 
 class _EventFetchBuilderPageContent extends StatefulWidget {
-  const _EventFetchBuilderPageContent({super.key, this.initialValue});
+  const _EventFetchBuilderPageContent({super.key, this.initialValue, this.initialError});
 
   final String? initialValue;
+  final Object? initialError;
 
   @override
   State<_EventFetchBuilderPageContent> createState() => _EventFetchBuilderPageContentState();
@@ -68,7 +80,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
   static const _nullableStreamValues = [ null, 1, 2, null, 3, null, 5, 6, 7, 8, null, 9];
   int _nullableStreamIndex = 0;
 
-  late final Timer timer;
+  Timer? _timer;
 
   Future<String> fetchTask() async {
     await Future.delayed(const Duration(seconds: 2));
@@ -86,8 +98,12 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) => tick());
-    tick();
+    if (widget.initialError != null) {
+      stream.addError(widget.initialError!);
+    } else {
+      _timer = Timer.periodic(const Duration(seconds: 5), (timer) => tick());
+      tick();
+    }
   }
 
   @override
@@ -97,7 +113,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
       children: [
         Padding(
           padding: const EdgeInsets.all(20),
-          child: EventFetchBuilder<String>.fromEvent(
+          child: EventFetchBuilder<String>(
             stream: stream,
             builder: (context, data) {
               return Column(
@@ -121,7 +137,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
         const Separator(),
         Padding(
           padding: const EdgeInsets.all(20),
-          child: EventFetchBuilder<int?>.fromEvent(
+          child: EventFetchBuilder<int?>(
             stream: nullableStream,
             builder: (context, data) {
               return Column(
@@ -148,7 +164,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
 
   @override
   void dispose() {
-    timer.cancel();
+    _timer?.cancel();
     stream.close();
     nullableStream.close();
     super.dispose();
