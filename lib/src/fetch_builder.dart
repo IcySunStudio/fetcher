@@ -133,7 +133,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       stream: _stream,   // When stream is null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
         return FetchBuilderContent<DataWrapper<R>?>(
-          config: widget.config,
+          config: config,     // Use config from state, not from widget, to force field to be initialized at init. Otherwise, if an error occurs in _fetch while state is unmounted, accessing the config will throw an error because context is unmounted.
           snapshot: snapshot,
           initBuilder: widget.initBuilder,
           builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),

@@ -1,3 +1,6 @@
+## 0.4.1
+* Fix FetchBuilder error that may occur when task throws when state is unmounted
+
 ## 0.4.0
 * BREAKING: EventFetchBuilder.fromEvent constructor is replaced by default constructor
 * EventFetchBuilder now internally use EventStreamBuilder, which allow to properly handle initial error

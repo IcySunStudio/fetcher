@@ -29,6 +29,24 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
     return Column(
       children: [
 
+        // Unmounted state test
+        // Test error handling when state is unmounted
+        ElevatedButton(
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+            appBar: AppBar(
+              title: const Text('Unmounted state test'),
+            ),
+            body: FetchBuilder.basic<Object>(
+              task: () async {
+                await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.of(context).pop());
+                await Future.delayed(const Duration(seconds: 2));
+                throw Exception('test');
+              },
+            ),
+          ))),
+          child: const Text('Unmounted state test'),
+        ),
+
         // Header
         const SizedBox(height: 20),
         const _Title(title: 'Fetcher with parameters'),
