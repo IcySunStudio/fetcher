@@ -1,3 +1,6 @@
+## 0.5.0
+* Add barrierColor parameter to AsyncTaskBuilder
+
 ## 0.4.1
 * Fix FetchBuilder error that may occur when task throws when state is unmounted
 

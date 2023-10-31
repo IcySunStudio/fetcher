@@ -13,6 +13,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   const AsyncTaskBuilder({
     super.key,
     this.config,
+    this.barrierColor,
     this.runTaskOnStart = false,
     this.task,
     required this.builder,
@@ -21,6 +22,11 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
+
+  /// Color of the barrier, displayed when running the task.
+  /// Default to a translucent white.
+  /// Use [Colors.transparent] to hide completely the barrier (still blocks interactions).
+  final Color? barrierColor;
 
   /// Whether to run the task on start.
   /// Default to false.
@@ -83,6 +89,7 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
   Widget build(BuildContext context) {
     return ActivityBarrier(
       duration: config.fadeDuration!,
+      barrierColor: widget.barrierColor,
       busyBuilder: config.fetchingBuilder!,
       isBusy: _isBusy,
       child: widget.builder(context, _runTask),

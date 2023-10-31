@@ -1,6 +1,8 @@
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
+import 'fetch_builder.page.dart';
+
 class AsyncTaskBuilderPage extends StatefulWidget {
   const AsyncTaskBuilderPage({super.key});
 
@@ -30,7 +32,7 @@ class _AsyncTaskBuilderPageState extends State<AsyncTaskBuilderPage> {
           },
         ),
 
-        // Content
+        // Classic AsyncTaskBuilder
         Expanded(
           child: AsyncTaskBuilder<String>(
             key: ValueKey(_refreshKey),
@@ -66,6 +68,27 @@ class _AsyncTaskBuilderPageState extends State<AsyncTaskBuilderPage> {
                   ),
 
                 ],
+              );
+            },
+          ),
+        ),
+
+        // Very small context, override barrierColor to transparent for proper clipping
+        const Separator(),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: AsyncTaskBuilder<void>(
+            task: () => Future.delayed(const Duration(seconds: 3)),
+            onSuccess: (_) async => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Success !'),
+            )),
+            barrierColor: Colors.transparent,
+            builder: (context, runTask) {
+              return FloatingActionButton(
+                mini: true,
+                onPressed: runTask,
+                backgroundColor: Colors.green,
+                child: const Icon(Icons.run_circle_outlined),
               );
             },
           ),

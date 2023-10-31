@@ -12,10 +12,21 @@ class ActivityBarrier extends StatelessWidget {
     required this.child,
   });
 
+  /// Duration of the fade animation.
   final Duration duration;
+
+  /// Color of the barrier, displayed when running the task.
+  /// Default to a translucent white.
+  /// Use [Colors.transparent] to hide completely the barrier (still blocks interactions).
   final Color? barrierColor;
+
+  /// Builder for the busy indicator.
   final WidgetBuilder busyBuilder;
+
+  /// Whether to display the barrier.
   final bool isBusy;
+
+  /// Child to display (behind the barrier).
   final Widget child;
 
   @override
