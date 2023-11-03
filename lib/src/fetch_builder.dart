@@ -186,13 +186,18 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
       return null;
     }
 
+    // Save to cache
+    if (widget.saveToCache != null && isTaskValid()) {
+      try {
+        widget.saveToCache!(result);
+      } catch (e, s) {
+        // Just report error, then continue
+        config.onError!(e, s);
+      }
+    }
+
     // Run post tasks
     try {
-      // Save to cache
-      if (isTaskValid()) {
-        widget.saveToCache?.call(result);
-      }
-
       // Call onSuccess
       if (isTaskValid()) {
         await widget.onSuccess?.call(result);

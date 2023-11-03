@@ -1,3 +1,6 @@
+## 0.5.1
+* Properly handle when FetchBuilder.saveToCache throws  
+
 ## 0.5.0
 * Add barrierColor parameter to AsyncTaskBuilder
 
