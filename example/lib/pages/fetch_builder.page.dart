@@ -16,6 +16,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
   bool withError = false;
   bool dataClear = false;
+  FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
 
   Future<String> fetchTask(bool? withError) async {
     final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Europe/Paris'));
@@ -54,6 +55,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
         // Settings
         CheckboxListTile(
           title: const Text('Clear data first'),
+          dense: true,
           value: dataClear,
           onChanged: (value) {
             setState(() {
@@ -63,6 +65,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
         ),
         CheckboxListTile(
           title: const Text('With error'),
+          dense: true,
           value: withError,
           onChanged: (value) {
             setState(() {
@@ -70,10 +73,21 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
             });
           },
         ),
+        SwitchListTile(
+          title: Text('Display error : ${errorDisplayMode == FetchErrorDisplayMode.inWidget ? 'in widget' : 'on display'}'),
+          subtitle: const Text('Only effective on refresh'),
+          dense: true,
+          value: errorDisplayMode == FetchErrorDisplayMode.inWidget,
+          onChanged: (value) {
+            setState(() {
+              errorDisplayMode = value ? FetchErrorDisplayMode.inWidget : FetchErrorDisplayMode.onDisplay;
+            });
+          },
+        ),
 
         // Button
         ElevatedButton(
-          onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError),
+          onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError, errorDisplayMode: errorDisplayMode),
           child: const Text('Refresh'),
         ),
 

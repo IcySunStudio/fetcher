@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:value_stream/value_stream.dart';
 
-import 'exceptions/connectivity_exception.dart';
 import 'exceptions/fetch_exception.dart';
 import 'config/fetcher_config.dart';
 import 'utils/data_wrapper.dart';
@@ -145,7 +144,7 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   /// Store last started task id
   int _lastFetchTaskId = 0;
 
-  Future<R?> _fetch({T? param, bool? clearDataFirst, bool? showErrors}) async {
+  Future<R?> _fetch({T? param, bool? clearDataFirst, FetchErrorDisplayMode? errorDisplayMode}) async {
     // Save task id
     final taskId = ++_lastFetchTaskId;
     bool isTaskValid() => mounted && taskId == _lastFetchTaskId;
@@ -170,14 +169,22 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
       // Update UI
       if (isTaskValid()) {
-        // Broadcast error, but not if there already is data and it's just a [ConnectivityException]
-        if (e is! ConnectivityException || stream.valueOrNull == null) {
-          stream.addError(FetchException(e, () => _fetch(param: param, showErrors: true)));
+        // Set display mode default value
+        errorDisplayMode ??= FetchErrorDisplayMode.values.first;
+
+        // Display "in widget" if asked OR if no data is available (because widget will be in loading state)
+        final inWidget = errorDisplayMode == FetchErrorDisplayMode.inWidget || stream.valueOrNull == null;
+
+        // Display "on display" if asked
+        final onDisplay = errorDisplayMode == FetchErrorDisplayMode.onDisplay;
+
+        // Display error in widget
+        if (inWidget) {
+          stream.addError(FetchException(e, () => _fetch(param: param, errorDisplayMode: FetchErrorDisplayMode.onDisplay)));
         }
 
-        // Display error to user, if asked.
-        // Default to false, to avoid displaying error when fetch has been started from code: user may be on another screen.
-        if (showErrors == true) {
+        // Display error in display
+        if (onDisplay) {
           config.onDisplayError!(context, e);
         }
       }
@@ -222,6 +229,17 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
   }
 }
 
+enum FetchErrorDisplayMode {
+  /// Display error inside the widget, replacing content.
+  /// Will use [FetcherConfig.fetchErrorBuilder] to build the error widget.
+  /// Default mode.
+  inWidget,
+
+  /// Display error to user.
+  /// Will call [FetcherConfig.onDisplayError] to display the error.
+  onDisplay,
+}
+
 /// A controller for an [FetchBuilder].
 ///
 /// Only support one widget per controller.
@@ -248,12 +266,12 @@ abstract class FetchBuilderControllerBase<T, R> {
 
 class ParameterizedFetchBuilderController<T, R> extends FetchBuilderControllerBase<T, R> {
   @override
-  Future<R?> refresh({T? param, bool? clearDataFirst, bool? userAsked}) =>
-      _state!._fetch(param: param, clearDataFirst: clearDataFirst, showErrors: userAsked);
+  Future<R?> refresh({T? param, bool? clearDataFirst, FetchErrorDisplayMode? errorDisplayMode}) =>
+      _state!._fetch(param: param, clearDataFirst: clearDataFirst, errorDisplayMode: errorDisplayMode);
 }
 
 class BasicFetchBuilderController<R> extends FetchBuilderControllerBase<Never, R> {
   @override
-  Future<R?> refresh({bool? clearDataFirst, bool? userAsked}) =>
-      _state!._fetch(clearDataFirst: clearDataFirst, showErrors: userAsked);
+  Future<R?> refresh({bool? clearDataFirst, FetchErrorDisplayMode? errorDisplayMode}) =>
+      _state!._fetch(clearDataFirst: clearDataFirst, errorDisplayMode: errorDisplayMode);
 }

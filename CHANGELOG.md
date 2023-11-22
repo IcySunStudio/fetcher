@@ -1,58 +1,63 @@
+## 0.6.0
+* BREAKING: New `FetchBuilder` error display handling using `FetchErrorDisplayMode`
+* BREAKING: Remove `ConnectivityException` & `UnreportedException`
+* BREAKING: Rename `FetchBuilder.errorBuilder` to `FetchBuilder.fetchErrorBuilder`
+
 ## 0.5.1
-* Properly handle when FetchBuilder.saveToCache throws  
+* Properly handle when `FetchBuilder.saveToCache` throws  
 
 ## 0.5.0
-* Add barrierColor parameter to AsyncTaskBuilder
+* Add `barrierColor` parameter to `AsyncTaskBuilder`
 
 ## 0.4.1
-* Fix FetchBuilder error that may occur when task throws when state is unmounted
+* Fix `FetchBuilder` error that may occur when task throws when state is unmounted
 
 ## 0.4.0
-* BREAKING: EventFetchBuilder.fromEvent constructor is replaced by default constructor
-* EventFetchBuilder now internally use EventStreamBuilder, which allow to properly handle initial error
+* BREAKING: `EventFetchBuilder.fromEvent` constructor is replaced by default constructor
+* `EventFetchBuilder` now internally use `EventStreamBuilder`, which allow to properly handle initial error
 
 ## 0.3.0
-* New PagedListViewFetcher widget, that fetches a paginated list of data, page by page
+* New `PagedListViewFetcher` widget, that fetches a paginated list of data, page by page
 
 ## 0.2.0
-* Add AsyncEditBuilder.fetchingBuilder parameter, to customize the fetching widget independently from the committing widget
+* Add `AsyncEditBuilder.fetchingBuilder` parameter, to customize the fetching widget independently from the committing widget
 
 ## 0.1.0
-* Add AsyncTaskBuilder.runTaskOnStart parameter
+* Add `AsyncTaskBuilder.runTaskOnStart` parameter
 
 ## 0.0.11
-* fix AsyncEditBuilder.onEditSuccess not called
+* fix `AsyncEditBuilder.onEditSuccess` not called
 
 ## 0.0.10
-* update to value_stream 0.0.4
+* update to `value_stream` 0.0.4
 
 ## 0.0.9
-* fix [AsyncEditBuilder] to correctly pass config
+* fix `AsyncEditBuilder` to correctly pass config
 
 ## 0.0.8
-* Parameter retry of FetcherConfig.errorBuilder is now optional, to correctly handle EventFetchBuilder stream errors
+* Parameter retry of `FetcherConfig.errorBuilder` is now optional, to correctly handle `EventFetchBuilder` stream errors
 
 ## 0.0.7
-* fix EventFetchBuilder when using stream with null values
+* fix `EventFetchBuilder` when using stream with null values
 
 ## 0.0.6
-* Add FetchBuilder.initBuilder param (to be used with fetchAtInit false)
-* New static AsyncTaskBuilder.runTask method that allows to run headless task safely
-* New AsyncEditBuilder
+* Add `FetchBuilder.initBuilder` param (to be used with `fetchAtInit` false)
+* New static `AsyncTaskBuilder.runTask` method that allows to run headless task safely
+* New `AsyncEditBuilder`
 
 ## 0.0.5
-* Default FetchBuilderErrorWidget now handles isDense parameter
-* New EventFetchBuilder widget
-* Move isDense and fade inside FetcherConfig
-* Expose ClearFocusBackground
-* Rename reportError to onError AND showError to onDisplayError
+* Default `FetchBuilderErrorWidget` now handles `isDense` parameter
+* New `EventFetchBuilder` widget
+* Move `isDense` and fade inside `FetcherConfig`
+* Expose `ClearFocusBackground`
+* Rename `reportError` to `onError` AND `showError` to `onDisplayError`
 
 ## 0.0.4
-* Replace rxdart dependency by value_stream
-* Remove ValueStreamBuilder (use EventStreamBuilder from value_stream)
+* Replace `rxdart` dependency by `value_stream`
+* Remove `ValueStreamBuilder` (use `EventStreamBuilder` from `value_stream`)
 
 ## 0.0.3
-* New AsyncForm widget
+* New `AsyncForm` widget
 * Code clean-up
 
 ## 0.0.1-dev1
