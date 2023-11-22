@@ -8,7 +8,7 @@ class FetcherConfig {
     this.fade,
     this.fadeDuration,
     this.fetchingBuilder,
-    this.errorBuilder,
+    this.fetchErrorBuilder,
     this.onError,
     this.onDisplayError,
   });
@@ -17,17 +17,19 @@ class FetcherConfig {
   /// Will affect default error widget density.
   final bool? isDense;
 
-  /// Whether to enable a fading transition between states
+  /// Whether to enable a fading transition between states.
   final bool? fade;
 
-  /// Duration of the [fade] transition
+  /// Duration of the [fade] transition.
   final Duration? fadeDuration;
 
-  /// Widget to display while fetching
+  /// Widget to display while fetching.
   final WidgetBuilder? fetchingBuilder;
 
-  /// Widget to display on error
-  final Widget Function(BuildContext context, bool isDense, VoidCallback? retry)? errorBuilder;
+  /// Widget to display on fetch error.
+  /// Replace whole widget content.
+  /// Default to [FetchBuilderErrorWidget], includes a retry button.
+  final Widget Function(BuildContext context, bool isDense, VoidCallback? retry)? fetchErrorBuilder;
 
   /// Called when an error occurred.
   /// Usually used to report error.
@@ -45,7 +47,7 @@ class FetcherConfig {
     fetchingBuilder: (_) => const Center(
       child: CircularProgressIndicator(),
     ),
-    errorBuilder: (_, isDense, retry) => FetchBuilderErrorWidget(isDense: isDense, onRetry: retry),
+    fetchErrorBuilder: (_, isDense, retry) => FetchBuilderErrorWidget(isDense: isDense, onRetry: retry),
     onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
     onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
   );
@@ -58,7 +60,7 @@ class FetcherConfig {
       fade: config.fade ?? fade,
       fadeDuration: config.fadeDuration ?? fadeDuration,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
-      errorBuilder: config.errorBuilder ?? errorBuilder,
+      fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
       onError: config.onError ?? onError,
       onDisplayError: config.onDisplayError ?? onDisplayError,
     );

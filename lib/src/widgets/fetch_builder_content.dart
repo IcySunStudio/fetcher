@@ -36,7 +36,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
         return initBuilder?.call(context) ?? const SizedBox();
       } else if (snapshot.hasError) {
         final error = snapshot.error;
-        return config.errorBuilder!(context, config.isDense == true, error is FetchException ? error.retry : null);
+        return config.fetchErrorBuilder!(context, config.isDense == true, error is FetchException ? error.retry : null);
       } else if (!snapshot.hasData) {
         return config.fetchingBuilder!(context);
       } else {
