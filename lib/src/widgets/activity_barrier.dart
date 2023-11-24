@@ -42,6 +42,7 @@ class ActivityBarrier extends StatelessWidget {
             duration: duration,
             child: isBusy
               ? Container(
+                  key: const ValueKey('barrier'),    // Enforce AnimatedSwitcher to animate on reverse (without this, may not animate on reverse)
                   color: barrierColor ?? const Color(0x99FFFFFF),
                   alignment: Alignment.center,
                   child: busyBuilder(context),

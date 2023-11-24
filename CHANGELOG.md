@@ -1,3 +1,6 @@
+## 0.6.1
+* fix ActivityBarrier reverse animation
+
 ## 0.6.0
 * BREAKING: New `FetchBuilder` error display handling using `FetchErrorDisplayMode`
 * BREAKING: Remove `ConnectivityException` & `UnreportedException`
