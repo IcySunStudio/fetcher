@@ -1,3 +1,7 @@
+## 0.6.2
+* replace `findAncestorWidgetOfExactType` by `getInheritedWidgetOfExactType` for better performance
+* fix `AsyncTaskBuilder.runTask` catch bloc throwing because of unmounted context
+
 ## 0.6.1
 * fix ActivityBarrier reverse animation
 

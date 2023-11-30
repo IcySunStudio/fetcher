@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultFetcherConfig(
       config: FetcherConfig(
+        fetchingBuilder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)),
         onDisplayError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(error.toString()),
           backgroundColor: Colors.red,

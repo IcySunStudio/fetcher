@@ -61,14 +61,16 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
       // Success callback
       await onSuccess?.call(result);
     } catch(e, s) {
-      // Get config
-      config = DefaultFetcherConfig.of(context).apply(config);
+      // Get default config if context is mounted
+      if (context.mounted) {
+        config = DefaultFetcherConfig.of(context).apply(config);
+      }
 
       // Error callback
-      config.onError?.call(e, s);
+      config?.onError?.call(e, s);
 
       // Display error callback
-      if (context.mounted) config.onDisplayError?.call(context, e);
+      if (context.mounted) config?.onDisplayError?.call(context, e);
     }
   }
 }
