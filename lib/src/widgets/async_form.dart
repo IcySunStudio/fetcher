@@ -1,23 +1,22 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:fetcher/src/async_task_builder.dart';
 import 'package:fetcher/src/utils/utils.dart';
-import '../async_task_builder.dart';
 import 'clear_focus_background.dart';
 
-typedef AsyncFormChildBuilder = Widget Function(BuildContext context, VoidCallback validate);
-
-class AsyncForm extends StatelessWidget {
+/// Wrapper around [AsyncTaskBuilder] adapted for form validation.
+class AsyncForm<T> extends StatelessWidget {
   const AsyncForm({super.key, required this.builder, this.onValidated, this.onSuccess});
 
   /// Child widget builder that provide a [validate] callback to be called when needed.
-  final AsyncFormChildBuilder builder;
+  final AsyncTaskChildBuilder<T> builder;
 
   /// Called when the form has been validated
-  final AsyncCallback? onValidated;
+  final AsyncValueGetter<T>? onValidated;
 
   /// Called when the [onValidated] task has successfully completed
-  final AsyncCallback? onSuccess;
+  final AsyncValueSetter<T>? onSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +24,11 @@ class AsyncForm extends StatelessWidget {
       child: Form(
         child: Builder(
           builder: (context) {
-            return AsyncTaskBuilder<void>(
-              task: onValidated != null ? onValidated! : () async {},
-              onSuccess: onSuccess != null ? (_) => onSuccess!() : null,
-              builder: (context, runTask) => builder(context, () => context.validateForm(
-                onSuccess: runTask,
+            return AsyncTaskBuilder<T>(
+              task: onValidated,
+              onSuccess: onSuccess,
+              builder: (context, runTask) => builder(context, ([task]) => context.validateForm(
+                onSuccess: () => runTask(task),
               )),
             );
           },

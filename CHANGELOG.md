@@ -1,3 +1,7 @@
+## 1.0.0
+* BREAKING: `AsyncForm` is now generic and handles a parameter of type `T` to be passed on.
+* Add new `AsyncFormPage` in the example app.
+
 ## 0.6.2
 * replace `findAncestorWidgetOfExactType` by `getInheritedWidgetOfExactType` for better performance
 * fix `AsyncTaskBuilder.runTask` catch bloc throwing because of unmounted context

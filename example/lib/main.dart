@@ -3,6 +3,7 @@ import 'package:fetcher/fetcher.dart';
 
 import 'pages/fetch_builder.page.dart';
 import 'pages/async_task_builder.page.dart';
+import 'pages/async_form.page.dart';
 import 'pages/event_fetch_builder.page.dart';
 import 'pages/async_edit_builder.page.dart';
 import 'pages/paged_fetcher_page.dart';
@@ -73,6 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Task',
           ),
           NavigationDestination(
+            icon: Icon(Icons.edit_document),
+            label: 'Form',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.sync),
             label: 'Edit',
           ),
@@ -86,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const FetchBuilderPage(),
         const EventFetchBuilderPage(),
         const AsyncTaskBuilderPage(),
+        const AsyncFormPage(),
         const AsyncEditBuilderPage(),
         const PagedFetcherPage(),
       ][currentPageIndex],
