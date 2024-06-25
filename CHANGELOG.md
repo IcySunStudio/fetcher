@@ -1,3 +1,6 @@
+## 2.0.0
+* BREAKING: `fetchErrorBuilder` now passes error object to the builder, so error can be used in widget.
+
 ## 1.0.0
 * BREAKING: `AsyncForm` is now generic and handles a parameter of type `T` to be passed on.
 * Add new `AsyncFormPage` in the example app.

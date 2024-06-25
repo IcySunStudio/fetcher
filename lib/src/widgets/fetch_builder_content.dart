@@ -1,6 +1,7 @@
 import 'package:fetcher/src/config/default_fetcher_config.dart';
 import 'package:fetcher/src/exceptions/fetch_exception.dart';
 import 'package:fetcher/src/config/fetcher_config.dart';
+import 'package:fetcher/src/models/fetcher_config_error_data.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 
@@ -35,8 +36,8 @@ class FetchBuilderContent<T> extends StatelessWidget {
       if (snapshot.connectionState == ConnectionState.none) {
         return initBuilder?.call(context) ?? const SizedBox();
       } else if (snapshot.hasError) {
-        final error = snapshot.error;
-        return config.fetchErrorBuilder!(context, config.isDense == true, error is FetchException ? error.retry : null);
+        final error = snapshot.error!;
+        return config.fetchErrorBuilder!(context, FetcherConfigErrorData(error, config.isDense == true, error is FetchException ? error.retry : null));
       } else if (!snapshot.hasData) {
         return config.fetchingBuilder!(context);
       } else {

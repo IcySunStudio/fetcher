@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:value_stream/value_stream.dart';
 
-import 'exceptions/fetch_exception.dart';
-import 'config/fetcher_config.dart';
-import 'utils/data_wrapper.dart';
-import 'utils/utils.dart';
-import 'widgets/fetch_builder_content.dart';
+import '../exceptions/fetch_exception.dart';
+import '../config/fetcher_config.dart';
+import '../utils/data_wrapper.dart';
+import '../utils/utils.dart';
+import '../widgets/fetch_builder_content.dart';
 
 /// Widget that fetch data asynchronously, and display it when available.
 /// Handle all possible states: loading, loaded, errors.

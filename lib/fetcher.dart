@@ -3,7 +3,7 @@ library fetcher;
 export 'src/config/default_fetcher_config.dart';
 export 'src/config/fetcher_config.dart';
 
-export 'src/fetch_builder.dart';
+export 'src/models/fetch_builder.dart';
 export 'src/event_fetch_builder.dart';
 export 'src/async_task_builder.dart';
 export 'src/async_edit_builder.dart';
