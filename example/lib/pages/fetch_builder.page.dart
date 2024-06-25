@@ -169,7 +169,7 @@ class Separator extends StatelessWidget {
 }
 
 class _Title extends StatelessWidget {
-  const _Title({super.key, required this.title});
+  const _Title({required this.title});
 
   final String title;
 

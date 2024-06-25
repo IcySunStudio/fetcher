@@ -115,7 +115,7 @@ class _PageContent extends StatelessWidget {
                 }
               },
               config: FetcherConfig(
-                fetchingBuilder: (context) => Text('Loading...'),
+                fetchingBuilder: (context) => const Text('Loading...'),
               ),
               onEditSuccess: (data) async {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
