@@ -1,4 +1,4 @@
-import 'package:fetcher/src/models/fetcher_config_error_data.dart';
+import 'package:fetcher/src/models/fetch_error_data.dart';
 import 'package:fetcher/src/widgets/fetch_builder_error_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +30,7 @@ class FetcherConfig {
   /// Widget to display on fetch error.
   /// Replace whole widget content.
   /// Default to [FetchBuilderErrorWidget], includes a retry button.
-  final Widget Function(BuildContext context, FetcherConfigErrorData errorData)? fetchErrorBuilder;
+  final Widget Function(BuildContext context, FetchErrorData errorData)? fetchErrorBuilder;
 
   /// Called when an error occurred.
   /// Usually used to report error.

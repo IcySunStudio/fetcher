@@ -1,3 +1,7 @@
+## 2.0.1
+* BREAKING: rename `FetcherConfigErrorData` to `FetchErrorData`.
+* fix `FetchErrorData` export.
+
 ## 2.0.0
 * BREAKING: `fetchErrorBuilder` now passes error object to the builder, so error can be used in widget.
 
