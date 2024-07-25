@@ -2,8 +2,10 @@ import 'package:fetcher/src/models/fetch_error_data.dart';
 import 'package:fetcher/src/widgets/fetch_builder_error_widget.dart';
 import 'package:flutter/widgets.dart';
 
+/// Configuration for fetcher widgets.
 @immutable
 class FetcherConfig {
+  /// Creates a new fetcher configuration.
   const FetcherConfig({
     this.isDense,
     this.fade,
@@ -13,6 +15,18 @@ class FetcherConfig {
     this.onError,
     this.onDisplayError,
   });
+
+  /// Fetcher configuration for silent mode.
+  /// Use this configuration to hide loader & error.
+  FetcherConfig.silent({bool? fade, Duration? fadeDuration}) : this(
+    isDense: true,
+    fade: fade,
+    fadeDuration: fadeDuration,
+    fetchingBuilder: (_) => const SizedBox(),
+    fetchErrorBuilder: (_, __) => const SizedBox(),
+    onError: null,
+    onDisplayError: (_, __) {},
+  );
 
   /// Whether fetcher is in a low space environment.
   /// Will affect default error widget density.
