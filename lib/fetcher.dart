@@ -3,9 +3,6 @@ library fetcher;
 export 'src/config/default_fetcher_config.dart';
 export 'src/config/fetcher_config.dart';
 export 'src/models/fetch_error_data.dart';
-export 'src/utils/utils.dart';
-
-export 'src/widgets/clear_focus_background.dart';
 
 export 'src/async_form.dart';
 export 'src/async_task_builder.dart';

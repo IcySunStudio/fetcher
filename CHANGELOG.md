@@ -1,5 +1,5 @@
 ## 3.0.0
-* BREAKING: a bit of renaming & cleaning. Migration should be easy.
+* BREAKING: a bit of renaming & export cleaning.
 
 ## 2.0.1
 * BREAKING: rename `FetcherConfigErrorData` to `FetchErrorData`.
