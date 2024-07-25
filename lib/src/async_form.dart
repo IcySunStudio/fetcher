@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:fetcher/src/async_task_builder.dart';
 import 'package:fetcher/src/utils/utils.dart';
-import 'clear_focus_background.dart';
+import 'widgets/clear_focus_background.dart';
 
 /// Wrapper around [AsyncTaskBuilder] adapted for form validation.
 class AsyncForm<T> extends StatelessWidget {

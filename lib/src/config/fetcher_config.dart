@@ -1,6 +1,6 @@
 import 'package:fetcher/src/models/fetch_error_data.dart';
 import 'package:fetcher/src/widgets/fetch_builder_error_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 @immutable
 class FetcherConfig {
@@ -39,19 +39,6 @@ class FetcherConfig {
   /// Called when an error should be displayed to user.
   /// Usually used with a SnackBar system or equivalent.
   final void Function(BuildContext context, Object error)? onDisplayError;
-
-  /// Default [FetcherConfig] values.
-  static FetcherConfig defaultConfig = FetcherConfig(
-    isDense: false,
-    fade: true,
-    fadeDuration: const Duration(milliseconds: 250),
-    fetchingBuilder: (_) => const Center(
-      child: CircularProgressIndicator(),
-    ),
-    fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
-    onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
-    onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
-  );
 
   /// Creates a copy of this config where each fields are overridden by each non-null field of [config].
   FetcherConfig apply(FetcherConfig? config) {

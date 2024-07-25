@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 
 import 'config/default_fetcher_config.dart';
 import 'config/fetcher_config.dart';
-import 'utils/utils.dart';
 import 'widgets/activity_barrier.dart';
 
+typedef TaskRunnerCallback<T> = void Function([AsyncValueGetter<T>? task]);
 typedef AsyncTaskChildBuilder<T> = Widget Function(BuildContext context, TaskRunnerCallback<T> runTask);
 
 /// A widget that allow to run an async task and handle all states (loading, errors, onSuccess).

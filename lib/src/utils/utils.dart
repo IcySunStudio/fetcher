@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-typedef TaskRunnerCallback<T> = void Function([AsyncValueGetter<T>? task]);
 typedef ParameterizedAsyncTask<T, R> = Future<R> Function(T? param);
 
 extension ExtendedBuildContext on BuildContext {
