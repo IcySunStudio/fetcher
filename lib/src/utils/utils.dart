@@ -12,11 +12,15 @@ extension ExtendedBuildContext on BuildContext {
   void clearFocus2() => FocusScope.of(this).requestFocus(FocusNode());
 
   /// Validate the enclosing [Form]
-  Future<void> validateForm({VoidCallback? onSuccess}) async {
+  void validateForm({VoidCallback? onSuccess}) {
+    // Clear current focus
     clearFocus();
-    final form = Form.maybeOf(this);
-    if (form == null) return;
 
+    // Find closest Form ancestor
+    // Throw if no Form ancestor is found
+    final form = Form.of(this);
+
+    // Validate form
     if (form.validate()) {
       form.save();
       onSuccess?.call();

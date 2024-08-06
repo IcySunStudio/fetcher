@@ -3,8 +3,6 @@ import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 
-typedef ValueGetter<R, T> = R Function(T value);
-
 /// A widget that fetch a paginated list of data, page by page.
 /// Handle all states (loading, errors, onSuccess).
 /// Initially just fetch first page, then fetch next page when user scrolls.
