@@ -137,7 +137,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           child: _Title(title: 'Delayed Fetcher without builder'),
         ),
         ElevatedButton(
-          onPressed: () => _fetchController2.refresh(),
+          onPressed: () => _fetchController2.refresh(clearDataFirst: true),
           child: const Text('Fetch'),
         ),
         const SizedBox(height: 20),

@@ -38,7 +38,7 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
             key: ValueKey(_refreshKey),
             runTaskOnStart: _runTaskOnStart,
             task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
-            onSuccess: (result) async => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            onSuccess: (result) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(result),
             )),
             builder: (context, runTask) {
@@ -79,7 +79,7 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
           padding: const EdgeInsets.all(20),
           child: SubmitBuilder<void>(
             task: () => Future.delayed(const Duration(seconds: 3)),
-            onSuccess: (_) async => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Success !'),
             )),
             barrierColor: Colors.transparent,

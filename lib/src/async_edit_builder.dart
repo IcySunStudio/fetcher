@@ -42,7 +42,8 @@ class AsyncEditBuilder<T> extends StatefulWidget {
   final DataEditWidgetBuilder<T> builder;
 
   /// Called after [submitTask] is successfully executed.
-  final AsyncValueSetter<T>? onEditSuccess;
+  /// Ignored if widget is unmounted.
+  final ValueSetter<T>? onEditSuccess;
 
   @override
   State<AsyncEditBuilder<T>> createState() => _AsyncEditBuilderState<T>();
@@ -65,9 +66,9 @@ class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
       builder: (context, data) {
         return SubmitBuilder<T>(
           config: widget.config,
-          onSuccess: (data) async {
-            await widget.onEditSuccess?.call(data);
-            await _fetcherController.refresh(param: data);
+          onSuccess: (data) {
+            widget.onEditSuccess?.call(data);
+            _fetcherController.refresh(param: data);
           },
           builder: (context, runTask) => widget.builder(
             context,

@@ -23,7 +23,7 @@ class FetchBuilder<T, R> extends StatefulWidget {
     bool fetchAtInit = true,
     WidgetBuilder? initBuilder,
     DataWidgetBuilder<R>? builder,
-    AsyncValueSetter<R>? onSuccess,
+    ValueSetter<R>? onSuccess,
     ValueGetter<R?>? getFromCache,
     ValueChanged<R>? saveToCache,
   }) => FetchBuilder.parameterized(
@@ -67,10 +67,13 @@ class FetchBuilder<T, R> extends StatefulWidget {
   final WidgetBuilder? initBuilder;
 
   /// Child to display when data is available
+  /// May be null if you only want to fetch data without displaying it (in that case you usually want to use [onSuccess] to navigate out of current page).
   final DataWidgetBuilder<R>? builder;
 
-  /// Called when [task] has completed with success
-  final AsyncValueSetter<R>? onSuccess;
+  /// Called when [task] has successfully completed.
+  /// Ignored if widget is unmounted.
+  /// Usually used to navigate to another page.
+  final ValueSetter<R>? onSuccess;
 
   /// A controller used to manually refresh data.
   final FetchBuilderControllerBase<T, R?>? controller;
@@ -185,6 +188,8 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
         // Display error in display
         if (onDisplay) {
+          // [isTaskValid] already check if widget is mounted
+          // ignore: use_build_context_synchronously
           config.onDisplayError!(context, e);
         }
       }
@@ -205,13 +210,11 @@ class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
 
     // Run post tasks
     try {
-      // Call onSuccess
       if (isTaskValid()) {
-        await widget.onSuccess?.call(result);
-      }
+        // Call onSuccess
+        widget.onSuccess?.call(result);
 
-      // Update UI
-      if (isTaskValid()) {
+        // Update UI
         stream.add(DataWrapper(result));
         return result;
       }

@@ -68,7 +68,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
         height: 45,
         child: FetchBuilder.basic<PagedData<T, P>>(
           task: _fetchNextPage,
-          onSuccess: (pagedData) async {
+          onSuccess: (pagedData) {
             setState(() {
               _updatePagedData(pagedData);
             });
@@ -97,7 +97,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
     return FetchBuilder.basic<PagedData<T, P>>(
       controller: widget.controller,
       task: _fetchNextPage,
-      onSuccess: (pagedData) async {
+      onSuccess: (pagedData) {
         items.clear();
         _updatePagedData(pagedData);
       },

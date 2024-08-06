@@ -89,11 +89,11 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
   }
 
   Future<void> tick() async {
-    print('new fetch - starting');
+    debugPrint('new fetch - starting');
     final value = await fetchTask();
     stream.add(value, skipIfClosed: true);
     nullableStream.add(_nullableStreamValues[_nullableStreamIndex++ % _nullableStreamValues.length], skipIfClosed: true);
-    print('new fetch - over');
+    debugPrint('new fetch - over');
   }
 
   @override

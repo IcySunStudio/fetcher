@@ -42,8 +42,10 @@ class SubmitBuilder<T> extends StatefulWidget {
   /// You may pass a [task] to run, that will override widget's [task].
   final SubmitChildBuilder<T> builder;
 
-  /// Called after [task] is successfully executed.
-  final AsyncValueSetter<T>? onSuccess;
+  /// Called after [task] has successfully completed.
+  /// Ignored if widget is unmounted.
+  /// Usually used to navigate to another page.
+  final ValueSetter<T>? onSuccess;
 
   @override
   State<SubmitBuilder<T>> createState() => _SubmitBuilderState<T>();
@@ -54,14 +56,14 @@ class SubmitBuilder<T> extends StatefulWidget {
     required BuildContext context,
     required AsyncValueGetter<T> task,
     FetcherConfig? config,
-    AsyncValueSetter<T>? onSuccess,
+    ValueSetter<T>? onSuccess,
   }) async {
     try {
       // Run task
       final result = await task();
 
       // Success callback
-      await onSuccess?.call(result);
+      if (context.mounted) onSuccess?.call(result);
     } catch(e, s) {
       // Get default config if context is mounted
       if (context.mounted) {
@@ -114,11 +116,7 @@ class _SubmitBuilderState<T> extends State<SubmitBuilder<T>> {
       context: context,
       config: config,
       task: task ?? widget.task!,
-      onSuccess: (result) async {
-        if (mounted) {
-          await widget.onSuccess?.call(result);
-        }
-      },
+      onSuccess: widget.onSuccess,
     );
 
     // Update UI

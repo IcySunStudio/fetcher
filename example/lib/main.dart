@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           NavigationDestination(
             icon: Icon(Icons.upload),
-            label: 'Task',
+            label: 'Submit',
           ),
           NavigationDestination(
             icon: Icon(Icons.edit_document),

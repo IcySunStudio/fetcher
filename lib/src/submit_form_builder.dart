@@ -15,8 +15,10 @@ class SubmitFormBuilder<T> extends StatelessWidget {
   /// Called when the form has been validated
   final AsyncValueGetter<T>? onValidated;
 
-  /// Called when the [onValidated] task has successfully completed
-  final AsyncValueSetter<T>? onSuccess;
+  /// Called when the [onValidated] task has successfully completed.
+  /// Ignored if widget is unmounted.
+  /// Usually used to navigate to another page.
+  final ValueSetter<T>? onSuccess;
 
   @override
   Widget build(BuildContext context) {

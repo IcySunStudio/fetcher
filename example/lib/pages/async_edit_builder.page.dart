@@ -61,7 +61,7 @@ class _PageContent extends StatelessWidget {
               child: AsyncEditBuilder<bool>(
                 fetchTask: () => Future.delayed(const Duration(seconds: 2), () => false),
                 submitTask: (data) => Future.delayed(const Duration(seconds: 1)),
-                onEditSuccess: (data) async {   // Use block body to force showSnackBar NOT to be awaited
+                onEditSuccess: (data) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('Submit success : $data'),
                   ));
@@ -117,11 +117,10 @@ class _PageContent extends StatelessWidget {
               config: FetcherConfig(
                 fetchingBuilder: (context) => const Text('Loading...'),
               ),
-              onEditSuccess: (data) async {
+              onEditSuccess: (data) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text('Submit success : $data'),
                 ));
-                await Future.delayed(const Duration(seconds: 1));   // Loading state will stay until [onEditSuccess] finished
               },
               builder: (context, selected, submit) {
                 return ToggleButtons(

@@ -14,7 +14,7 @@ class _SubmitFormBuilderPageState extends State<SubmitFormBuilderPage> {
   @override
   Widget build(BuildContext context) {
     return SubmitFormBuilder<String>(
-      onSuccess: (result) async => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      onSuccess: (result) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(result),
       )),
       builder: (context, validate) {
