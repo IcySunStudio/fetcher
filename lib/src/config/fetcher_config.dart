@@ -8,7 +8,6 @@ class FetcherConfig {
   /// Creates a new fetcher configuration.
   const FetcherConfig({
     this.isDense,
-    this.fade,
     this.fadeDuration,
     this.fetchingBuilder,
     this.fetchErrorBuilder,
@@ -20,7 +19,6 @@ class FetcherConfig {
   /// Use this configuration to hide loader & error.
   FetcherConfig.silent({bool? fade, Duration? fadeDuration}) : this(
     isDense: true,
-    fade: fade,
     fadeDuration: fadeDuration,
     fetchingBuilder: (_) => const SizedBox(),
     fetchErrorBuilder: (_, __) => const SizedBox(),
@@ -32,10 +30,12 @@ class FetcherConfig {
   /// Will affect default error widget density.
   final bool? isDense;
 
-  /// Whether to enable a fading transition between states.
-  final bool? fade;
-
-  /// Duration of the [fade] transition.
+  /// Duration of the fade transition.
+  /// Use [Duration.zero] to disable fade transition.
+  ///
+  /// It is recommended to use a value that is roughly the duration of the navigation transition, to ensure proper screen transition animation.
+  /// (If it's lower, you may see the non-loading state before next page is displayed).
+  /// (If it's higher, you may see the loading state for a short time when page is popped (because animation is paused when a route is displayed above)).
   final Duration? fadeDuration;
 
   /// Widget to display while fetching.
@@ -59,7 +59,6 @@ class FetcherConfig {
     if (config == null) return this;
     return FetcherConfig(
       isDense: config.isDense ?? isDense,
-      fade: config.fade ?? fade,
       fadeDuration: config.fadeDuration ?? fadeDuration,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,

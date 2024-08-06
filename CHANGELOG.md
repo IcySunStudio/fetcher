@@ -3,7 +3,8 @@
 * BREAKING: rename `AsyncForm` to `SubmitFormBuilder`.
 * BREAKING: rename `AsyncEditBuilder.commitTask` to `AsyncEditBuilder.submitTask`.
 * BREAKING: all `onSuccess` callbacks are now synchronous.
-* BREAKING: a bit of renaming & export cleaning.
+* BREAKING: remove `FetcherConfig.fade` parameter. Use `FetcherConfig.fadeDuration` instead.
+* BREAKING: a bit of other renaming & export cleaning.
 * New `FetcherConfig.silent` config for cases where loader & error should not be displayed.
 
 ## 2.0.1

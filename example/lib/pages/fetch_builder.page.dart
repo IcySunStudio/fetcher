@@ -96,6 +96,10 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           child: FetchBuilder<bool, String>.parameterized(
             controller: _fetchController1,
             task: fetchTask,
+            config: const FetcherConfig(
+              fadeDuration: Duration.zero,    // Disable fade
+              // fadeDuration: Duration(seconds: 2),   // Long fade
+            ),
             builder: (context, data) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,

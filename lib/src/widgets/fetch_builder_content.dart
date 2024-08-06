@@ -45,7 +45,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       }
     } ();
 
-    if (config.fade == true) {
+    if (config.fadeDuration != null && config.fadeDuration! > Duration.zero) {
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
         child: child,

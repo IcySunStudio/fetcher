@@ -1,7 +1,6 @@
 import 'package:fetcher/src/config/fetcher_config.dart';
 import 'package:fetcher/src/widgets/fetch_builder_error_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class DefaultFetcherConfig extends InheritedWidget {
   DefaultFetcherConfig({
@@ -19,7 +18,6 @@ class DefaultFetcherConfig extends InheritedWidget {
   /// Default [FetcherConfig] values.
   static FetcherConfig defaultConfig = FetcherConfig(
     isDense: false,
-    fade: true,
     fadeDuration: const Duration(milliseconds: 250),
     fetchingBuilder: (_) => const Center(child: CircularProgressIndicator()),
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
