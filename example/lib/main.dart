@@ -3,7 +3,7 @@ import 'package:fetcher/fetcher.dart';
 
 import 'pages/fetch_builder.page.dart';
 import 'pages/submit_builder.page.dart';
-import 'pages/async_form.page.dart';
+import 'pages/submit_form_builder.page.dart';
 import 'pages/event_fetch_builder.page.dart';
 import 'pages/async_edit_builder.page.dart';
 import 'pages/paged_fetcher_page.dart';
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const FetchBuilderPage(),
         const EventFetchBuilderPage(),
         const SubmitBuilderPage(),
-        const AsyncFormPage(),
+        const SubmitFormBuilderPage(),
         const AsyncEditBuilderPage(),
         const PagedFetcherPage(),
       ][currentPageIndex],

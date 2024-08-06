@@ -5,11 +5,11 @@ import 'package:fetcher/src/submit_builder.dart';
 import 'package:fetcher/src/utils/utils.dart';
 import 'widgets/clear_focus_background.dart';
 
-/// Wrapper around [SubmitBuilder] adapted for form validation.
-class AsyncForm<T> extends StatelessWidget {
-  const AsyncForm({super.key, required this.builder, this.onValidated, this.onSuccess});
+/// Wrapper around [SubmitBuilder] with automatic form validation.
+class SubmitFormBuilder<T> extends StatelessWidget {
+  const SubmitFormBuilder({super.key, required this.builder, this.onValidated, this.onSuccess});
 
-  /// Child widget builder that provide a [validate] callback to be called when needed.
+  /// Child widget builder that provide a [validate] callback to be called when needed (usually on a 'validate' button).
   final SubmitChildBuilder<T> builder;
 
   /// Called when the form has been validated

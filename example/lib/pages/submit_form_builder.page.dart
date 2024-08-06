@@ -1,19 +1,19 @@
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
-class AsyncFormPage extends StatefulWidget {
-  const AsyncFormPage({super.key});
+class SubmitFormBuilderPage extends StatefulWidget {
+  const SubmitFormBuilderPage({super.key});
 
   @override
-  State<AsyncFormPage> createState() => _AsyncFormPageState();
+  State<SubmitFormBuilderPage> createState() => _SubmitFormBuilderPageState();
 }
 
-class _AsyncFormPageState extends State<AsyncFormPage> {
+class _SubmitFormBuilderPageState extends State<SubmitFormBuilderPage> {
   String? value;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncForm<String>(
+    return SubmitFormBuilder<String>(
       onSuccess: (result) async => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(result),
       )),
