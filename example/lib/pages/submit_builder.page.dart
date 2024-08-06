@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'fetch_builder.page.dart';
 
-class AsyncTaskBuilderPage extends StatefulWidget {
-  const AsyncTaskBuilderPage({super.key});
+class SubmitBuilderPage extends StatefulWidget {
+  const SubmitBuilderPage({super.key});
 
   @override
-  State<AsyncTaskBuilderPage> createState() => _AsyncTaskBuilderPageState();
+  State<SubmitBuilderPage> createState() => _SubmitBuilderPageState();
 }
 
-class _AsyncTaskBuilderPageState extends State<AsyncTaskBuilderPage> {
+class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
   int _refreshKey = 0;
   bool _runTaskOnStart = false;
 
@@ -32,9 +32,9 @@ class _AsyncTaskBuilderPageState extends State<AsyncTaskBuilderPage> {
           },
         ),
 
-        // Classic AsyncTaskBuilder
+        // Classic SubmitBuilder
         Expanded(
-          child: AsyncTaskBuilder<String>(
+          child: SubmitBuilder<String>(
             key: ValueKey(_refreshKey),
             runTaskOnStart: _runTaskOnStart,
             task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
@@ -77,7 +77,7 @@ class _AsyncTaskBuilderPageState extends State<AsyncTaskBuilderPage> {
         const Separator(),
         Padding(
           padding: const EdgeInsets.all(20),
-          child: AsyncTaskBuilder<void>(
+          child: SubmitBuilder<void>(
             task: () => Future.delayed(const Duration(seconds: 3)),
             onSuccess: (_) async => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Success !'),

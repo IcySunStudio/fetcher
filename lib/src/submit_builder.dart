@@ -6,11 +6,12 @@ import 'config/fetcher_config.dart';
 import 'widgets/activity_barrier.dart';
 
 typedef TaskRunnerCallback<T> = void Function([AsyncValueGetter<T>? task]);
-typedef AsyncTaskChildBuilder<T> = Widget Function(BuildContext context, TaskRunnerCallback<T> runTask);
+typedef SubmitChildBuilder<T> = Widget Function(BuildContext context, TaskRunnerCallback<T> runTask);
 
 /// A widget that allow to run an async task and handle all states (loading, errors, onSuccess).
-class AsyncTaskBuilder<T> extends StatefulWidget {
-  const AsyncTaskBuilder({
+/// Design for tasks that is triggered by a user action (like a button press).
+class SubmitBuilder<T> extends StatefulWidget {
+  const SubmitBuilder({
     super.key,
     this.config,
     this.barrierColor,
@@ -33,21 +34,22 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   final bool runTaskOnStart;
 
   /// Task to be executed.
-  /// Will be overridden by task passed when calling [runTask] provided by [builder].
+  /// Will be overridden by task parameter passed when calling [runTask] provided by [builder].
   final AsyncValueGetter<T>? task;
 
   /// Widget builder, that provides a [runTask] callback.
+  /// Call [runTask] to start the task (usually from a button).
   /// You may pass a [task] to run, that will override widget's [task].
-  final AsyncTaskChildBuilder<T> builder;
+  final SubmitChildBuilder<T> builder;
 
   /// Called after [task] is successfully executed.
   final AsyncValueSetter<T>? onSuccess;
 
   @override
-  State<AsyncTaskBuilder<T>> createState() => _AsyncTaskBuilderState<T>();
+  State<SubmitBuilder<T>> createState() => _SubmitBuilderState<T>();
 
   /// Safely run a async task.
-  /// Headless version of [AsyncTaskBuilder].
+  /// Headless version of [SubmitBuilder].
   static Future<void> runTask<T>({
     required BuildContext context,
     required AsyncValueGetter<T> task,
@@ -75,7 +77,7 @@ class AsyncTaskBuilder<T> extends StatefulWidget {
   }
 }
 
-class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
+class _SubmitBuilderState<T> extends State<SubmitBuilder<T>> {
   late final config = DefaultFetcherConfig.of(context).apply(widget.config);
   bool _isBusy = false;
 
@@ -108,7 +110,7 @@ class _AsyncTaskBuilderState<T> extends State<AsyncTaskBuilder<T>> {
     setIsBusy(true);
 
     // Run task
-    await AsyncTaskBuilder.runTask<T>(
+    await SubmitBuilder.runTask<T>(
       context: context,
       config: config,
       task: task ?? widget.task!,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fetcher/fetcher.dart';
 
 import 'pages/fetch_builder.page.dart';
-import 'pages/async_task_builder.page.dart';
+import 'pages/submit_builder.page.dart';
 import 'pages/async_form.page.dart';
 import 'pages/event_fetch_builder.page.dart';
 import 'pages/async_edit_builder.page.dart';
@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: <Widget>[
         const FetchBuilderPage(),
         const EventFetchBuilderPage(),
-        const AsyncTaskBuilderPage(),
+        const SubmitBuilderPage(),
         const AsyncFormPage(),
         const AsyncEditBuilderPage(),
         const PagedFetcherPage(),

@@ -6,7 +6,7 @@ typedef DataEditWidgetBuilder<T> = Widget Function(BuildContext context, T value
 
 /// A widget that allow to fetch a value asynchronously, and then to run another task asynchronously (to commit new value for instance) while updating UI with new value.
 /// Handle all states (loading, errors, onSuccess).
-/// It's actually a mix of [FetchBuilder] and [AsyncTaskBuilder] combined.
+/// It's actually a mix of [FetchBuilder] and [SubmitBuilder] combined.
 /// Typically used for component that needs to fetch a value and then edit that value.
 /// Example : an async switch
 class AsyncEditBuilder<T> extends StatefulWidget {
@@ -21,7 +21,7 @@ class AsyncEditBuilder<T> extends StatefulWidget {
   });
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
-  /// Config is applied to both [FetchBuilder] and [AsyncTaskBuilder]
+  /// Config is applied to both [FetchBuilder] and [SubmitBuilder]
   final FetcherConfig? config;
 
   /// Widget to display while fetching
@@ -62,7 +62,7 @@ class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
       config: _fetchBuilderConfig,
       task: (value) async => value ?? await widget.fetchTask(),
       builder: (context, data) {
-        return AsyncTaskBuilder<T>(
+        return SubmitBuilder<T>(
           config: widget.config,
           onSuccess: (data) async {
             await widget.onEditSuccess?.call(data);
