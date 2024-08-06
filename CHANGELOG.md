@@ -2,6 +2,7 @@
 * BREAKING: a bit of renaming & export cleaning.
 * BREAKING: rename `AsyncTaskBuilder` to `SubmitBuilder`.
 * BREAKING: rename `AsyncForm` to `SubmitFormBuilder`.
+* BREAKING: rename `AsyncEditBuilder.commitTask` to `AsyncEditBuilder.submitTask`.
 * New `FetcherConfig.silent` config for cases where loader & error should not be displayed.
 
 ## 2.0.1

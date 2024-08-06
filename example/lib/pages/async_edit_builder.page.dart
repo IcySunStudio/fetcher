@@ -60,10 +60,10 @@ class _PageContent extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(500)), // Circular border to avoid ActivityBarrier overflow
               child: AsyncEditBuilder<bool>(
                 fetchTask: () => Future.delayed(const Duration(seconds: 2), () => false),
-                commitTask: (data) => Future.delayed(const Duration(seconds: 1)),
+                submitTask: (data) => Future.delayed(const Duration(seconds: 1)),
                 onEditSuccess: (data) async {   // Use block body to force showSnackBar NOT to be awaited
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Commit success : $data'),
+                    content: Text('Submit success : $data'),
                   ));
                 },
                 fetchingBuilder: (context) => const _FavoriteButton(
@@ -80,10 +80,10 @@ class _PageContent extends StatelessWidget {
                     ),
                   ),
                 ),
-                builder: (context, selected, commit) {
+                builder: (context, selected, submit) {
                   return _FavoriteButton(
                     selected: selected,
-                    onPressed: () => commit(!selected),
+                    onPressed: () => submit(!selected),
                   );
                 },
               ),
@@ -93,7 +93,7 @@ class _PageContent extends StatelessWidget {
           // ToggleButtons
           const SizedBox(height: 80),
           const Text(
-            'Tap on a cell to commit value.\nThe last cell throws an error.',
+            'Tap on a cell to submit value.\nThe last cell throws an error.',
           ),
           const SizedBox(height: 20),
           Container(
@@ -105,13 +105,13 @@ class _PageContent extends StatelessWidget {
                 await Future.delayed(const Duration(seconds: 3));
                 return values.first;
               },
-              commitTask: (data) async {
-                // Task that commit data
+              submitTask: (data) async {
+                // Task that submit data
                 await Future.delayed(const Duration(seconds: 1));
 
                 // Throw error (to test)
                 if (data == values.last) {
-                  throw Exception('An error occured on commit : value is preserved');
+                  throw Exception('An error occured on submit : value is preserved');
                 }
               },
               config: FetcherConfig(
@@ -119,14 +119,14 @@ class _PageContent extends StatelessWidget {
               ),
               onEditSuccess: (data) async {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Commit success : $data'),
+                  content: Text('Submit success : $data'),
                 ));
                 await Future.delayed(const Duration(seconds: 1));   // Loading state will stay until [onEditSuccess] finished
               },
-              builder: (context, selected, commit) {
+              builder: (context, selected, submit) {
                 return ToggleButtons(
                   isSelected: values.map((value) => value == selected).toList(growable: false),
-                  onPressed: (index) => commit(values[index]),
+                  onPressed: (index) => submit(values[index]),
                   children: values.map((value) {
                     return Text(value.toString());
                   }).toList(growable: false),

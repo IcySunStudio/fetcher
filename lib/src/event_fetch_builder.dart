@@ -6,7 +6,7 @@ import 'config/default_fetcher_config.dart';
 import 'config/fetcher_config.dart';
 import 'widgets/fetch_builder_content.dart';
 
-/// Widget that listen to a Stream and display data.
+/// Widget that listen to an [EventStream] and display data.
 /// It's like [FetchBuilder] but instead of directly calling a task once, it will listen to a stream and his updates.
 /// Handle all possible states: loading, loaded, errors.
 class EventFetchBuilder<T> extends StatelessWidget {
