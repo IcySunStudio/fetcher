@@ -33,14 +33,21 @@ class FetchBuilderContent<T> extends StatelessWidget {
     final config = DefaultFetcherConfig.of(context).apply(this.config);
 
     final child = () {
+      // If source stream is null
       if (snapshot.connectionState == ConnectionState.none) {
         return initBuilder?.call(context) ?? const SizedBox();
-      } else if (snapshot.hasError) {
+      }
+      // If an error occurred
+      else if (snapshot.hasError) {
         final error = snapshot.error!;
         return config.fetchErrorBuilder!(context, FetchErrorData(error, config.isDense == true, error is FetchException ? error.retry : null));
-      } else if (!snapshot.hasData) {
+      }
+      // If data is loading
+      else if (!snapshot.hasData) {
         return config.fetchingBuilder!(context);
-      } else {
+      }
+      // If data is available
+      else {
         return builder?.call(context, snapshot.data as T) ?? const SizedBox();
       }
     } ();
@@ -48,7 +55,12 @@ class FetchBuilderContent<T> extends StatelessWidget {
     if (config.fadeDuration != null && config.fadeDuration! > Duration.zero) {
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
-        child: child,
+        child: KeyedSubtree(
+          // Ensure proper AnimatedSwitcher transition between states.
+          // Without this, transition doesn't work when data isn't cleared first (same widget type), and in any case the outgoing widget isn't animated.
+          key: ObjectKey(snapshot),
+          child: child,
+        ),
       );
     }
 

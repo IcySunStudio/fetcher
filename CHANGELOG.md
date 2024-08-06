@@ -6,6 +6,7 @@
 * BREAKING: remove `FetcherConfig.fade` parameter. Use `FetcherConfig.fadeDuration` instead.
 * BREAKING: a bit of other renaming & export cleaning.
 * New `FetcherConfig.silent` config for cases where loader & error should not be displayed.
+* fix fade animation not working properly.
 
 ## 2.0.1
 * BREAKING: rename `FetcherConfigErrorData` to `FetchErrorData`.

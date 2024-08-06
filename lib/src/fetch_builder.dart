@@ -61,9 +61,10 @@ class FetchBuilder<T, R> extends StatefulWidget {
   final ParameterizedAsyncTask<T, R> task;
 
   /// Whether to automatically start [task] when widget is initialised
+  /// Default to true.
   final bool fetchAtInit;
 
-  /// When [fetchAtInit] is true, child to display before fetching starts.
+  /// When [fetchAtInit] is false, child to display before fetching starts.
   final WidgetBuilder? initBuilder;
 
   /// Child to display when data is available
