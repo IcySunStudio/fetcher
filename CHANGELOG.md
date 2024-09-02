@@ -1,5 +1,6 @@
 ## 3.1.0
 * Add NewsReaderPage example
+* Add BLoC pattern components, so fetcher can be use with BLoC pattern without any additional dependency.
 
 ## 3.0.0
 * BREAKING: rename `AsyncTaskBuilder` to `SubmitBuilder`.
