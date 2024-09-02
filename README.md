@@ -89,10 +89,33 @@ SubmitBuilder<void>(
 ```
 
 Were submitData is an async function that send new data to server, and may throw (not internet, bad request, etc).
-
 If task throws, it will call `onDisplayMessage` callback (see config) and stay on the page to allow user to try again: `onSuccess` is only called it task return without errors.
-
 `task` can optionally return an object, that will be passed to the `onSuccess` callback, for advanced usage.
+
+
+
+If task depends of the child context (for instance, if you have 2 buttons that starts 2 different tasks), you can pass the desired task in the runTask callback, instead of the task argument of SubmitBuilder:
+
+```dart
+SubmitBuilder<void>(
+  onSuccess: (_) => Navigator.pop(context),
+  builder: (context, runTask) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: runTask(() => api.submitData('data 1')),
+          child: const Text('Submit 1'),
+        ),
+        ElevatedButton(
+          onPressed: runTask(() => api.submitData('data 2')),
+          child: const Text('Submit 2'),
+        ),
+      ],
+    );
+  },
+)
+```
+
 
 ### More
 
