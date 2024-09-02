@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fetcher/fetcher.dart';
 
-import 'pages/fetch_builder.page.dart';
-import 'pages/submit_builder.page.dart';
-import 'pages/submit_form_builder.page.dart';
-import 'pages/event_fetch_builder.page.dart';
-import 'pages/async_edit_builder.page.dart';
-import 'pages/paged_fetcher_page.dart';
+import 'news_reader/news_reader.page.dart';
+import 'widgets/widget_examples.page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,15 +33,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,48 +42,27 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Fetcher Example'),
       ),
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
-        },
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: Icon(Icons.download),
-            label: 'Fetch',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.keyboard_double_arrow_down),
-            label: 'Event',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.upload),
-            label: 'Submit',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.edit_document),
-            label: 'Form',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.sync),
-            label: 'Edit',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.numbers),
-            label: 'Paged',
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // News reader example
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NewsReaderPage(page: 1))),
+              child: const Text('News reader example'),
+            ),
+
+            // Widget examples
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const WidgetExamplesPage())),
+              child: const Text('Widget examples'),
+            ),
+          ],
+        ),
       ),
-      body: <Widget>[
-        const FetchBuilderPage(),
-        const EventFetchBuilderPage(),
-        const SubmitBuilderPage(),
-        const SubmitFormBuilderPage(),
-        const AsyncEditBuilderPage(),
-        const PagedFetcherPage(),
-      ][currentPageIndex],
     );
   }
 }

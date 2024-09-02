@@ -1,3 +1,6 @@
+## 3.1.0
+* Add NewsReaderPage example
+
 ## 3.0.0
 * BREAKING: rename `AsyncTaskBuilder` to `SubmitBuilder`.
 * BREAKING: rename `AsyncForm` to `SubmitFormBuilder`.
@@ -6,11 +9,11 @@
 * BREAKING: remove `FetcherConfig.fade` parameter. Use `FetcherConfig.fadeDuration` instead.
 * BREAKING: a bit of other renaming & export cleaning.
 * New `FetcherConfig.silent` config for cases where loader & error should not be displayed.
-* fix fade animation not working properly.
+* Fix fade animation not working properly.
 
 ## 2.0.1
 * BREAKING: rename `FetcherConfigErrorData` to `FetchErrorData`.
-* fix `FetchErrorData` export.
+* Fix `FetchErrorData` export.
 
 ## 2.0.0
 * BREAKING: `fetchErrorBuilder` now passes error object to the builder, so error can be used in widget.
@@ -20,11 +23,11 @@
 * Add new `AsyncFormPage` in the example app.
 
 ## 0.6.2
-* replace `findAncestorWidgetOfExactType` by `getInheritedWidgetOfExactType` for better performance
-* fix `AsyncTaskBuilder.runTask` catch bloc throwing because of unmounted context
+* Replace `findAncestorWidgetOfExactType` by `getInheritedWidgetOfExactType` for better performance
+* Fix `AsyncTaskBuilder.runTask` catch bloc throwing because of unmounted context
 
 ## 0.6.1
-* fix ActivityBarrier reverse animation
+* Fix ActivityBarrier reverse animation
 
 ## 0.6.0
 * BREAKING: New `FetchBuilder` error display handling using `FetchErrorDisplayMode`
@@ -54,19 +57,19 @@
 * Add `AsyncTaskBuilder.runTaskOnStart` parameter
 
 ## 0.0.11
-* fix `AsyncEditBuilder.onEditSuccess` not called
+* Fix `AsyncEditBuilder.onEditSuccess` not called
 
 ## 0.0.10
-* update to `value_stream` 0.0.4
+* Update to `value_stream` 0.0.4
 
 ## 0.0.9
-* fix `AsyncEditBuilder` to correctly pass config
+* Fix `AsyncEditBuilder` to correctly pass config
 
 ## 0.0.8
 * Parameter retry of `FetcherConfig.errorBuilder` is now optional, to correctly handle `EventFetchBuilder` stream errors
 
 ## 0.0.7
-* fix `EventFetchBuilder` when using stream with null values
+* Fix `EventFetchBuilder` when using stream with null values
 
 ## 0.0.6
 * Add `FetchBuilder.initBuilder` param (to be used with `fetchAtInit` false)
