@@ -7,10 +7,6 @@ extension ExtendedBuildContext on BuildContext {
   /// This is the cleanest, official way.
   void clearFocus() => FocusScope.of(this).unfocus();
 
-  /// Clear current context focus (Second method)
-  /// Use this method if [clearFocus] doesn't work.
-  void clearFocus2() => FocusScope.of(this).requestFocus(FocusNode());
-
   /// Validate the enclosing [Form]
   void validateForm({VoidCallback? onSuccess}) {
     // Clear current focus
