@@ -162,7 +162,6 @@ class _MyPageState extends State<MyPage> with BlocProvider<MyPage, MyBloc> {
 }
 ```
 
-
 ### More
 
 See the example project for more usage examples.
@@ -196,8 +195,7 @@ DefaultFetcherConfig(
 
 From there you're good to go 🎉️
 
-
-## Fetcher Bloc complete example
+## Fetcher Bloc complete example / tutorial
 
 A detailed example to illustrate how to use Fetcher Bloc for a common use-case: a basic news reader app.
 
@@ -206,11 +204,312 @@ A detailed example to illustrate how to use Fetcher Bloc for a common use-case: 
 
 Full source code is available in the example project.
 
+### 1. Fetch data
 
-// TODO
+First, let's build the bloc with the method that will fetch last article from server
 
+```dart
+import 'package:fetcher/fetcher_bloc.dart';
+
+class NewsReaderBloc with Disposable {
+  Future<NewsArticle> fetchArticle() async {
+    // Simulate network request
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Return an article
+    return NewsArticle('Title 1', 'Random content generated for page 1, at ${DateTime.now()}');
+  }
+}
+```
+
+We just need a class that extends `Disposable`, with an async method that returns the fetched data (here `NewsArticle`).
+No need for any error handling here, all is handled by `FetchBuilder`.
+
+With corresponding data object:
+
+```dart
+class NewsArticle {
+  const NewsArticle(this.title, this.content);
+
+  final String title;
+  final String content;
+}
+```
+
+UI side, we need to create a new stateful widget for the page, that holds the bloc in his state:
+
+```dart
+import 'package:fetcher/fetcher_bloc.dart';
+import 'package:flutter/material.dart';
+
+import 'news_reader.bloc.dart';
+
+class NewsReaderPage extends StatefulWidget {
+  const NewsReaderPage({super.key});
+
+  @override
+  State<NewsReaderPage> createState() => _NewsReaderPageState();
+}
+
+class _NewsReaderPageState extends State<NewsReaderPage> with BlocProvider<NewsReaderPage, NewsReaderBloc> {
+  @override
+  NewsReaderBloc initBloc() => NewsReaderBloc();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox();
+  }
+}
+
+```
+
+Now `NewsReaderBloc` instance is accessible from widget's state.
+
+Let's build a basic UI to fetch and then display data:
+
+```dart
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('News reader #1'),
+    ),
+    body: FetchBuilder.basic<NewsArticle>(
+      task: bloc.fetchArticle,
+      builder: (context, article) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // Title
+              Text(
+                article.title,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+  
+              // Content
+              const SizedBox(height: 15),
+              Text(
+                article.content,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        );
+      }
+    ),
+  );
+}
+```
+
+Key part here is the `FetchBuilder.basic<NewsArticle>` widget, that do all the job: we just give it the `task` (network request from bloc), it handles the rest.
+While it's loading, a default loading widget will be displayed.
+If task throws, a default error widget will be displayed, with a retry button.
+When data is available, `builder` will be called, with direct access to the data.
+
+We now have a basic page that fetch data, than displays `article.title` and `article.content`.
+
+we can go further and customize the fetching widget (optional).
+We have a `config` argument of type `FetcherConfig`, which allows to customize this widget.
+Here we use `fetchingBuilder` argument to override default loading widget:
+
+```dart
+...
+task: bloc.fetchArticle,
+config: FetcherConfig(
+  fetchingBuilder: (context) => Padding(
+    padding: const EdgeInsets.all(20),
+    child: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 10),
+          Text('Fetching article 1...'),
+        ],
+      ),
+    ),
+  ),
+),
+builder: ...
+```
+
+### 2. Dynamic widget
+
+If you need some widget to change dynamically, for instance on user interaction, and the related task is synchronous and safe (does not throws), you can use a basic `DataStream` and his widget `DataStreamBuilder`.
+`DataStream` is just a `Dart` `Stream` that holds the lattest value for easy access, and also guaranties that the value is alway accessible (no error handling).
+In our example, we can use that for the user to select a vote (like or dislike).
+
+First add an enum on the bloc:
+
+```dart
+enum ArticleVote {
+  like,
+  dislike,
+}
+```
+
+Then instantiate a new `DataStream`, and close it on the `dispose` method:
+
+```dart
+  final selectedVote = DataStream<ArticleVote?>(null);
+
+  @override
+  void dispose() {
+    selectedVote.close();
+    super.dispose();
+  }
+
+```
+
+Because vote can be null (nothing selected), `DataStream` type must be nullable: `ArticleVote?`
+Initial value is `null` (unselected), we must explicitly pass it to the constructor.
+
+You can add an extra handy bloc method to apply a vote (optional):
+
+```dart
+void selectVote(ArticleVote vote) => selectedVote.add(vote, skipSame: true);
+```
+
+On the UI side, use corresponding DataStreamBuilder:
+
+```dart
+DataStreamBuilder<ArticleVote?>(
+  stream: bloc.selectedVote,
+  builder: (context, selectedVote) {
+    return ToggleButtons(
+      isSelected: [
+        selectedVote == ArticleVote.like,
+        selectedVote == ArticleVote.dislike,
+      ],
+      onPressed: (index) => bloc.selectVote(index == 0 ? ArticleVote.like : ArticleVote.dislike),
+      children: const [
+        Icon(Icons.thumb_up),
+        Icon(Icons.thumb_down),
+      ],
+    );
+  },
+),
+```
+
+When `bloc.selectedVote` stream updates (using the strem's `add()` method), `DataStreamBuilder.builder` part will be rebuild.
+So you alway should wrap the smallest possible part with a `DataStreamBuilder`, to only rebuild the part that changes.
+
+Now we have a working ToggleButtons 😄
+
+
+### 3. Submit data
+
+Now we want to submit that vote to the server. And because it's an asynchonous task (and unsafe), we have to handle all states properly.
+So we will use the perfectly adapted SubmitBuilder widget.
+
+First add a new method to submit the vote to the server on the bloc:
+
+```dart
+Future<ArticleVote> voteArticle([ArticleVote? vote]) async {
+  // If no vote is provided, use the selected vote
+  vote ??= selectedVote.value;
+
+  // If still no vote, throw an error
+  if (vote == null) throw Exception('Select a vote first');
+
+  // Simulate network request
+  await Future.delayed(const Duration(seconds: 1));
+
+  // Return the vote
+  return vote;
+}
+```
+
+Method takes the current stream value of `selectedVote`, then send it to the network.
+If selection is empty, we throw an error with a displayable message (by default it will be displayed by user).
+
+Now on UI side, just wrap your page with `SubmitBuilder`:
+
+```dart
+Widget build(BuildContext context) {
+  return SubmitBuilder<ArticleVote>(
+    task: bloc.voteArticle,
+    onSuccess: (vote) {
+      // Display a success message
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Voted successfully: ${vote.name}'),
+        backgroundColor: Colors.green,
+      ));
+
+      // Navigate to the next page
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => NewsReaderPage()));
+    },
+    builder: (context, runTask) {
+      ...
+      ElevatedButton(
+        onPressed: runTask,
+        child: const Text('Vote'),
+      ),
+      ...
+    }
+  );
+}
+```
+
+`task` is executed when `runTask` (in `builder`) is called (usually from a button).
+While `task` is executed, a barrier with a loader is displayed, blocking user interaction (that's why we need the `SubmitBuilder` to be quite high on the tree).
+If `task` throws, a message is displayed, and state is reverted, so user can retry.
+When `task` is completed with success, `onSuccess` is called. This is where you should put navigation logic (all logic that needs a `BuildContext`).
+
+If you need to pass an argument to `task` from the `builder` (or if you have different buttons calling different tasks), you may pass a task to the `runTask` callback, that will override the widget's `task`.
+
+In our example, let's call a secondary task from a second button.
+
+In the bloc:
+
+```dart
+  Future<ArticleVote> voteArticleWithError() => voteArticle(ArticleVote.error);
+```
+
+In the page:
+
+```
+ElevatedButton(
+  onPressed: () => runTask(bloc.voteArticleWithError),
+  child: const Text('Vote with error'),
+),
+```
+
+
+That's all !
+This example illustrate the base of `fetcher_bloc` usage.
+
+Test & see full example code in the example project.
 
 
 ## FAQ
 
 ### Controller
+
+In a FetchBuilder, if you need to call a task programmatically (for instance to refresh data from a pull-to-refresh), you can use the `controller` argument.
+
+1. Instanciate a new `BasicFetchBuilderController` (or `ParameterizedFetchBuilderController`) in the bloc or in a state.
+2. Pass instance to `controller` parameter of `FetchBuilder`.
+3. Call `controller.refresh()` from a function.
+
+### FetchBuilder with extra argument
+
+For advanced usage, you can use `FetchBuilder.parameterized` constructor to pass an object to the task.
+
+For instance, it can be usefull for a search feature, passing the search string in the `refresh` method of the `controller`, each time searcg field changes.
+
+### Fetch vs Submit
+
+Both corresponding widgets handle an asynchonous task states (loading, error, data, etc).
+But differences in usage is important as state flow is a bit different.
+
+Fetch is when you need to fetch a data before displaying it to the user.
+So while data is fetching, you have nothing to display but a loader.
+Same when an error occurs, an error widget will be displayed instead of the data widget.
+
+Submit is when you need to send/post/submit/commit a data asynchonously OR just call an asynchonous task.
+Typical example is a form submission. Task is usually called after a user interaction (i.e. a button), displaying a barrier with a loader ABOVE all content.
+If an error occurs, barrier is removed and state reverted, so user can try again using same context (you stay on the form page).
+If it's a success, you usually want to navigate elsewhere.
+
+You may look at the news reader example to get deeper.
