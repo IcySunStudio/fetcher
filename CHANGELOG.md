@@ -1,5 +1,6 @@
 ## 4.0.0
 * BREAKING: remove obsolete `clearFocus2` method.
+* export `ActivityBarrier` widget
 
 ## 3.1.0
 * Add NewsReaderPage example
