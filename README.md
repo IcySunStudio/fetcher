@@ -73,7 +73,7 @@ FetchBuilder.basic<Weather>(
 )
 ```
 
-Were `getWeather` is an async function that return a `Future<Weather>`, and may throw (not internet, bad request, etc).
+Where `getWeather` is an async function that return a `Future<Weather>`, and may throw (not internet, bad request, etc).
 
 By default it will use global (or default) config. To override locally you can use config parameter:
 
@@ -102,8 +102,8 @@ SubmitBuilder<void>(
 )
 ```
 
-Were submitData is an async function that send new data to server, and may throw (not internet, bad request, etc).
-If task throws, it will call `onDisplayMessage` callback (see config) and stay on the page to allow user to try again: `onSuccess` is only called it task return without errors.
+Where submitData is an async function that send new data to server, and may throw (not internet, bad request, etc).
+If task throws, it will call `onDisplayMessage` callback (see config) and stay on the page to allow user to try again. `onSuccess` is only called if task return without errors.
 `task` can optionally return an object, that will be passed to the `onSuccess` callback, for advanced usage.
 
 If task depends of the child context (for instance, if you have 2 buttons that starts 2 different tasks), you can pass the desired task in the runTask callback, instead of the task argument of SubmitBuilder:
@@ -306,7 +306,7 @@ While it's loading, a default loading widget will be displayed.
 If task throws, a default error widget will be displayed, with a retry button.
 When data is available, `builder` will be called, with direct access to the data.
 
-We now have a basic page that fetch data, than displays `article.title` and `article.content`.
+We now have a basic page that fetch data, then displays `article.title` and `article.content`.
 
 we can go further and customize the fetching widget (optional).
 We have a `config` argument of type `FetcherConfig`, which allows to customize this widget.
