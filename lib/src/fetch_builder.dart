@@ -1,6 +1,6 @@
 import 'package:fetcher/src/config/default_fetcher_config.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 
 import 'exceptions/fetch_exception.dart';
@@ -11,36 +11,28 @@ import 'widgets/fetch_builder_content.dart';
 
 /// Widget that fetch data asynchronously, and display it when available.
 /// Handle all possible states: loading, loaded, errors.
-class FetchBuilder<T, R> extends StatefulWidget {
-  /// Basic [FetchBuilder] constructor (not parameterized).
-  ///
-  /// Because constructor or factory must be of type <T, R>, we must use a static method instead.
-  static FetchBuilder<Never, R> basic<R>({
-    Key? key,
-    FetcherConfig? config,
-    FetchBuilderControllerBase<Never, R?>? controller,
-    required AsyncValueGetter<R> task,
-    bool fetchAtInit = true,
-    WidgetBuilder? initBuilder,
-    DataWidgetBuilder<R>? builder,
-    ValueSetter<R>? onSuccess,
-    ValueGetter<R?>? getFromCache,
-    ValueChanged<R>? saveToCache,
-  }) => FetchBuilder.parameterized(
-    key: key,
-    config: config,
+class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
+  FetchBuilder({
+    super.key,
+    super.config,
+    FetchBuilderController<T>? controller,
+    required AsyncValueGetter<T> task,
+    super.fetchAtInit = true,
+    super.initBuilder,
+    super.builder,
+    super.onSuccess,
+    super.getFromCache,
+    super.saveToCache,
+  }) : super._(
     controller: controller,
     task: (_) => task(),
-    fetchAtInit: fetchAtInit,
-    initBuilder: initBuilder,
-    builder: builder,
-    onSuccess: onSuccess,
-    getFromCache: getFromCache,
-    saveToCache: saveToCache,
   );
+}
 
-  /// A [FetchBuilder] where [FetchBuilderControllerBase.refresh] takes a parameter that will be passed to [task].
-  const FetchBuilder.parameterized({
+/// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
+/// Useful for advanced use cases.
+class FetchBuilderWithParameter<T, R> extends StatefulWidget {
+  const FetchBuilderWithParameter._({
     super.key,
     this.config,
     this.controller,
@@ -53,8 +45,27 @@ class FetchBuilder<T, R> extends StatefulWidget {
     this.saveToCache,
   });
 
+  /// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
+  /// Useful for advanced use cases.
+  const FetchBuilderWithParameter({
+    super.key,
+    this.config,
+    FetchBuilderWithParameterController<T, R>? controller,
+    required this.task,
+    this.fetchAtInit = true,
+    this.initBuilder,
+    this.builder,
+    this.onSuccess,
+    this.getFromCache,
+    this.saveToCache,
+  // ignore: prefer_initializing_formals    // We force subtype to be used
+  }) : controller = controller;
+
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
+
+  /// A controller used to manually refresh data.
+  final FetchBuilderControllerBase<T, R>? controller;
 
   /// Task that fetch and return the data, with optional parameter
   /// If task throws, it will be properly handled (message displayed + report error)
@@ -76,9 +87,6 @@ class FetchBuilder<T, R> extends StatefulWidget {
   /// Usually used to navigate to another page.
   final ValueSetter<R>? onSuccess;
 
-  /// A controller used to manually refresh data.
-  final FetchBuilderControllerBase<T, R?>? controller;
-
   /// Optional function to provide data from cache at creation.
   /// If available, data will be displayed instantly, while fetching newer data from [task].
   /// If a [ConnectivityException] happens while fetching, cached data will stay displayed.
@@ -88,10 +96,10 @@ class FetchBuilder<T, R> extends StatefulWidget {
   final ValueChanged<R>? saveToCache;
 
   @override
-  State<FetchBuilder<T, R>> createState() => _FetchBuilderState<T, R>();
+  State<FetchBuilderWithParameter<T, R>> createState() => _FetchBuilderWithParameterState<T, R>();
 }
 
-class _FetchBuilderState<T, R> extends State<FetchBuilder<T, R>> {
+class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParameter<T, R>> {
   late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
 
   EventStream<DataWrapper<R>?>? _stream;
@@ -249,13 +257,13 @@ enum FetchErrorDisplayMode {
 /// Only support one widget per controller.
 /// If multiple widget are using the same controller, only the last one will work.
 abstract class FetchBuilderControllerBase<T, R> {
-  _FetchBuilderState<T, R>? _state;
+  _FetchBuilderWithParameterState<T, R>? _state;
 
-  void _mountState(_FetchBuilderState<T, R> state) {
+  void _mountState(_FetchBuilderWithParameterState<T, R> state) {
     _state = state;
   }
 
-  void _unmountState(_FetchBuilderState<T, R> state) {
+  void _unmountState(_FetchBuilderWithParameterState<T, R> state) {
     /// When a widget is rebuilt with another key,
     /// the state of the new widget is first initialised,
     /// then the state of the old widget is disposed.
@@ -265,16 +273,17 @@ abstract class FetchBuilderControllerBase<T, R> {
     }
   }
 
+  /// Refresh data by re-running the [FetchBuilder.task].
   Future<R?> refresh();
 }
 
-class ParameterizedFetchBuilderController<T, R> extends FetchBuilderControllerBase<T, R> {
+class FetchBuilderWithParameterController<T, R> extends FetchBuilderControllerBase<T, R> {
   @override
   Future<R?> refresh({T? param, bool? clearDataFirst, FetchErrorDisplayMode? errorDisplayMode}) =>
       _state!._fetch(param: param, clearDataFirst: clearDataFirst, errorDisplayMode: errorDisplayMode);
 }
 
-class BasicFetchBuilderController<R> extends FetchBuilderControllerBase<Never, R> {
+class FetchBuilderController<R> extends FetchBuilderControllerBase<Never, R> {
   @override
   Future<R?> refresh({bool? clearDataFirst, FetchErrorDisplayMode? errorDisplayMode}) =>
       _state!._fetch(clearDataFirst: clearDataFirst, errorDisplayMode: errorDisplayMode);

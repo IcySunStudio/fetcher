@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:fetcher/fetcher.dart';
+import 'package:fetcher/fetcher_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:value_stream/value_stream.dart';
 
 import 'fetch_builder.page.dart';
 

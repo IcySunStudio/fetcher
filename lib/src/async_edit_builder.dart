@@ -50,7 +50,7 @@ class AsyncEditBuilder<T> extends StatefulWidget {
 }
 
 class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
-  final _fetcherController = ParameterizedFetchBuilderController<T, T>();
+  final _fetcherController = FetchBuilderWithParameterController<T, T>();
   late final _fetchBuilderConfig = () {
     if (widget.fetchingBuilder == null) return widget.config;
     final fetchingBuilderConfig = FetcherConfig(fetchingBuilder: widget.fetchingBuilder);
@@ -59,7 +59,7 @@ class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return FetchBuilder<T, T>.parameterized(
+    return FetchBuilderWithParameter<T, T>(
       controller: _fetcherController,
       config: _fetchBuilderConfig,
       task: (value) async => value ?? await widget.fetchTask(),

@@ -35,7 +35,7 @@ class _NewsReaderPageState extends State<NewsReaderPage> with BlocProvider<NewsR
           appBar: AppBar(
             title: Text('News reader #${widget.page}'),
           ),
-          body: FetchBuilder.basic<NewsArticle>(
+          body: FetchBuilder<NewsArticle>(
             task: bloc.fetchArticle,
             config: FetcherConfig(
               fetchingBuilder: (context) => Padding(

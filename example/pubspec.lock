@@ -39,7 +39,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.1.0"
+    version: "4.0.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -139,7 +139,7 @@ packages:
     source: hosted
     version: "1.3.0"
   value_stream:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: value_stream
       sha256: aad843f2dab2fa167a26c1b99c4d077340241c9f2c2f41c2e643a3c60daf4f04

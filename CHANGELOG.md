@@ -1,4 +1,8 @@
 ## 4.0.0
+* BREAKING: replace `FetchBuilder.basic` constructor to simply `FetchBuilder`.
+* BREAKING: replace `FetchBuilder.parameterized` constructor to `FetchBuilderWithParameter`.
+* BREAKING: rename `BasicFetchBuilderController` to simply `FetchBuilderController`.
+* BREAKING: rename `ParameterizedFetchBuilderController` to simply `FetchBuilderWithParameterController`.
 * BREAKING: remove obsolete `clearFocus2` method.
 * export `ActivityBarrier` widget
 

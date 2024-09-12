@@ -22,7 +22,7 @@ class PagedListViewFetcher<T, P> extends StatefulWidget {
   }) : assert(separator == null || itemExtent == null);
 
   /// A controller used to manually refresh data.
-  final BasicFetchBuilderController<PagedData<T, P>>? controller;
+  final FetchBuilderController<PagedData<T, P>>? controller;
 
   /// Task that fetch and return the data, with pageId as parameter.
   final ParameterizedAsyncTask<P, PagedData<T, P>> task;
@@ -66,7 +66,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
     _loader = Center(   // Center force CircularProgressIndicator to have a proper size if itemExtent is used
       child: SizedBox(
         height: 45,
-        child: FetchBuilder.basic<PagedData<T, P>>(
+        child: FetchBuilder<PagedData<T, P>>(
           task: _fetchNextPage,
           onSuccess: (pagedData) {
             setState(() {
@@ -94,7 +94,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
 
   @override
   Widget build(BuildContext context) {
-    return FetchBuilder.basic<PagedData<T, P>>(
+    return FetchBuilder<PagedData<T, P>>(
       controller: widget.controller,
       task: _fetchNextPage,
       onSuccess: (pagedData) {

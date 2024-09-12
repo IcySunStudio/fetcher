@@ -11,8 +11,8 @@ class FetchBuilderPage extends StatefulWidget {
 }
 
 class _FetchBuilderPageState extends State<FetchBuilderPage> {
-  final _fetchController1 = ParameterizedFetchBuilderController<bool, String>();
-  final _fetchController2 = BasicFetchBuilderController<String>();
+  final _fetchController1 = FetchBuilderWithParameterController<bool, String>();
+  final _fetchController2 = FetchBuilderController<String>();
 
   bool withError = false;
   bool dataClear = false;
@@ -37,9 +37,11 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
             appBar: AppBar(
               title: const Text('Unmounted state test'),
             ),
-            body: FetchBuilder.basic<Object>(
+            body: FetchBuilder<Object>(
               task: () async {
-                await Future.delayed(const Duration(milliseconds: 500)).then((value) => Navigator.of(context).pop());
+                await Future.delayed(const Duration(milliseconds: 500)).then((value) {
+                  if(context.mounted) Navigator.of(context).pop();
+                });
                 await Future.delayed(const Duration(seconds: 2));
                 throw Exception('test');
               },
@@ -93,7 +95,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
         // Parameterized Fetcher
         Expanded(
-          child: FetchBuilder<bool, String>.parameterized(
+          child: FetchBuilderWithParameter<bool, String>(
             controller: _fetchController1,
             task: fetchTask,
             config: const FetcherConfig(
@@ -126,7 +128,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           padding: EdgeInsets.all(10),
           child: _Title(title: 'Dense Fetcher with Error'),
         ),
-        FetchBuilder.basic<String>(
+        FetchBuilder<String>(
           task: () async => throw Exception('Error !!'),
           config: const FetcherConfig(
             isDense: true,
@@ -145,7 +147,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           child: const Text('Fetch'),
         ),
         const SizedBox(height: 20),
-        FetchBuilder.basic<String>(
+        FetchBuilder<String>(
           controller: _fetchController2,
           fetchAtInit: false,
           task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
