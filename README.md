@@ -10,7 +10,7 @@ Minimalist framework to easily handle UI states (loading, error and data) for as
 It provides two main widgets, with automatic handling of all common UI states:
 
 * `FetchBuilder`: fetch then display data *(example: a weather info page)*
-* `SubmitBuilder` submit data *(example: a form page)*
+* `SubmitBuilder`: submit data *(example: a form page)*
 
 Simplicity in mind: you directly provide a `Future` (likely network call, which may throw), the widget handles everything else.
 
