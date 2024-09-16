@@ -9,12 +9,12 @@ Minimalist framework to easily handle UI states (loading, error and data) for as
 
 It provides two main widgets, with automatic handling of all common UI states:
 
-* `FetchBuilder` fetch then display data *(example: a weather info page)*.
-* `SubmitBuilder` submit data *(example: a form page)*.
+* `FetchBuilder`: fetch then display data *(example: a weather info page)*
+* `SubmitBuilder`: submit data *(example: a form page)*
 
-Simplicity in mind: directly provides a `Future` (likely network call, which may throw), the widget handles the rest.
+Simplicity in mind: you directly provide a `Future` (likely network call, which may throw), the widget handles everything else.
 
-Package developed with the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle): no fuss, no glitter, just an easy-to-use API, using easy-to-read code.
+Package developed following the [KISS principle](https://en.wikipedia.org/wiki/KISS_principle): no fuss, no glitter, just an easy-to-use API, using easy-to-read code.
 
 **Fetcher Bloc**
 
@@ -24,7 +24,7 @@ A handy export file is provided in that purpose.
 
 ## Features
 
-* Minimalist library: mostly use native Flutter components & logic
+* Minimalist library: mostly uses native Flutter components & logic
 * Ready to use: default widgets provided
 * Basic usage should be very simple and straighforward, while advanced usage is possible
 * Global configuration with local overrides
@@ -35,25 +35,25 @@ A handy export file is provided in that purpose.
 
 ### Main Widgets
 
-* `FetchBuilder` fetch then display data
+* `FetchBuilder`: fetch then display data
   * Handle loading, error and data states
   * Retry system
-* `SubmitBuilder` submit data
+* `SubmitBuilder`: submit data
   * Handle loading and error states
   * Display barrier to prevent user interaction while loading (avoid double clicks)
 
 ### Additional Widgets
 
-* `EventFetchBuilder` listen to an `EventStream` and display data
+* `EventFetchBuilder`: listen to an `EventStream` and display data
 
   * It's like `FetchBuilder` but instead of directly calling a task once, it will listen to a stream and his updates.
-* `PagedListViewFetcher` paginated version of `FetchBuilder`
+* `PagedListViewFetcher`: paginated version of `FetchBuilder`
 
   * with infinite scrolling
-* `SubmitFormBuilder` submit data with automatic form validation
+* `SubmitFormBuilder`: submit data with automatic form validation
 
   * use default Flutter Form system
-* `AsyncEditBuilder` fetch then display data, and submit a change if needed (example: an async switch)
+* `AsyncEditBuilder`: fetch then display data, and submit a change if needed (example: an async switch)
 
 ### Fetcher Bloc
 
@@ -64,7 +64,7 @@ A handy export file is provided in that purpose.
 
 ### Fetch data
 
-This example fetch a data from a server, then display data directly
+This example fetches data from a server, then displays data directly
 
 ```dart
 FetchBuilder.basic<Weather>(
@@ -73,9 +73,9 @@ FetchBuilder.basic<Weather>(
 )
 ```
 
-Where `getWeather` is an async function that return a `Future<Weather>`, and may throw (not internet, bad request, etc).
+Where `getWeather` is an async function that returns a `Future<Weather>`, and may throw (no internet, bad request, etc.).
 
-By default it will use global (or default) config. To override locally you can use config parameter:
+By default, it will use global (or default) config. To override locally you can use config parameter:
 
 ```dart
 FetchBuilder.basic<Weather>(
@@ -89,7 +89,7 @@ FetchBuilder.basic<Weather>(
 
 ### Submit data
 
-This example submit data to server, and then pop the page.
+This example submits data to server, and then pops the page.
 
 ```dart
 SubmitBuilder<void>(
@@ -102,11 +102,11 @@ SubmitBuilder<void>(
 )
 ```
 
-Where submitData is an async function that send new data to server, and may throw (not internet, bad request, etc).
-If task throws, it will call `onDisplayMessage` callback (see config) and stay on the page to allow user to try again. `onSuccess` is only called if task return without errors.
-`task` can optionally return an object, that will be passed to the `onSuccess` callback, for advanced usage.
+Where submitData is an async function that sends new data to server, and may throw (no internet, bad request, etc.).
+If task throws, it will call `onDisplayMessage` callback (see config) and stay on the page to allow user to try again. `onSuccess` is only called if task returns without errors.
+`task` can optionally return an object that will be passed to the `onSuccess` callback, for advanced usage.
 
-If task depends of the child context (for instance, if you have 2 buttons that starts 2 different tasks), you can pass the desired task in the runTask callback, instead of the task argument of SubmitBuilder:
+If `task` depends of the child context (for instance, if you have two buttons starting two different tasks), you can pass the desired task in the `runTask` callback, instead of the `task` argument of SubmitBuilder:
 
 ```dart
 SubmitBuilder<void>(
@@ -130,9 +130,9 @@ SubmitBuilder<void>(
 
 ### Fetcher Bloc
 
-This example use `BlocProvider` mixin to provide a bloc class to the widget state.
+This example uses `BlocProvider` mixin to provide a bloc class to the widget state.
 
-The bloc class, that exposes anything you need (business logic), here a simple value:
+The bloc class exposes anything you need (business logic), here is a simple value:
 
 ```dart
 class MyBloc with Disposable {
@@ -140,7 +140,7 @@ class MyBloc with Disposable {
 }
 ```
 
-The widget (generally the page widget), that uses a `BlocProvider` mixin to give access to the bloc from the state:
+The widget (generally the page widget) uses a `BlocProvider` mixin to give access to the bloc from the state:
 
 ```dart
 class MyPage extends StatefulWidget {
@@ -164,7 +164,7 @@ class _MyPageState extends State<MyPage> with BlocProvider<MyPage, MyBloc> {
 
 ### More
 
-See the example project for more usage examples.
+See [the example project](https://github.com/IcySunStudio/fetcher/tree/master/example) for more examples.
 
 ## Getting started
 
@@ -202,11 +202,11 @@ A detailed example to illustrate how to use Fetcher Bloc for a common use-case: 
 * Fetch latest news article from server
 * User has the option to either like or dislike the article
 
-Full source code is available in the example project.
+Full source code is available in [the example project](https://github.com/IcySunStudio/fetcher/tree/master/example).
 
 ### 1. Fetch data
 
-First, let's build the bloc with the method that will fetch last article from server
+First, let's build the bloc with the method that will fetch last article from server:
 
 ```dart
 import 'package:fetcher/fetcher_bloc.dart';
@@ -222,7 +222,7 @@ class NewsReaderBloc with Disposable {
 }
 ```
 
-We just need a class that extends `Disposable`, with an async method that returns the fetched data (here `NewsArticle`).
+We just need a class that extends `Disposable`, with an async method returning the fetched data (here `NewsArticle`).
 No need for any error handling here, all is handled by `FetchBuilder`.
 
 With corresponding data object:
@@ -236,7 +236,7 @@ class NewsArticle {
 }
 ```
 
-UI side, we need to create a new stateful widget for the page, that holds the bloc in his state:
+On the UI side, we need to create a new stateful widget for the page that holds the bloc in its state:
 
 ```dart
 import 'package:fetcher/fetcher_bloc.dart';
@@ -301,16 +301,16 @@ Widget build(BuildContext context) {
 }
 ```
 
-Key part here is the `FetchBuilder.basic<NewsArticle>` widget, that do all the job: we just give it the `task` (network request from bloc), it handles the rest.
+Key part here is the `FetchBuilder.basic<NewsArticle>` widget, that does all the job: we just give it the `task` (network request from bloc), it handles the rest.
 While it's loading, a default loading widget will be displayed.
 If task throws, a default error widget will be displayed, with a retry button.
 When data is available, `builder` will be called, with direct access to the data.
 
 We now have a basic page that fetch data, then displays `article.title` and `article.content`.
 
-we can go further and customize the fetching widget (optional).
+We can go further and customize the fetching widget (optional).
 We have a `config` argument of type `FetcherConfig`, which allows to customize this widget.
-Here we use `fetchingBuilder` argument to override default loading widget:
+Here we use `fetchingBuilder` argument to override the default loading widget:
 
 ```dart
 ...
@@ -335,11 +335,11 @@ builder: ...
 
 ### 2. Dynamic widget
 
-If you need some widget to change dynamically, for instance on user interaction, and the related task is synchronous and safe (does not throws), you can use a basic `DataStream` and his widget `DataStreamBuilder`.
-`DataStream` is just a `Dart` `Stream` that holds the lattest value for easy access, and also guaranties that the value is alway accessible (no error handling).
+If you need some widget to change dynamically, for instance on user interaction, and the related task is synchronous and safe (does not throw), you can use a basic `DataStream` and its widget `DataStreamBuilder`.
+`DataStream` is just a Dart `Stream` that holds the latest value for easy access, and also guarantees that the value is always accessible (no error handling).
 In our example, we can use that for the user to select a vote (like or dislike).
 
-First add an enum on the bloc:
+First, add an enum on the bloc:
 
 ```dart
 enum ArticleVote {
@@ -391,8 +391,8 @@ DataStreamBuilder<ArticleVote?>(
 ),
 ```
 
-When `bloc.selectedVote` stream updates (using the strem's `add()` method), `DataStreamBuilder.builder` part will be rebuild.
-So you alway should wrap the smallest possible part with a `DataStreamBuilder`, to only rebuild the part that changes.
+When `bloc.selectedVote` stream updates (using the strem's `add()` method), `DataStreamBuilder.builder` part will be rebuilt.
+So you should always wrap the smallest possible part with a `DataStreamBuilder`, to only rebuild the part that changes.
 
 Now we have a working ToggleButtons 😄
 
@@ -402,7 +402,7 @@ Now we have a working ToggleButtons 😄
 Now we want to submit that vote to the server. And because it's an asynchonous task (and unsafe), we have to handle all states properly.
 So we will use the perfectly adapted SubmitBuilder widget.
 
-First add a new method to submit the vote to the server on the bloc:
+First, add a new method to submit the vote to the server on the bloc:
 
 ```dart
 Future<ArticleVote> voteArticle([ArticleVote? vote]) async {
@@ -420,8 +420,8 @@ Future<ArticleVote> voteArticle([ArticleVote? vote]) async {
 }
 ```
 
-Method takes the current stream value of `selectedVote`, then send it to the network.
-If selection is empty, we throw an error with a displayable message (by default it will be displayed by user).
+Method takes the current stream value of `selectedVote`, then sends it to the network.
+If selection is empty, we throw an error with a displayable message (by default it will be displayed to user).
 
 Now on UI side, just wrap your page with `SubmitBuilder`:
 
@@ -452,13 +452,13 @@ Widget build(BuildContext context) {
 ```
 
 `task` is executed when `runTask` (in `builder`) is called (usually from a button).
-While `task` is executed, a barrier with a loader is displayed, blocking user interaction (that's why we need the `SubmitBuilder` to be quite high on the tree).
+While `task` is executed, a barrier with a loader is displayed, blocking user interaction (that's why we need the `SubmitBuilder` to be relatively high in the widget tree).
 If `task` throws, a message is displayed, and state is reverted, so user can retry.
 When `task` is completed with success, `onSuccess` is called. This is where you should put navigation logic (all logic that needs a `BuildContext`).
 
 If you need to pass an argument to `task` from the `builder` (or if you have different buttons calling different tasks), you may pass a task to the `runTask` callback, that will override the widget's `task`.
 
-In our example, let's call a secondary task from a second button.
+In our example, let's call a secondary task from a new button.
 
 In the bloc:
 
@@ -468,7 +468,7 @@ In the bloc:
 
 In the page:
 
-```
+```dart
 ElevatedButton(
   onPressed: () => runTask(bloc.voteArticleWithError),
   child: const Text('Vote with error'),
@@ -476,10 +476,10 @@ ElevatedButton(
 ```
 
 
-That's all !
-This example illustrate the base of `fetcher_bloc` usage.
+That's all!
+This example illustrates the base of `fetcher_bloc` usage.
 
-Test & see full example code in the example project.
+Test & see full example code in [the example project](https://github.com/IcySunStudio/fetcher/tree/master/example).
 
 
 ## FAQ
@@ -488,28 +488,28 @@ Test & see full example code in the example project.
 
 In a FetchBuilder, if you need to call a task programmatically (for instance to refresh data from a pull-to-refresh), you can use the `controller` argument.
 
-1. Instanciate a new `BasicFetchBuilderController` (or `ParameterizedFetchBuilderController`) in the bloc or in a state.
-2. Pass instance to `controller` parameter of `FetchBuilder`.
-3. Call `controller.refresh()` from a function.
+1. Instantiate a new `BasicFetchBuilderController` (or `ParameterizedFetchBuilderController`) in the bloc or in a state
+2. Pass instance to `controller` parameter of `FetchBuilder`
+3. Call `controller.refresh()` from a function
 
 ### FetchBuilder with extra argument
 
 For advanced usage, you can use `FetchBuilder.parameterized` constructor to pass an object to the task.
 
-For instance, it can be usefull for a search feature, passing the search string in the `refresh` method of the `controller`, each time searcg field changes.
+For instance, it can be useful for a search feature, passing the search string in the `refresh` method of the `controller`, each time search field changes.
 
 ### Fetch vs Submit
 
 Both corresponding widgets handle an asynchonous task states (loading, error, data, etc).
 But differences in usage is important as state flow is a bit different.
 
-Fetch is when you need to fetch a data before displaying it to the user.
+Fetch should be used when you need to fetch a data before displaying it to the user.
 So while data is fetching, you have nothing to display but a loader.
-Same when an error occurs, an error widget will be displayed instead of the data widget.
+Similarly, when an error occurs, an error widget will be displayed instead of the data widget.
 
-Submit is when you need to send/post/submit/commit a data asynchonously OR just call an asynchonous task.
+Submit should be used when you need to send/post/submit/commit a data asynchonously OR just call an asynchonous task.
 Typical example is a form submission. Task is usually called after a user interaction (i.e. a button), displaying a barrier with a loader ABOVE all content.
 If an error occurs, barrier is removed and state reverted, so user can try again using same context (you stay on the form page).
 If it's a success, you usually want to navigate elsewhere.
 
-You may look at the news reader example to get deeper.
+You may look at [the news reader example](https://github.com/IcySunStudio/fetcher/tree/master/example) to go deeper.
