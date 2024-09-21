@@ -1,5 +1,6 @@
 import 'package:fetcher/extra.dart';
 import 'package:fetcher/fetcher.dart';
+import 'package:fetcher/src/fetch_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream/value_stream.dart';
 

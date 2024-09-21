@@ -11,14 +11,14 @@ class FetchBuilderPage extends StatefulWidget {
 }
 
 class _FetchBuilderPageState extends State<FetchBuilderPage> {
-  final _fetchController1 = FetchBuilderWithParameterController<bool, String>();
-  final _fetchController2 = FetchBuilderController<String>();
+  final _fetchController1 = AsyncTaskBuilderController<bool, String>();
+  final _fetchController2 = AsyncTaskBuilderController.basic<String>();
 
   bool withError = false;
   bool dataClear = false;
   FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
 
-  Future<String> fetchTask(bool? withError) async {
+  Future<String> fetchTask([bool? withError]) async {
     final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Europe/Paris'));
     await Future.delayed(const Duration(seconds: 2));
     if (withError == true) throw Exception('Error !');
@@ -29,24 +29,24 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
         // Unmounted state test
         // Test error handling when state is unmounted
         ElevatedButton(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: const Text('Unmounted state test'),
-            ),
-            body: FetchBuilder<Object>(
-              task: () async {
-                await Future.delayed(const Duration(milliseconds: 500)).then((value) {
-                  if(context.mounted) Navigator.of(context).pop();
-                });
-                await Future.delayed(const Duration(seconds: 2));
-                throw Exception('test');
-              },
-            ),
-          ))),
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => Scaffold(
+                    appBar: AppBar(
+                      title: const Text('Unmounted state test'),
+                    ),
+                    body: AsyncTaskBuilder.basic(
+                      task: () async {
+                        await Future.delayed(const Duration(milliseconds: 500)).then((value) {
+                          if (context.mounted) Navigator.of(context).pop();
+                        });
+                        await Future.delayed(const Duration(seconds: 2));
+                        throw Exception('test');
+                      },
+                    ),
+                  ))),
           child: const Text('Unmounted state test'),
         ),
 
@@ -95,12 +95,12 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
         // Parameterized Fetcher
         Expanded(
-          child: FetchBuilderWithParameter<bool, String>(
+          child: AsyncTaskBuilder<bool, String>.fetch(
             controller: _fetchController1,
             task: fetchTask,
             config: const FetcherConfig(
               // fadeDuration: Duration.zero,    // Disable fade
-              fadeDuration: Duration(seconds: 1),   // Long fade
+              fadeDuration: Duration(seconds: 1), // Long fade
             ),
             builder: (context, data) {
               return Column(
@@ -128,7 +128,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           padding: EdgeInsets.all(10),
           child: _Title(title: 'Dense Fetcher with Error'),
         ),
-        FetchBuilder<String>(
+        AsyncTaskBuilder.basic<String>(
           task: () async => throw Exception('Error !!'),
           config: const FetcherConfig(
             isDense: true,
@@ -147,13 +147,14 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           child: const Text('Fetch'),
         ),
         const SizedBox(height: 20),
-        FetchBuilder<String>(
+        AsyncTaskBuilder.basic<String>(
           controller: _fetchController2,
           fetchAtInit: false,
           task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
-          onSuccess: (result) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-            body: Center(child: Text(result)),
-          ))),
+          onSuccess: (result) => Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => Scaffold(
+                    body: Center(child: Text(result)),
+                  ))),
           initBuilder: (_) => const Text('Press Fetch to start'),
         ),
         const SizedBox(height: 20),

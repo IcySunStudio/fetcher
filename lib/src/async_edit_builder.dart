@@ -50,21 +50,22 @@ class AsyncEditBuilder<T> extends StatefulWidget {
 }
 
 class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
-  final _fetcherController = FetchBuilderWithParameterController<T, T>();
+  final _fetcherController = AsyncTaskBuilderController<T, T>();
   late final _fetchBuilderConfig = () {
     if (widget.fetchingBuilder == null) return widget.config;
     final fetchingBuilderConfig = FetcherConfig(fetchingBuilder: widget.fetchingBuilder);
     return widget.config == null ? fetchingBuilderConfig : widget.config!.apply(fetchingBuilderConfig);
-  } ();
+  }();
 
   @override
   Widget build(BuildContext context) {
-    return FetchBuilderWithParameter<T, T>(
+    return AsyncTaskBuilder<T, T>.fetchWithParameter(
       controller: _fetcherController,
       config: _fetchBuilderConfig,
       task: (value) async => value ?? await widget.fetchTask(),
       builder: (context, data) {
-        return SubmitBuilder<T>(
+        return AsyncTaskBuilder<void, T>.submit(
+          ///TODO: Find a way to make task optional here
           config: widget.config,
           onSuccess: (data) {
             widget.onEditSuccess?.call(data);

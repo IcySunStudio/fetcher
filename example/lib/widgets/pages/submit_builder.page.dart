@@ -18,7 +18,6 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
         // Settings
         CheckboxListTile(
           title: const Text('Run task on start'),
@@ -34,7 +33,7 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
 
         // Classic SubmitBuilder
         Expanded(
-          child: SubmitBuilder<String>(
+          child: AsyncTaskBuilder<void, String>.submit(
             key: ValueKey(_refreshKey),
             runTaskOnStart: _runTaskOnStart,
             task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
@@ -47,7 +46,6 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-
                   // Basic run
                   Center(
                     child: ElevatedButton(
@@ -66,7 +64,6 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
                       child: const Text('Press to start with error'),
                     ),
                   ),
-
                 ],
               );
             },
@@ -77,7 +74,7 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
         const Separator(),
         Padding(
           padding: const EdgeInsets.all(20),
-          child: SubmitBuilder<void>(
+          child: AsyncTaskBuilder.submit(
             task: () => Future.delayed(const Duration(seconds: 3)),
             onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('Success !'),
