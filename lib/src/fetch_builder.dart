@@ -24,9 +24,9 @@ class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
     super.getFromCache,
     super.saveToCache,
   }) : super._(
-    controller: controller,
-    task: (_) => task(),
-  );
+          controller: controller,
+          task: (_) => task(),
+        );
 }
 
 /// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
@@ -58,7 +58,7 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.onSuccess,
     this.getFromCache,
     this.saveToCache,
-  // ignore: prefer_initializing_formals    // We force subtype to be used
+    // ignore: prefer_initializing_formals    // We force subtype to be used<<
   }) : controller = controller;
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
@@ -141,10 +141,11 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
   @override
   Widget build(BuildContext context) {
     return EventStreamBuilder<DataWrapper<R>?>(
-      stream: _stream,   // When stream is null, the snapshot's state will be ConnectionState.none.
+      stream: _stream, // When stream is null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
         return FetchBuilderContent<DataWrapper<R>?>(
-          config: config,     // Use config from state, not from widget, to force field to be initialized at init. Otherwise, if an error occurs in _fetch while state is unmounted, accessing the config will throw an error because context is unmounted.
+          config:
+              config, // Use config from state, not from widget, to force field to be initialized at init. Otherwise, if an error occurs in _fetch while state is unmounted, accessing the config will throw an error because context is unmounted.
           snapshot: snapshot,
           initBuilder: widget.initBuilder,
           builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),
@@ -175,7 +176,7 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
     final R result;
     try {
       result = await widget.task(param);
-    } catch(e, s) {
+    } catch (e, s) {
       // Report error first
       config.onError!(e, s);
 
@@ -227,7 +228,7 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
         stream.add(DataWrapper(result));
         return result;
       }
-    } catch(e, s) {
+    } catch (e, s) {
       config.onError!(e, s);
     }
     return null;
