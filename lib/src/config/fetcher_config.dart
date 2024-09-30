@@ -43,6 +43,7 @@ class FetcherConfig {
 
   /// Widget to display on fetch error.
   /// Replace whole widget content.
+  /// [FetchErrorData] contains useful data about the error, like a retry function (only available on [FetchBuilder]).
   /// Default to [FetchBuilderErrorWidget], includes a retry button.
   final Widget Function(BuildContext context, FetchErrorData errorData)? fetchErrorBuilder;
 

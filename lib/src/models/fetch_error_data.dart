@@ -10,6 +10,7 @@ class FetchErrorData {
   /// Whether the widget context is in a low space environment
   final bool isDense;
 
-  /// Called when user retry
+  /// Function to call to retry the fetch
+  /// Only available on [FetchBuilder]
   final VoidCallback? retry;
 }

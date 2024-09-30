@@ -40,7 +40,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       // If an error occurred
       else if (snapshot.hasError) {
         final error = snapshot.error!;
-        return config.fetchErrorBuilder!(context, FetchErrorData(error, config.isDense == true, error is FetchException ? error.retry : null));
+        return config.fetchErrorBuilder!(context, FetchErrorData(error is FetchException ? error.innerException : error, config.isDense == true, error is FetchException ? error.retry : null));
       }
       // If data is loading
       else if (!snapshot.hasData) {

@@ -2,7 +2,6 @@ library fetcher;
 
 export 'src/config/default_fetcher_config.dart';
 export 'src/config/fetcher_config.dart';
-export 'src/exceptions/fetch_exception.dart';
 export 'src/models/fetch_error_data.dart';
 
 export 'src/submit_form_builder.dart';

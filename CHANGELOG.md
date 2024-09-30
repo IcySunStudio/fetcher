@@ -4,6 +4,7 @@
 * BREAKING: rename `BasicFetchBuilderController` to simply `FetchBuilderController`.
 * BREAKING: rename `ParameterizedFetchBuilderController` to simply `FetchBuilderWithParameterController`.
 * BREAKING: remove obsolete `clearFocus2` method.
+* BREAKING: For `FetchBuilder`, `FetcherConfig.fetchErrorBuilder.errorData.error` is now directly the thrown error object, instead of a useless `FetchException` (which is now hidden).
 * export `ActivityBarrier` widget
 
 ## 3.1.0
