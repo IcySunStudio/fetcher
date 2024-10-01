@@ -21,8 +21,6 @@ class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
     super.initBuilder,
     super.builder,
     super.onSuccess,
-    super.getFromCache,
-    super.saveToCache,
   }) : super._(
     controller: controller,
     task: (_) => task(),
@@ -41,8 +39,6 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.initBuilder,
     this.builder,
     this.onSuccess,
-    this.getFromCache,
-    this.saveToCache,
   });
 
   /// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
@@ -56,8 +52,6 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.initBuilder,
     this.builder,
     this.onSuccess,
-    this.getFromCache,
-    this.saveToCache,
   // ignore: prefer_initializing_formals    // We force subtype to be used
   }) : controller = controller;
 
@@ -87,14 +81,6 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
   /// Usually used to navigate to another page.
   final ValueSetter<R>? onSuccess;
 
-  /// Optional function to provide data from cache at creation.
-  /// If available, data will be displayed instantly, while fetching newer data from [task].
-  /// If a [ConnectivityException] happens while fetching, cached data will stay displayed.
-  final ValueGetter<R?>? getFromCache;
-
-  /// Called when [task] is a success, to save new data to cache.
-  final ValueChanged<R>? saveToCache;
-
   @override
   State<FetchBuilderWithParameter<T, R>> createState() => _FetchBuilderWithParameterState<T, R>();
 }
@@ -118,18 +104,6 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
   @override
   void initState() {
     super.initState();
-
-    // Get from cache
-    if (widget.getFromCache != null) {
-      try {
-        final cachedData = widget.getFromCache!();
-        if (cachedData != null) {
-          _initStream().add(DataWrapper(cachedData));
-        }
-      } catch (e, s) {
-        config.onError!(e, s);
-      }
-    }
 
     // Init controller
     widget.controller?._mountState(this);
@@ -205,16 +179,6 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
       // Exit
       return null;
-    }
-
-    // Save to cache
-    if (widget.saveToCache != null && isTaskValid()) {
-      try {
-        widget.saveToCache!(result);
-      } catch (e, s) {
-        // Just report error, then continue
-        config.onError!(e, s);
-      }
     }
 
     // Run post tasks
