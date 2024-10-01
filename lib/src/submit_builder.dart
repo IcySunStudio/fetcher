@@ -45,6 +45,7 @@ class SubmitBuilder<T> extends StatefulWidget {
   /// Called after [task] has successfully completed.
   /// Ignored if widget is unmounted.
   /// Usually used to navigate to another page.
+  /// If it throws, it will be handled as if [task] has thrown.
   final ValueSetter<T>? onSuccess;
 
   @override

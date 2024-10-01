@@ -91,9 +91,9 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
   EventStream<DataWrapper<R>?>? _stream;
 
-  /// Only init stream when needed.
-  /// This allows to properly display [widget.initBuilder].
-  EventStream<DataWrapper<R>?> _initStream() {
+  /// Lazy stream init.
+  /// This allows to properly display [widget.initBuilder] (When stream is null, the StreamBuilder snapshot's state will be ConnectionState.none).
+  EventStream<DataWrapper<R>?> get stream {
     if (_stream == null) {
       setState(() {
         _stream = EventStream();
@@ -116,7 +116,7 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
   @override
   Widget build(BuildContext context) {
     return EventStreamBuilder<DataWrapper<R>?>(
-      stream: _stream,   // When stream is null, the snapshot's state will be ConnectionState.none.
+      stream: _stream,   // Use nullable stream: when it's null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
         return FetchBuilderContent<DataWrapper<R>?>(
           config: config,     // Use config from state, not from widget, to force field to be initialized at init. Otherwise, if an error occurs in _fetch while state is unmounted, accessing the config will throw an error because context is unmounted.
@@ -138,9 +138,6 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
     // Skip if disposed
     if (!mounted) return null;
-
-    // Init stream
-    final stream = _initStream();
 
     // Clear current data
     clearDataFirst ??= stream.hasError;

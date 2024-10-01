@@ -27,27 +27,32 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
   @override
   Widget build(BuildContext context) {
+    const contentPadding = EdgeInsets.symmetric(horizontal: 20);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
 
         // Unmounted state test
         // Test error handling when state is unmounted
-        ElevatedButton(
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-            appBar: AppBar(
-              title: const Text('Unmounted state test'),
-            ),
-            body: FetchBuilder<Object>(
-              task: () async {
-                await Future.delayed(const Duration(milliseconds: 500)).then((value) {
-                  if(context.mounted) Navigator.of(context).pop();
-                });
-                await Future.delayed(const Duration(seconds: 2));
-                throw Exception('test');
-              },
-            ),
-          ))),
-          child: const Text('Unmounted state test'),
+        Padding(
+          padding: contentPadding,
+          child: ElevatedButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+              appBar: AppBar(
+                title: const Text('Unmounted state test'),
+              ),
+              body: FetchBuilder<Object>(
+                task: () async {
+                  await Future.delayed(const Duration(milliseconds: 500)).then((value) {
+                    if(context.mounted) Navigator.of(context).pop();
+                  });
+                  await Future.delayed(const Duration(seconds: 2));
+                  throw Exception('test');
+                },
+              ),
+            ))),
+            child: const Text('Unmounted state test'),
+          ),
         ),
 
         // Header
@@ -88,9 +93,12 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
         ),
 
         // Button
-        ElevatedButton(
-          onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError, errorDisplayMode: errorDisplayMode),
-          child: const Text('Refresh'),
+        Padding(
+          padding: contentPadding,
+          child: ElevatedButton(
+            onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError, errorDisplayMode: errorDisplayMode),
+            child: const Text('Refresh'),
+          ),
         ),
 
         // Parameterized Fetcher
@@ -142,31 +150,37 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           padding: EdgeInsets.all(10),
           child: _Title(title: 'Delayed Fetcher without builder'),
         ),
-        ElevatedButton(
-          onPressed: () => _fetchController2.refresh(clearDataFirst: true),
-          child: const Text('Fetch'),
+        Padding(
+          padding: contentPadding,
+          child: ElevatedButton(
+            onPressed: () => _fetchController2.refresh(clearDataFirst: true),
+            child: const Text('Fetch'),
+          ),
         ),
         const SizedBox(height: 20),
-        FetchBuilder<String>(
-          controller: _fetchController2,
-          fetchAtInit: false,
-          task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
-          onSuccess: (result) {
-            // Uncomment to test error handling in onSuccess
-            // throw 'An error occurred in onSuccess';
+        Padding(
+          padding: contentPadding,
+          child: FetchBuilder<String>(
+            controller: _fetchController2,
+            fetchAtInit: false,
+            task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
+            onSuccess: (result) {
+              // Uncomment to test error handling in onSuccess
+              // throw 'An error occurred in onSuccess';
 
-            // Display a success message
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Load without builder success'),
-              backgroundColor: Colors.green,
-            ));
+              // Display a success message
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Load without builder success'),
+                backgroundColor: Colors.green,
+              ));
 
-            // Navigate to the next page
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-              body: Center(child: Text(result)),
-            )));
-          },
-          initBuilder: (_) => const Text('Press Fetch to start'),
+              // Navigate to the next page
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+                body: Center(child: Text(result)),
+              )));
+            },
+            initBuilder: (_) => const Text('Press Fetch to start'),
+          ),
         ),
         const SizedBox(height: 20),
       ],
