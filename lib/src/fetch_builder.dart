@@ -79,6 +79,7 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
   /// Called when [task] has successfully completed.
   /// Ignored if widget is unmounted.
   /// Usually used to navigate to another page.
+  /// If it throws, it will be handled as if [task] has thrown.
   final ValueSetter<R>? onSuccess;
 
   @override
@@ -145,10 +146,22 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
     clearDataFirst ??= stream.hasError;
     if (clearDataFirst) stream.add(null);
 
-    // Run task
-    final R result;
+    // Start process
     try {
-      result = await widget.task(param);
+      // Run task
+      final result = await widget.task(param);
+
+      // If task is still valid
+      if (isTaskValid()) {
+        // Call onSuccess
+        widget.onSuccess?.call(result);
+
+        // Update UI
+        stream.add(DataWrapper(result));
+      }
+
+      // Return result, even if task is not valid anymore
+      return result;
     } catch(e, s) {
       // Report error first
       config.onError!(e, s);
@@ -176,24 +189,9 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
           config.onDisplayError!(context, e);
         }
       }
-
-      // Exit
-      return null;
     }
 
-    // Run post tasks
-    try {
-      if (isTaskValid()) {
-        // Call onSuccess
-        widget.onSuccess?.call(result);
-
-        // Update UI
-        stream.add(DataWrapper(result));
-        return result;
-      }
-    } catch(e, s) {
-      config.onError!(e, s);
-    }
+    // Exit with no result
     return null;
   }
 
@@ -238,6 +236,7 @@ abstract class FetchBuilderControllerBase<T, R> {
   }
 
   /// Refresh data by re-running the [FetchBuilder.task].
+  /// Return the result of the task, or null if task throws.
   Future<R?> refresh();
 }
 

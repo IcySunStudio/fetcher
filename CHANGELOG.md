@@ -6,7 +6,8 @@
 * BREAKING: remove obsolete `clearFocus2` method.
 * BREAKING: For `FetchBuilder`, `FetcherConfig.fetchErrorBuilder.errorData.error` is now directly the thrown error object, instead of a useless `FetchException` (which is now hidden).
 * BREAKING: remove `FetchBuilder.getFromCache` and `FetchBuilder.saveToCache`: cache handling should be done at the BLoC level.
-* export `ActivityBarrier` widget
+* Fix when `FetchBuilder.onSuccess` throws an error: it's now handled like if `FetchBuilder.task` throws (before that fix, it would be stuck in loading state).
+* Export `ActivityBarrier` widget
 
 ## 3.1.0
 * Add NewsReaderPage example

@@ -151,9 +151,21 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
           controller: _fetchController2,
           fetchAtInit: false,
           task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
-          onSuccess: (result) => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-            body: Center(child: Text(result)),
-          ))),
+          onSuccess: (result) {
+            // Uncomment to test error handling in onSuccess
+            // throw 'An error occurred in onSuccess';
+
+            // Display a success message
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Load without builder success'),
+              backgroundColor: Colors.green,
+            ));
+
+            // Navigate to the next page
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+              body: Center(child: Text(result)),
+            )));
+          },
           initBuilder: (_) => const Text('Press Fetch to start'),
         ),
         const SizedBox(height: 20),
