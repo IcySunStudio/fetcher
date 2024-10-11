@@ -7,7 +7,7 @@ import 'widgets/clear_focus_background.dart';
 
 /// Wrapper around [SubmitBuilder] with automatic form validation.
 class SubmitFormBuilder<T> extends StatelessWidget {
-  const SubmitFormBuilder({super.key, required this.builder, this.onValidated, this.onSuccess});
+  const SubmitFormBuilder({super.key, required this.builder, this.onValidated, this.onSuccess, this.formKey});
 
   /// Child widget builder that provide a [validate] callback to be called when needed (usually on a 'validate' button).
   final SubmitChildBuilder<T> builder;
@@ -20,10 +20,14 @@ class SubmitFormBuilder<T> extends StatelessWidget {
   /// Usually used to navigate to another page.
   final ValueSetter<T>? onSuccess;
 
+  /// Form key to be used for validation control.
+  final GlobalKey<FormState>? formKey;
+
   @override
   Widget build(BuildContext context) {
     return ClearFocusBackground(
       child: Form(
+        key: formKey ?? GlobalKey<FormState>(),
         child: Builder(
           builder: (context) {
             return SubmitBuilder<T>(
