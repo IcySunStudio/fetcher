@@ -9,6 +9,8 @@ import 'utils/data_wrapper.dart';
 import 'utils/utils.dart';
 import 'widgets/fetch_builder_content.dart';
 
+part 'fetch_refresher.dart';
+
 /// Widget that fetch data asynchronously, and display it when available.
 /// Handle all possible states: loading, loaded, errors.
 class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
@@ -89,6 +91,9 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
 class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParameter<T, R>> {
   late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
 
+  /// Because BuildContext is unmounted when dispose() is called, we need to keep a reference to the _FetchRefresherState we've registered to
+  _FetchRefresherState? _refresherState;
+
   EventStream<DataWrapper<R>?>? _stream;
 
   /// Lazy stream init.
@@ -108,6 +113,10 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
     // Init controller
     widget.controller?._mountState(this);
+
+    // Register to closest FetchRefresher
+    _refresherState = FetchRefresher._maybeOf(context);
+    _refresherState?._register(this);
 
     // Fetch
     if (widget.fetchAtInit) _fetch();
@@ -204,6 +213,7 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
   @override
   void dispose() {
     widget.controller?._unmountState(this);
+    _refresherState?._unregister(this);
     _stream?.close();
     super.dispose();
   }

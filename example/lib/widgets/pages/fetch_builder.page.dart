@@ -1,7 +1,8 @@
+import 'dart:math';
+
+import 'package:fetcher/extra.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class FetchBuilderPage extends StatefulWidget {
   const FetchBuilderPage({super.key});
@@ -13,181 +14,194 @@ class FetchBuilderPage extends StatefulWidget {
 class _FetchBuilderPageState extends State<FetchBuilderPage> {
   final _fetchController1 = FetchBuilderWithParameterController<bool, String>();
   final _fetchController2 = FetchBuilderController<String>();
+  final _random = Random();
 
   bool withError = false;
   bool dataClear = false;
   FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
 
-  Future<String> fetchTask(bool? withError) async {
+  Future<String> fetchTask(String taskName, bool? withError) async {
     // Simulate a network request
-    await Future.delayed(const Duration(seconds: 2));
+    debugPrint('[$taskName] Fetching data...');
+    await Future.delayed(Duration(milliseconds: 1000 + (_random.nextDouble() * 2000).round()));
 
     // Simulate an error
     if (withError == true) throw Exception('Error !');
 
     // Return simulated data
-    return DateTime.now().toIso8601String();
+    return 'taskName: ${DateTime.now().toIso8601String()}';
   }
 
   @override
   Widget build(BuildContext context) {
     const contentPadding = EdgeInsets.symmetric(horizontal: 20);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-
-        // Unmounted state test
-        // Test error handling when state is unmounted
-        Padding(
-          padding: contentPadding,
-          child: ElevatedButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-              appBar: AppBar(
-                title: const Text('Unmounted state test'),
+    return FetchRefresher(
+      child: FillRemainsScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Pull to refresh
+            const Padding(
+              padding: contentPadding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.refresh),
+                  SizedBox(width: 10),
+                  Text('Pull to refresh all fetchers'),
+                ],
               ),
-              body: FetchBuilder<Object>(
-                task: () async {
-                  await Future.delayed(const Duration(milliseconds: 500)).then((value) {
-                    if(context.mounted) Navigator.of(context).pop();
-                  });
-                  await Future.delayed(const Duration(seconds: 2));
-                  throw Exception('test');
+            ),
+            const SizedBox(height: 20),
+
+            // Unmounted state test
+            // Test error handling when state is unmounted
+            Padding(
+              padding: contentPadding,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+                  appBar: AppBar(
+                    title: const Text('Unmounted state test'),
+                  ),
+                  body: FetchBuilder<String>(
+                    task: () async {
+                      await Future.delayed(const Duration(milliseconds: 500)).then((value) {
+                        if(context.mounted) Navigator.of(context).pop();
+                      });
+                      return await fetchTask('Unmounted', false);
+                    },
+                  ),
+                ))),
+                child: const Text('Unmounted state test'),
+              ),
+            ),
+
+            // Header
+            const SizedBox(height: 20),
+            const _Title(title: 'Fetcher with parameters'),
+
+            // Settings
+            CheckboxListTile(
+              title: const Text('Clear data first'),
+              dense: true,
+              value: dataClear,
+              onChanged: (value) {
+                setState(() {
+                  dataClear = value!;
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: const Text('With error'),
+              dense: true,
+              value: withError,
+              onChanged: (value) {
+                setState(() {
+                  withError = value!;
+                });
+              },
+            ),
+            SwitchListTile(
+              title: Text('Display error : ${errorDisplayMode == FetchErrorDisplayMode.inWidget ? 'in widget' : 'on display'}'),
+              subtitle: const Text('Only effective on refresh'),
+              dense: true,
+              value: errorDisplayMode == FetchErrorDisplayMode.inWidget,
+              onChanged: (value) {
+                setState(() {
+                  errorDisplayMode = value ? FetchErrorDisplayMode.inWidget : FetchErrorDisplayMode.onDisplay;
+                });
+              },
+            ),
+
+            // Button
+            Padding(
+              padding: contentPadding,
+              child: ElevatedButton(
+                onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError, errorDisplayMode: errorDisplayMode),
+                child: const Text('Refresh'),
+              ),
+            ),
+
+            // Parameterized Fetcher
+            SizedBox(
+              height: 200,
+              child: FetchBuilderWithParameter<bool, String>(
+                controller: _fetchController1,
+                task: (withError) => fetchTask('Parameterized', withError),
+                config: const FetcherConfig(
+                  // fadeDuration: Duration.zero,    // Disable fade
+                  fadeDuration: Duration(seconds: 1),   // Long fade
+                ),
+                builder: (context, data) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Data is fetched :',
+                        style: Theme.of(context).textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        data,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  );
                 },
               ),
-            ))),
-            child: const Text('Unmounted state test'),
-          ),
-        ),
-
-        // Header
-        const SizedBox(height: 20),
-        const _Title(title: 'Fetcher with parameters'),
-
-        // Settings
-        CheckboxListTile(
-          title: const Text('Clear data first'),
-          dense: true,
-          value: dataClear,
-          onChanged: (value) {
-            setState(() {
-              dataClear = value!;
-            });
-          },
-        ),
-        CheckboxListTile(
-          title: const Text('With error'),
-          dense: true,
-          value: withError,
-          onChanged: (value) {
-            setState(() {
-              withError = value!;
-            });
-          },
-        ),
-        SwitchListTile(
-          title: Text('Display error : ${errorDisplayMode == FetchErrorDisplayMode.inWidget ? 'in widget' : 'on display'}'),
-          subtitle: const Text('Only effective on refresh'),
-          dense: true,
-          value: errorDisplayMode == FetchErrorDisplayMode.inWidget,
-          onChanged: (value) {
-            setState(() {
-              errorDisplayMode = value ? FetchErrorDisplayMode.inWidget : FetchErrorDisplayMode.onDisplay;
-            });
-          },
-        ),
-
-        // Button
-        Padding(
-          padding: contentPadding,
-          child: ElevatedButton(
-            onPressed: () => _fetchController1.refresh(clearDataFirst: dataClear ? true : null, param: withError, errorDisplayMode: errorDisplayMode),
-            child: const Text('Refresh'),
-          ),
-        ),
-
-        // Parameterized Fetcher
-        Expanded(
-          child: FetchBuilderWithParameter<bool, String>(
-            controller: _fetchController1,
-            task: fetchTask,
-            config: const FetcherConfig(
-              // fadeDuration: Duration.zero,    // Disable fade
-              fadeDuration: Duration(seconds: 1),   // Long fade
             ),
-            builder: (context, data) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Data is fetched :',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    data,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
 
-        // Dense Fetcher
-        const Separator(),
-        const Padding(
-          padding: EdgeInsets.all(10),
-          child: _Title(title: 'Dense Fetcher with Error'),
-        ),
-        FetchBuilder<String>(
-          task: () async => throw Exception('Error !!'),
-          config: const FetcherConfig(
-            isDense: true,
-          ),
-          builder: (context, data) => throw StateError('Should never reach this code'),
-        ),
+            // Dense Fetcher
+            const Separator(),
+            const _Title(title: 'Dense Fetcher with Error'),
+            FetchBuilder<String>(
+              task: () => fetchTask('Dense', true),
+              config: const FetcherConfig(
+                isDense: true,
+              ),
+              builder: (context, data) => throw StateError('Should never reach this code'),
+            ),
 
-        // Delayed Fetcher without builder
-        const Separator(),
-        const Padding(
-          padding: EdgeInsets.all(10),
-          child: _Title(title: 'Delayed Fetcher without builder'),
-        ),
-        Padding(
-          padding: contentPadding,
-          child: ElevatedButton(
-            onPressed: () => _fetchController2.refresh(clearDataFirst: true),
-            child: const Text('Fetch'),
-          ),
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: contentPadding,
-          child: FetchBuilder<String>(
-            controller: _fetchController2,
-            fetchAtInit: false,
-            task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
-            onSuccess: (result) {
-              // Uncomment to test error handling in onSuccess
-              // throw 'An error occurred in onSuccess';
+            // Delayed Fetcher without builder
+            const Separator(),
+            const _Title(title: 'Delayed Fetcher without builder'),
+            Padding(
+              padding: contentPadding,
+              child: ElevatedButton(
+                onPressed: () => _fetchController2.refresh(clearDataFirst: true),
+                child: const Text('Fetch'),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: contentPadding,
+              child: FetchBuilder<String>(
+                controller: _fetchController2,
+                fetchAtInit: false,
+                task: () => fetchTask('Delayed', false),
+                onSuccess: (result) {
+                  // Uncomment to test error handling in onSuccess
+                  // throw 'An error occurred in onSuccess';
 
-              // Display a success message
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Load without builder success'),
-                backgroundColor: Colors.green,
-              ));
+                  // Display a success message
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Load without builder success'),
+                    backgroundColor: Colors.green,
+                  ));
 
-              // Navigate to the next page
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
-                body: Center(child: Text(result)),
-              )));
-            },
-            initBuilder: (_) => const Text('Press Fetch to start'),
-          ),
+                  // Navigate to the next page
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+                    body: Center(child: Text(result)),
+                  )));
+                },
+                initBuilder: (_) => const Text('Press Fetch to start'),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
-        const SizedBox(height: 20),
-      ],
+      ),
     );
   }
 }
@@ -211,9 +225,12 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleMedium,
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
     );
   }
 }
