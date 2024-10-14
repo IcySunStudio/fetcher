@@ -19,10 +19,14 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
 
   Future<String> fetchTask(bool? withError) async {
-    final response = await http.get(Uri.parse('http://worldtimeapi.org/api/timezone/Europe/Paris'));
+    // Simulate a network request
     await Future.delayed(const Duration(seconds: 2));
+
+    // Simulate an error
     if (withError == true) throw Exception('Error !');
-    return json.decode(response.body)['datetime'];
+
+    // Return simulated data
+    return DateTime.now().toIso8601String();
   }
 
   @override

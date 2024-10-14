@@ -114,6 +114,15 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
   }
 
   @override
+  void didUpdateWidget(covariant FetchBuilderWithParameter<T, R> oldWidget) {
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller?._unmountState(this);
+      widget.controller?._mountState(this);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return EventStreamBuilder<DataWrapper<R>?>(
       stream: _stream,   // Use nullable stream: when it's null, the snapshot's state will be ConnectionState.none.

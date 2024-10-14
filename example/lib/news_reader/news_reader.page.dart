@@ -38,11 +38,11 @@ class _NewsReaderPageState extends State<NewsReaderPage> with BlocProvider<NewsR
           body: FetchBuilder<NewsArticle>(
             task: bloc.fetchArticle,
             config: FetcherConfig(
-              fetchingBuilder: (context) => Padding(
-                padding: const EdgeInsets.all(20),
-                child: Center(
+              fetchingBuilder: (context) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const CircularProgressIndicator(),
                       const SizedBox(height: 10),

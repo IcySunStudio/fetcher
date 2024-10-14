@@ -1,3 +1,6 @@
+## 4.1.0
+* Fix `FetchBuilder.controller` update when widget parameter changes.
+
 ## 4.0.0
 * BREAKING: replace `FetchBuilder.basic` constructor to simply `FetchBuilder`.
 * BREAKING: replace `FetchBuilder.parameterized` constructor to `FetchBuilderWithParameter`.

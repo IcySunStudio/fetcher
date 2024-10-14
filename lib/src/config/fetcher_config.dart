@@ -67,5 +67,26 @@ class FetcherConfig {
       onDisplayError: config.onDisplayError ?? onDisplayError,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is FetcherConfig
+        && other.isDense == isDense
+        && other.fadeDuration == fadeDuration
+        && other.fetchingBuilder == fetchingBuilder
+        && other.fetchErrorBuilder == fetchErrorBuilder
+        && other.onError == onError
+        && other.onDisplayError == onDisplayError;
+  }
+
+  @override
+  int get hashCode =>
+      isDense.hashCode ^
+      fadeDuration.hashCode ^
+      fetchingBuilder.hashCode ^
+      fetchErrorBuilder.hashCode ^
+      onError.hashCode ^
+      onDisplayError.hashCode;
 }
 
