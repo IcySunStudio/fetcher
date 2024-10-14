@@ -12,6 +12,7 @@ class FetchBuilderPage extends StatefulWidget {
 }
 
 class _FetchBuilderPageState extends State<FetchBuilderPage> {
+  final _refreshController = FetchRefresherController();
   final _fetchController1 = FetchBuilderWithParameterController<bool, String>();
   final _fetchController2 = FetchBuilderController<String>();
   final _random = Random();
@@ -36,23 +37,26 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   Widget build(BuildContext context) {
     const contentPadding = EdgeInsets.symmetric(horizontal: 20);
     return FetchRefresher(
+      controller: _refreshController,
       child: FillRemainsScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Pull to refresh
-            const Padding(
+            Padding(
               padding: contentPadding,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.refresh),
-                  SizedBox(width: 10),
-                  Text('Pull to refresh all fetchers'),
-                ],
+              child: ElevatedButton(
+                onPressed: _refreshController.refresh,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.refresh),
+                    SizedBox(width: 10),
+                    Text('Pull or tap to refresh all fetchers'),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 20),
 
             // Unmounted state test
             // Test error handling when state is unmounted
@@ -78,6 +82,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
             // Header
             const SizedBox(height: 20),
+            const Separator(),
             const _Title(title: 'Fetcher with parameters'),
 
             // Settings

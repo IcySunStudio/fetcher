@@ -67,7 +67,7 @@ A handy export file is provided in that purpose.
 This example fetches data from a server, then displays data directly
 
 ```dart
-FetchBuilder.basic<Weather>(
+FetchBuilder<Weather>(
   task: api.getWeather,
   builder: (context, weather) => Text('Weather: ${weather.temperature}')
 )
@@ -78,7 +78,7 @@ Where `getWeather` is an async function that returns a `Future<Weather>`, and ma
 By default, it will use global (or default) config. To override locally you can use config parameter:
 
 ```dart
-FetchBuilder.basic<Weather>(
+FetchBuilder<Weather>(
   task: api.getWeather,
   config: FetcherConfig(
     fetchingBuilder: (context) => const CircularProgressIndicator(),
@@ -273,7 +273,7 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       title: Text('News reader #1'),
     ),
-    body: FetchBuilder.basic<NewsArticle>(
+    body: FetchBuilder<NewsArticle>(
       task: bloc.fetchArticle,
       builder: (context, article) {
         return Padding(
@@ -301,7 +301,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-Key part here is the `FetchBuilder.basic<NewsArticle>` widget, that does all the job: we just give it the `task` (network request from bloc), it handles the rest.
+Key part here is the `FetchBuilder<NewsArticle>` widget, that does all the job: we just give it the `task` (network request from bloc), it handles the rest.
 While it's loading, a default loading widget will be displayed.
 If task throws, a default error widget will be displayed, with a retry button.
 When data is available, `builder` will be called, with direct access to the data.
@@ -488,13 +488,13 @@ Test & see full example code in [the example project](https://github.com/IcySunS
 
 In a FetchBuilder, if you need to call a task programmatically (for instance to refresh data from a pull-to-refresh), you can use the `controller` argument.
 
-1. Instantiate a new `BasicFetchBuilderController` (or `ParameterizedFetchBuilderController`) in the bloc or in a state
+1. Instantiate a new `FetchBuilderController` (or `FetchBuilderWithParameterController`) in the bloc or in a state
 2. Pass instance to `controller` parameter of `FetchBuilder`
 3. Call `controller.refresh()` from a function
 
 ### FetchBuilder with extra argument
 
-For advanced usage, you can use `FetchBuilder.parameterized` constructor to pass an object to the task.
+For advanced usage, you can use `FetchBuilderWithParameter` widget to pass an object to the task.
 
 For instance, it can be useful for a search feature, passing the search string in the `refresh` method of the `controller`, each time search field changes.
 
