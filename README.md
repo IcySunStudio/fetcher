@@ -20,7 +20,7 @@ Package developed following the [KISS principle](https://en.wikipedia.org/wiki/K
 
 `fetcher` package was designed with BLoC pattern in mind.
 We recommend using `fetcher` with the provided `BlocProvider` to split UI and business logic, and with the `value_stream` package to handle synchronous UI changes (based on `StreamBuilder`).
-A handy export file is provided in that purpose.
+A handy export file is provided in that purpose: `flutter_bloc.dart`.
 
 ## Features
 
