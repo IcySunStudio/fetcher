@@ -58,7 +58,9 @@ class FetchBuilderContent<T> extends StatelessWidget {
         child: KeyedSubtree(
           // Ensure proper AnimatedSwitcher transition between states.
           // Without this, transition doesn't work when data isn't cleared first (same widget type), and in any case the outgoing widget isn't animated.
-          key: ObjectKey(snapshot),
+          // Use ValueKey instead of ObjectKey to use the == operator of AsyncSnapshot instead of the identical operator:
+          // new instance of AsyncSnapshot may be created at each build, and using identical operator will force unnecessary rebuilds.
+          key: ValueKey(snapshot),
           child: child,
         ),
       );

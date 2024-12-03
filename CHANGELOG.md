@@ -1,3 +1,6 @@
+## 4.1.1
+* Fix unnecessary rebuild when using `EventFetchBuilder`.
+
 ## 4.1.0
 * New `FetchRefresher` widget, that allows to refresh all `FetchBuilder` children using Material "swipe to refresh" idiom.
 * Fix `FetchBuilder.controller` update when widget parameter changes.
