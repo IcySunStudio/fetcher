@@ -23,6 +23,7 @@ class DefaultFetcherConfig extends InheritedWidget {
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
     onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
     onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
+    onTaskSuccess: null,
   );
 
   @override
