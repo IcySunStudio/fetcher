@@ -12,12 +12,19 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  /// Global key for the App's main navigator
+  static final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
+  /// The [BuildContext] of the main navigator.
+  static BuildContext get navigatorContext => _navigatorKey.currentContext!;
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return DefaultFetcherConfig(
       config: FetcherConfig(
         fetchingBuilder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)),
+        onUnsavedFormPop: _askPopConfirmation,
         onDisplayError: (context, error) => showMessage(context, error.toString(), backgroundColor: Colors.red),
       ),
       child: MaterialApp(
@@ -25,10 +32,31 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        navigatorKey: _navigatorKey,
         home: const MyHomePage(),
       ),
     );
   }
+
+  Future<bool?> _askPopConfirmation() => showDialog<bool>(
+    context: navigatorContext,    // Need to use a context with Material data
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('Any unsaved changes will be lost!'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Yes, discard my changes'),
+            onPressed: () => Navigator.pop(context, true),
+          ),
+          TextButton(
+            child: const Text('No, continue editing'),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 class MyHomePage extends StatelessWidget {

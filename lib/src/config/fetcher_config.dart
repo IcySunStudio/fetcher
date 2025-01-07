@@ -11,6 +11,7 @@ class FetcherConfig {
     this.fadeDuration,
     this.fetchingBuilder,
     this.fetchErrorBuilder,
+    this.onUnsavedFormPop,
     this.onError,
     this.onDisplayError,
   });
@@ -47,6 +48,13 @@ class FetcherConfig {
   /// Default to [FetchBuilderErrorWidget], includes a retry button.
   final Widget Function(BuildContext context, FetchErrorData errorData)? fetchErrorBuilder;
 
+  /// On a page with [SubmitFormBuilder], called when current route tries to pop with unsaved form changes.
+  /// Return `true` to allow pop, `false` or `null` to prevent pop.
+  /// Usually used to show a dialog to confirm pop.
+  /// If null (default), always allow pop (behavior disabled).
+  /// Current implementation just track if form has been modified (calling [Form.save()] doesn't reset status).
+  final Future<bool?> Function()? onUnsavedFormPop;
+
   /// Called when an error occurred.
   /// Usually used to report error.
   final void Function(Object exception, StackTrace stack, {dynamic reason})? onError;
@@ -63,6 +71,7 @@ class FetcherConfig {
       fadeDuration: config.fadeDuration ?? fadeDuration,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
+      onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
       onError: config.onError ?? onError,
       onDisplayError: config.onDisplayError ?? onDisplayError,
     );
@@ -76,6 +85,7 @@ class FetcherConfig {
         && other.fadeDuration == fadeDuration
         && other.fetchingBuilder == fetchingBuilder
         && other.fetchErrorBuilder == fetchErrorBuilder
+        && other.onUnsavedFormPop == onUnsavedFormPop
         && other.onError == onError
         && other.onDisplayError == onDisplayError;
   }
@@ -86,6 +96,7 @@ class FetcherConfig {
       fadeDuration.hashCode ^
       fetchingBuilder.hashCode ^
       fetchErrorBuilder.hashCode ^
+      onUnsavedFormPop.hashCode ^
       onError.hashCode ^
       onDisplayError.hashCode;
 }

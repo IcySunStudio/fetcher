@@ -1,3 +1,6 @@
+## 4.2.0
+* New feature to prevent a form to pop with unsaved changes when using `SubmitFormBuilder`. Introduce new `GuardedForm` widget, along with new `onUnsavedFormPop` parameter in `FetcherConfig` and `SubmitFormBuilder`.
+
 ## 4.1.1
 * Fix unnecessary rebuild when using `EventFetchBuilder`.
 
