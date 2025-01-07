@@ -1,3 +1,4 @@
+import 'package:example/utils/message.dart';
 import 'package:flutter/material.dart';
 import 'package:fetcher/fetcher.dart';
 
@@ -17,10 +18,7 @@ class MyApp extends StatelessWidget {
     return DefaultFetcherConfig(
       config: FetcherConfig(
         fetchingBuilder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)),
-        onDisplayError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(error.toString()),
-          backgroundColor: Colors.red,
-        )),
+        onDisplayError: (context, error) => showMessage(context, error.toString(), backgroundColor: Colors.red),
       ),
       child: MaterialApp(
         title: 'Fetcher Example',

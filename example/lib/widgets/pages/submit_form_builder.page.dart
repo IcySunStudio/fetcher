@@ -1,3 +1,4 @@
+import 'package:example/utils/message.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,7 @@ class _SubmitFormBuilderPageState extends State<SubmitFormBuilderPage> {
   @override
   Widget build(BuildContext context) {
     return SubmitFormBuilder<String>(
-      onSuccess: (result) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(result),
-      )),
+      onSuccess: (result) => showMessage(context, result),
       builder: (context, validate) {
         return Padding(
           padding: const EdgeInsets.all(15),

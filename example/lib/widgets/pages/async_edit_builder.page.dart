@@ -1,3 +1,4 @@
+import 'package:example/utils/message.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
@@ -61,11 +62,7 @@ class _PageContent extends StatelessWidget {
               child: AsyncEditBuilder<bool>(
                 fetchTask: () => Future.delayed(const Duration(seconds: 2), () => false),
                 submitTask: (data) => Future.delayed(const Duration(seconds: 1)),
-                onEditSuccess: (data) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Submit success : $data'),
-                  ));
-                },
+                onEditSuccess: (data) => showMessage(context, 'Submit success : $data'),
                 fetchingBuilder: (context) => const _FavoriteButton(
                   key: ValueKey('fetching'),    // Avoid fade blinking
                   selected: false,
@@ -117,11 +114,7 @@ class _PageContent extends StatelessWidget {
               config: FetcherConfig(
                 fetchingBuilder: (context) => const Text('Loading...'),
               ),
-              onEditSuccess: (data) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Submit success : $data'),
-                ));
-              },
+              onEditSuccess: (data) => showMessage(context, 'Submit success : $data'),
               builder: (context, selected, submit) {
                 return ToggleButtons(
                   isSelected: values.map((value) => value == selected).toList(growable: false),

@@ -1,3 +1,4 @@
+import 'package:example/utils/message.dart';
 import 'package:fetcher/fetcher_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +23,7 @@ class _NewsReaderPageState extends State<NewsReaderPage> with BlocProvider<NewsR
       task: bloc.voteArticle,
       onSuccess: (vote) {
         // Display a success message
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Voted successfully: ${vote.name}'),
-          backgroundColor: Colors.green,
-        ));
+        showMessage(context, 'Voted successfully: ${vote.name}', backgroundColor: Colors.green);
 
         // Navigate to the next page
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => NewsReaderPage(page: widget.page + 1)));

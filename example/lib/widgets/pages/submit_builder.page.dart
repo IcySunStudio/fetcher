@@ -1,3 +1,4 @@
+import 'package:example/utils/message.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
 
@@ -38,9 +39,7 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
             key: ValueKey(_refreshKey),
             runTaskOnStart: _runTaskOnStart,
             task: () => Future.delayed(const Duration(seconds: 2), () => 'success'),
-            onSuccess: (result) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(result),
-            )),
+            onSuccess: (result) => showMessage(context, result),
             builder: (context, runTask) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,9 +78,7 @@ class _SubmitBuilderPageState extends State<SubmitBuilderPage> {
           padding: const EdgeInsets.all(20),
           child: SubmitBuilder<void>(
             task: () => Future.delayed(const Duration(seconds: 3)),
-            onSuccess: (_) => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Success !'),
-            )),
+            onSuccess: (_) => showMessage(context, 'Success !'),
             barrierColor: Colors.transparent,
             builder: (context, runTask) {
               return FloatingActionButton(

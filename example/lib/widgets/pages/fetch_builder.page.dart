@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/utils/message.dart';
 import 'package:fetcher/extra.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
@@ -190,10 +191,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
                   // throw 'An error occurred in onSuccess';
 
                   // Display a success message
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Load without builder success'),
-                    backgroundColor: Colors.green,
-                  ));
+                  showMessage(context, 'Load without builder success', backgroundColor: Colors.green);
 
                   // Navigate to the next page
                   Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
