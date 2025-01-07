@@ -5,9 +5,13 @@ import 'package:flutter/material.dart';
 class GuardedForm extends StatefulWidget {
   const GuardedForm({
     super.key,
+    this.onChanged,
     this.onUnsavedFormPop,
     required this.child,
   });
+
+  /// Called when one of the form fields changes.
+  final VoidCallback? onChanged;
 
   /// Called when current route tries to pop with unsaved changes.
   /// Return `true` to allow pop, `false` or `null` to prevent pop.
@@ -36,7 +40,12 @@ class _GuardedFormState extends State<GuardedForm> {
           Navigator.of(context).pop(result);
         }
       },
-      onChanged: () => setState(() => _canPop = false),
+      onChanged: () {
+        widget.onChanged?.call();
+        if (_canPop) {
+          setState(() => _canPop = false);
+        }
+      },
       child: widget.child,
     );
   }

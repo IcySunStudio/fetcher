@@ -10,10 +10,20 @@ import 'config/default_fetcher_config.dart';
 
 /// Wrapper around [SubmitBuilder] with automatic form validation.
 class SubmitFormBuilder<T> extends StatelessWidget {
-  const SubmitFormBuilder({super.key, this.onUnsavedFormPop, this.onValidated, this.onSuccess, required this.builder});
+  const SubmitFormBuilder({
+    super.key,
+    this.onChanged,
+    this.onUnsavedFormPop,
+    this.onValidated,
+    this.onSuccess,
+    required this.builder,
+  });
 
   /// Use this callback on [onUnsavedFormPop] to always allow form pop (disable default behavior).
   static Future<bool> alwaysAllowFormPopCallback() async => true;
+
+  /// Called when one of the form fields changes.
+  final VoidCallback? onChanged;
 
   /// Called when current route tries to pop with unsaved changes.
   /// Return `true` to allow pop, `false` or `null` to prevent pop.
@@ -37,6 +47,7 @@ class SubmitFormBuilder<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClearFocusBackground(
       child: GuardedForm(
+        onChanged: onChanged,
         onUnsavedFormPop: onUnsavedFormPop ?? DefaultFetcherConfig.of(context).onUnsavedFormPop,
         child: Builder(
           builder: (context) {
