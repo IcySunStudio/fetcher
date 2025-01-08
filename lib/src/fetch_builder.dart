@@ -24,9 +24,9 @@ class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
     super.builder,
     super.onSuccess,
   }) : super._(
-    controller: controller,
-    task: (_) => task(),
-  );
+          controller: controller,
+          task: (_) => task(),
+        );
 }
 
 /// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
@@ -54,7 +54,7 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.initBuilder,
     this.builder,
     this.onSuccess,
-  // ignore: prefer_initializing_formals    // We force subtype to be used
+    // ignore: prefer_initializing_formals    // We force subtype to be used
   }) : controller = controller;
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
@@ -168,6 +168,9 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
       // If task is still valid
       if (isTaskValid()) {
+        // Intercept result if configured
+        config.onTaskSuccess?.call(result);
+
         // Call onSuccess
         widget.onSuccess?.call(result);
 
