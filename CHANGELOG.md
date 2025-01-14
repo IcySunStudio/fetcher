@@ -1,3 +1,7 @@
+## 4.2.2
+* Fix popping behavior when using `alwaysAllowFormPopCallback` on `SubmitFormBuilder`.
+* Rename `alwaysAllowFormPopCallback` to `ignoreFormPopCallback` and review doc to be more clear.
+
 ## 4.2.1
 * Expose `onChanged` parameter on `GuardedForm` and `SubmitFormBuilder`.
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A [Form] that tracks for changes and may prevent pop.
-/// Current implementation just track if form has been modified (calling [Form.save()] doesn't reset status).
+/// Current implementation just track if form has been modified once (calling [Form.save()] doesn't reset status).
 class GuardedForm extends StatefulWidget {
   const GuardedForm({
     super.key,
@@ -16,7 +16,7 @@ class GuardedForm extends StatefulWidget {
   /// Called when current route tries to pop with unsaved changes.
   /// Return `true` to allow pop, `false` or `null` to prevent pop.
   /// Usually used to show a dialog to confirm pop.
-  /// If null, always allow pop (behavior disabled, acts like a normal form).
+  /// If null, will not prevent pop (behavior disabled, acts like a normal [Form]).
   final Future<bool?> Function()? onUnsavedFormPop;
 
   /// The form content.

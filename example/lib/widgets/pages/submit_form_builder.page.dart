@@ -16,7 +16,7 @@ class _SubmitFormBuilderPageState extends State<SubmitFormBuilderPage> {
   Widget build(BuildContext context) {
     return SubmitFormBuilder<String>(
       onChanged: () => print('Form changed'),
-      //onUnsavedFormPop: SubmitFormBuilder.alwaysAllowFormPopCallback,    // Uncomment to override behavior set in main.dart
+      //onUnsavedFormPop: SubmitFormBuilder.ignoreFormPopCallback,    // Uncomment to override behavior set in main.dart
       onSuccess: (result) => showMessage(context, result),
       builder: (context, validate) {
         return Padding(

@@ -19,8 +19,8 @@ class SubmitFormBuilder<T> extends StatelessWidget {
     required this.builder,
   });
 
-  /// Use this callback on [onUnsavedFormPop] to always allow form pop (disable default behavior).
-  static Future<bool> alwaysAllowFormPopCallback() async => true;
+  /// Use this callback on [onUnsavedFormPop] to ignore form pop (will not prevent popping, i.e. disable default behavior).
+  static Future<bool> ignoreFormPopCallback() async => true;
 
   /// Called when one of the form fields changes.
   final VoidCallback? onChanged;
@@ -28,8 +28,8 @@ class SubmitFormBuilder<T> extends StatelessWidget {
   /// Called when current route tries to pop with unsaved changes.
   /// Return `true` to allow pop, `false` or `null` to prevent pop.
   /// Usually used to show a dialog to confirm pop.
-  /// If null, will use closest [DefaultFetcherConfig].
-  /// Use [alwaysAllowFormPopCallback] to disable behavior.
+  /// If null, will use closest [DefaultFetcherConfig]'s value.
+  /// Use [ignoreFormPopCallback] to disable behavior.
   final Future<bool?> Function()? onUnsavedFormPop;
 
   /// Called when the form has been validated
@@ -48,7 +48,9 @@ class SubmitFormBuilder<T> extends StatelessWidget {
     return ClearFocusBackground(
       child: GuardedForm(
         onChanged: onChanged,
-        onUnsavedFormPop: onUnsavedFormPop ?? DefaultFetcherConfig.of(context).onUnsavedFormPop,
+        // It's NOT the same to pass null VS ignoreFormPopCallback directly: using ignoreFormPopCallback might trigger pop several times on pages that uses several SubmitFormBuilder.
+        // So we explicitly check if the callback is ignoreFormPopCallback, and pass null instead, to properly disable behavior.
+        onUnsavedFormPop: onUnsavedFormPop == ignoreFormPopCallback ? null : (onUnsavedFormPop ?? DefaultFetcherConfig.of(context).onUnsavedFormPop),
         child: Builder(
           builder: (context) {
             return SubmitBuilder<T>(
