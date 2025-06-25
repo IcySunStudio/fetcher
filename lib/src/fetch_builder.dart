@@ -168,6 +168,9 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
       // If task is still valid
       if (isTaskValid()) {
+        // Call config onFetchSuccess
+        config.onFetchSuccess?.call(result);
+
         // Call onSuccess
         widget.onSuccess?.call(result);
 

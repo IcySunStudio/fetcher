@@ -14,6 +14,7 @@ class FetcherConfig {
     this.onUnsavedFormPop,
     this.onError,
     this.onDisplayError,
+    this.onFetchSuccess,
   });
 
   /// Fetcher configuration for silent mode.
@@ -23,7 +24,6 @@ class FetcherConfig {
     fadeDuration: fadeDuration,
     fetchingBuilder: (_) => const SizedBox(),
     fetchErrorBuilder: (_, __) => const SizedBox(),
-    onError: null,
     onDisplayError: (_, __) {},
   );
 
@@ -63,6 +63,10 @@ class FetcherConfig {
   /// Usually used with a SnackBar system or equivalent.
   final void Function(BuildContext context, Object error)? onDisplayError;
 
+  /// Called when any [FetchBuilder]'s task ends successfully.
+  /// Can be used to add cross-cutting concerns like logging, analytics, or custom behaviors
+  final void Function(dynamic result)? onFetchSuccess;
+
   /// Creates a copy of this config where each fields are overridden by each non-null field of [config].
   FetcherConfig apply(FetcherConfig? config) {
     if (config == null) return this;
@@ -74,6 +78,7 @@ class FetcherConfig {
       onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
       onError: config.onError ?? onError,
       onDisplayError: config.onDisplayError ?? onDisplayError,
+      onFetchSuccess: config.onFetchSuccess ?? onFetchSuccess,
     );
   }
 
@@ -87,7 +92,8 @@ class FetcherConfig {
         && other.fetchErrorBuilder == fetchErrorBuilder
         && other.onUnsavedFormPop == onUnsavedFormPop
         && other.onError == onError
-        && other.onDisplayError == onDisplayError;
+        && other.onDisplayError == onDisplayError
+        && other.onFetchSuccess == onFetchSuccess;
   }
 
   @override
@@ -98,6 +104,6 @@ class FetcherConfig {
       fetchErrorBuilder.hashCode ^
       onUnsavedFormPop.hashCode ^
       onError.hashCode ^
-      onDisplayError.hashCode;
+      onDisplayError.hashCode ^
+      onFetchSuccess.hashCode;
 }
-
