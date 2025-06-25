@@ -1,3 +1,6 @@
+## 4.3.1
+* Migrate `value_stream` to `value_stream_flutter`.
+
 ## 4.3.0
 * New `isMounted` getter on controllers, to safely call `refresh`.
 * New `onFetchSuccess` parameter on config, global fetch success interceptor.

@@ -3,7 +3,7 @@ import 'package:fetcher/src/exceptions/fetch_exception.dart';
 import 'package:fetcher/src/config/fetcher_config.dart';
 import 'package:fetcher/src/models/fetch_error_data.dart';
 import 'package:flutter/material.dart';
-import 'package:value_stream/value_stream.dart';
+import 'package:value_stream_flutter/value_stream_flutter.dart';
 
 import 'faded_animated_switcher.dart';
 

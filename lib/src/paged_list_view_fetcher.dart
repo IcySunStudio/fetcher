@@ -1,7 +1,7 @@
 import 'package:fetcher/extra.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
-import 'package:value_stream/value_stream.dart';
+import 'package:value_stream_flutter/value_stream_flutter.dart';
 
 /// A widget that fetch a paginated list of data, page by page.
 /// Handle all states (loading, errors, onSuccess).

@@ -1,4 +1,4 @@
-library fetcher;
+library;
 
 export 'src/config/default_fetcher_config.dart';
 export 'src/config/fetcher_config.dart';

@@ -1,8 +1,7 @@
 import 'dart:math';
 
 import 'package:example/utils/message.dart';
-import 'package:fetcher/extra.dart';
-import 'package:fetcher/fetcher.dart';
+import 'package:fetcher/fetcher_bloc.dart';
 import 'package:flutter/material.dart';
 
 class FetchBuilderPage extends StatefulWidget {
