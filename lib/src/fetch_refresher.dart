@@ -12,6 +12,7 @@ class FetchRefresher extends StatefulWidget {
   });
 
   /// A controller used to programmatically refresh data.
+  /// Only one controller per [FetchRefresher] will work.
   final FetchRefresherController? controller;
 
   /// The widget below this widget in the tree.
@@ -97,6 +98,9 @@ class _FetchRefresherScope extends InheritedWidget {
 }
 
 /// A controller for an [FetchRefresher].
+///
+/// Only support one widget per controller.
+/// If multiple widget are using the same controller, only the last one will work.
 class FetchRefresherController {
   _FetchRefresherState? _state;
 
@@ -114,6 +118,10 @@ class FetchRefresherController {
     }
   }
 
+  /// Whether the controller is mounted to a [FetchRefresher].
+  bool get isMounted => _state != null;
+
   /// Refresh all [FetchBuilder] children, while displaying a refresh indicator.
+  /// Throws if controller is not mounted. Use [isMounted] to check if controller is mounted before use.
   Future<void> refresh() => _state!.refresh();
 }

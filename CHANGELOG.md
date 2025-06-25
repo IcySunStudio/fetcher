@@ -1,3 +1,6 @@
+## 4.3.0
+* New `isMounted` getter on controllers, to safely call `refresh`.
+
 ## 4.2.2
 * Fix popping behavior when using `alwaysAllowFormPopCallback` on `SubmitFormBuilder`.
 * Rename `alwaysAllowFormPopCallback` to `ignoreFormPopCallback` and review doc to be more clear.

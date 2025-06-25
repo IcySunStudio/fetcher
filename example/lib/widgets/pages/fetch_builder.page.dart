@@ -34,6 +34,19 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
     return 'taskName: ${DateTime.now().toIso8601String()}';
   }
 
+  void _printControllerMountedState() {
+    debugPrint('Controller are mounted: ${_refreshController.isMounted}, ${_fetchController1.isMounted}, ${_fetchController2.isMounted}');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Test controller isMounted
+    _printControllerMountedState();
+    Future.delayed(const Duration(seconds: 1), _printControllerMountedState);
+  }
+
   @override
   Widget build(BuildContext context) {
     const contentPadding = EdgeInsets.symmetric(horizontal: 20);
@@ -75,6 +88,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
                       });
                       return await fetchTask('Unmounted', false);
                     },
+                    onSuccess: (_) => showMessage(context, 'This message should not be displayed because the state is unmounted'),
                   ),
                 ))),
                 child: const Text('Unmounted state test'),
@@ -195,6 +209,9 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
                   // Navigate to the next page
                   Navigator.of(context).push(MaterialPageRoute(builder: (_) => Scaffold(
+                    appBar: AppBar(
+                      title: const Text('FetchBuilder without builder'),
+                    ),
                     body: Center(child: Text(result)),
                   )));
                 },

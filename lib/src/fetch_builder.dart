@@ -251,8 +251,12 @@ abstract class FetchBuilderControllerBase<T, R> {
     }
   }
 
+  /// Whether the controller is mounted to a [FetchBuilder].
+  bool get isMounted => _state != null;
+
   /// Refresh data by re-running the [FetchBuilder.task].
   /// Return the result of the task, or null if task throws.
+  /// Throws if controller is not mounted. Use [isMounted] to check if controller is mounted before use.
   Future<R?> refresh();
 }
 
