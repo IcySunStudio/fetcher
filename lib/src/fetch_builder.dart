@@ -54,7 +54,7 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.initBuilder,
     this.builder,
     this.onSuccess,
-    // ignore: prefer_initializing_formals    // We force subtype to be used
+  // ignore: prefer_initializing_formals    // We force subtype to be used
   }) : controller = controller;
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]

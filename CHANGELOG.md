@@ -1,3 +1,16 @@
+## 4.2.2
+* Fix popping behavior when using `alwaysAllowFormPopCallback` on `SubmitFormBuilder`.
+* Rename `alwaysAllowFormPopCallback` to `ignoreFormPopCallback` and review doc to be more clear.
+
+## 4.2.1
+* Expose `onChanged` parameter on `GuardedForm` and `SubmitFormBuilder`.
+
+## 4.2.0
+* New feature to prevent a form to pop with unsaved changes when using `SubmitFormBuilder`. Introduce new `GuardedForm` widget, along with new `onUnsavedFormPop` parameter in `FetcherConfig` and `SubmitFormBuilder`.
+
+## 4.1.1
+* Fix unnecessary rebuild when using `EventFetchBuilder`.
+
 ## 4.1.0
 * New `FetchRefresher` widget, that allows to refresh all `FetchBuilder` children using Material "swipe to refresh" idiom.
 * Fix `FetchBuilder.controller` update when widget parameter changes.
