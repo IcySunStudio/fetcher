@@ -13,20 +13,18 @@ class FetcherConfig {
     this.fetchErrorBuilder,
     this.onError,
     this.onDisplayError,
-    this.onTaskSuccess,
+    this.onFetchSuccess,
   });
 
   /// Fetcher configuration for silent mode.
   /// Use this configuration to hide loader & error.
   FetcherConfig.silent({bool? fade, Duration? fadeDuration}) : this(
-          isDense: true,
-          fadeDuration: fadeDuration,
-          fetchingBuilder: (_) => const SizedBox(),
-          fetchErrorBuilder: (_, __) => const SizedBox(),
-          onError: null,
-          onDisplayError: (_, __) {},
-          onTaskSuccess: null,
-        );
+    isDense: true,
+    fadeDuration: fadeDuration,
+    fetchingBuilder: (_) => const SizedBox(),
+    fetchErrorBuilder: (_, __) => const SizedBox(),
+    onDisplayError: (_, __) {},
+  );
 
   /// Whether fetcher is in a low space environment.
   /// Will affect default error widget density.
@@ -57,9 +55,9 @@ class FetcherConfig {
   /// Usually used with a SnackBar system or equivalent.
   final void Function(BuildContext context, Object error)? onDisplayError;
 
-  /// Result interceptor that allows processing successful task results
-  /// Usually used for adding cross-cutting concerns like logging, analytics, or custom behaviors
-  final void Function<T>(T result)? onTaskSuccess;
+  /// Called when any [FetchBuilder]'s task ends successfully.
+  /// Can be used to add cross-cutting concerns like logging, analytics, or custom behaviors
+  final void Function(dynamic result)? onFetchSuccess;
 
   /// Creates a copy of this config where each fields are overridden by each non-null field of [config].
   FetcherConfig apply(FetcherConfig? config) {
@@ -71,7 +69,7 @@ class FetcherConfig {
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
       onError: config.onError ?? onError,
       onDisplayError: config.onDisplayError ?? onDisplayError,
-      onTaskSuccess: config.onTaskSuccess ?? onTaskSuccess,
+      onFetchSuccess: config.onFetchSuccess ?? onFetchSuccess,
     );
   }
 
@@ -85,7 +83,7 @@ class FetcherConfig {
         && other.fetchErrorBuilder == fetchErrorBuilder
         && other.onError == onError
         && other.onDisplayError == onDisplayError
-        && other.onTaskSuccess == onTaskSuccess;
+        && other.onFetchSuccess == onFetchSuccess;
   }
 
   @override
@@ -96,5 +94,5 @@ class FetcherConfig {
       fetchErrorBuilder.hashCode ^
       onError.hashCode ^
       onDisplayError.hashCode ^
-      onTaskSuccess.hashCode;
+      onFetchSuccess.hashCode;
 }

@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
           content: Text(error.toString()),
           backgroundColor: Colors.red,
         )),
+        onFetchSuccess: (result) => debugPrint('[FetchSuccess] Fetch success with result: $result'),
       ),
       child: MaterialApp(
         title: 'Fetcher Example',
