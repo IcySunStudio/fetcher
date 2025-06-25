@@ -5,7 +5,7 @@
 
 **Async task UI made easy 😄**
 
-Minimalist framework to easily handle UI states (loading, error and data) for asynchonous tasks (like network calls), in an unified way.
+Minimalist framework to easily handle UI states (loading, error and data) for asynchronous tasks (like network calls), with global error handling and configuration.
 
 It provides two main widgets, with automatic handling of all common UI states:
 
@@ -24,14 +24,14 @@ A handy export file is provided in that purpose: `flutter_bloc.dart`.
 
 ## Features
 
-* Minimalist library: mostly uses native Flutter components & logic
-* Ready to use: default widgets provided
-* Basic usage should be very simple and straighforward, while advanced usage is possible
-* Global configuration with local overrides
-* Error & retry handling, with common UX behavior in mind
-* Can be plugged into an error reporting service
-* Fade transition between states to allow smooth UI
-* Optional components to use with BLoC pattern (recommended)
+* 🚀 Minimalist library: mostly uses native Flutter components & logic
+* 🧩 Ready to use: default widgets provided
+* 🪄 Basic usage should be very simple and straightforward, while advanced usage is possible
+* 🌍 Global configuration with local overrides, to offer uniform UX across the app
+* 🔄 Error & retry handling, with common UX behavior in mind
+* 🛠️ Can be plugged into an error reporting service
+* 🎨 Fade transition between states to allow smooth UI
+* 🧱 Optional components to use with BLoC pattern (recommended)
 
 ### Main Widgets
 

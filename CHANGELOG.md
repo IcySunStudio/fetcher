@@ -1,5 +1,6 @@
 ## 4.3.0
 * New `isMounted` getter on controllers, to safely call `refresh`.
+* New `onFetchSuccess` parameter on config, global fetch success interceptor.
 
 ## 4.2.2
 * Fix popping behavior when using `alwaysAllowFormPopCallback` on `SubmitFormBuilder`.
