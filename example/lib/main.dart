@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         fetchingBuilder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)),
         onUnsavedFormPop: _askPopConfirmation,
         onDisplayError: (context, error) => showMessage(context, error.toString(), backgroundColor: Colors.red),
+        onFetchSuccess: (result) => debugPrint('[FetchSuccess] Fetch success with result: $result'),
       ),
       child: MaterialApp(
         title: 'Fetcher Example',
