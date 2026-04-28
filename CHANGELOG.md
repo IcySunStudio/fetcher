@@ -1,3 +1,6 @@
+## 4.4.0
+* New `scrollToFirstInvalidField` feature on `SubmitFormBuilder`: automatically scrolls to the first invalid field when form validation fails. Disabled by default.
+
 ## 4.3.1
 * Migrate `value_stream` to `value_stream_flutter`.
 

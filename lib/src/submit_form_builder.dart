@@ -14,6 +14,7 @@ class SubmitFormBuilder<T> extends StatelessWidget {
     super.key,
     this.onChanged,
     this.onUnsavedFormPop,
+    this.scrollToFirstInvalidField,
     this.onValidated,
     this.onSuccess,
     required this.builder,
@@ -31,6 +32,10 @@ class SubmitFormBuilder<T> extends StatelessWidget {
   /// If null, will use closest [DefaultFetcherConfig]'s value.
   /// Use [ignoreFormPopCallback] to disable behavior.
   final Future<bool?> Function()? onUnsavedFormPop;
+
+  /// Whether to scroll to the first invalid field when form validation fails.
+  /// If null, will use closest [DefaultFetcherConfig]'s value, or default to `false` if not set.
+  final bool? scrollToFirstInvalidField;
 
   /// Called when the form has been validated
   final AsyncValueGetter<T>? onValidated;
@@ -58,6 +63,7 @@ class SubmitFormBuilder<T> extends StatelessWidget {
               onSuccess: onSuccess,
               builder: (context, runTask) => builder(context, ([task]) => context.validateForm(
                 onSuccess: () => runTask(task),
+                scrollToFirstInvalid: scrollToFirstInvalidField ?? DefaultFetcherConfig.of(context).scrollToFirstInvalidField ?? false,
               )),
             );
           },

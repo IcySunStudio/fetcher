@@ -12,6 +12,7 @@ class FetcherConfig {
     this.fetchingBuilder,
     this.fetchErrorBuilder,
     this.onUnsavedFormPop,
+    this.scrollToFirstInvalidField,
     this.onError,
     this.onDisplayError,
     this.onFetchSuccess,
@@ -55,6 +56,9 @@ class FetcherConfig {
   /// Current implementation just track if form has been modified (calling [Form.save()] doesn't reset status).
   final Future<bool?> Function()? onUnsavedFormPop;
 
+  /// On a page with [SubmitFormBuilder], whether to scroll to the first invalid field when form validation fails.
+  final bool? scrollToFirstInvalidField;
+
   /// Called when an error occurred.
   /// Usually used to report error.
   final void Function(Object exception, StackTrace stack, {dynamic reason})? onError;
@@ -76,6 +80,7 @@ class FetcherConfig {
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
       onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
+      scrollToFirstInvalidField: config.scrollToFirstInvalidField ?? scrollToFirstInvalidField,
       onError: config.onError ?? onError,
       onDisplayError: config.onDisplayError ?? onDisplayError,
       onFetchSuccess: config.onFetchSuccess ?? onFetchSuccess,
@@ -91,6 +96,7 @@ class FetcherConfig {
         && other.fetchingBuilder == fetchingBuilder
         && other.fetchErrorBuilder == fetchErrorBuilder
         && other.onUnsavedFormPop == onUnsavedFormPop
+        && other.scrollToFirstInvalidField == scrollToFirstInvalidField
         && other.onError == onError
         && other.onDisplayError == onDisplayError
         && other.onFetchSuccess == onFetchSuccess;
@@ -103,6 +109,7 @@ class FetcherConfig {
       fetchingBuilder.hashCode ^
       fetchErrorBuilder.hashCode ^
       onUnsavedFormPop.hashCode ^
+      scrollToFirstInvalidField.hashCode ^
       onError.hashCode ^
       onDisplayError.hashCode ^
       onFetchSuccess.hashCode;
