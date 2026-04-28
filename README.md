@@ -1,4 +1,4 @@
-<img src="https://github.com/user-attachments/assets/69be0ff9-840c-44e5-bef0-3147e3d78553" width="100%" alt="fetcher" />
+![fetcher](https://github.com/user-attachments/assets/69be0ff9-840c-44e5-bef0-3147e3d78553)
 
 [![Pub](https://img.shields.io/pub/v/fetcher.svg?label=fetcher)](https://pub.dartlang.org/packages/fetcher)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-green.svg)](https://opensource.org/licenses/BSD-3-Clause)
