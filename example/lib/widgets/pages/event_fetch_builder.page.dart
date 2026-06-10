@@ -223,10 +223,11 @@ class _HeavyInitWidgetState extends State<_HeavyInitWidget> {
   void initState() {
     super.initState();
     // Simulate heavy one-time computation
+    final initialData = widget.data;
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
-          _computedValue = '42';
+          _computedValue = '$initialData + 42';
         });
       }
     });
