@@ -20,7 +20,7 @@ class FetcherConfig {
 
   /// Fetcher configuration for silent mode.
   /// Use this configuration to hide loader & error.
-  FetcherConfig.silent({bool? fade, Duration? fadeDuration}) : this(
+  FetcherConfig.silent({Duration? fadeDuration}) : this(
     isDense: true,
     fadeDuration: fadeDuration,
     fetchingBuilder: (_) => const SizedBox(),
