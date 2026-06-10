@@ -19,6 +19,7 @@ class PagedListViewFetcher<T, P> extends StatefulWidget {
     this.padding,
     this.itemExtent,
     this.reverse = false,
+    this.physics,
   }) : assert(separator == null || itemExtent == null);
 
   /// A controller used to manually refresh data.
@@ -45,6 +46,10 @@ class PagedListViewFetcher<T, P> extends StatefulWidget {
 
   /// If true, the list will be reversed.
   final bool reverse;
+
+  /// The scroll physics to use for the list.
+  /// Use [AlwaysScrollableScrollPhysics] to allow pull-to-refresh even when the list doesn't fill the screen.
+  final ScrollPhysics? physics;
 
   @override
   State<PagedListViewFetcher<T, P>> createState() => _PagedListViewFetcherState<T, P>();
@@ -112,6 +117,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
           return ListView.separated(
             padding: widget.padding,
             reverse: widget.reverse,
+            physics: widget.physics,
             itemCount: itemCount,
             separatorBuilder: (_, __) => widget.separator!,
             itemBuilder: _itemBuilder,
@@ -120,6 +126,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
           return ListView.builder(
             padding: widget.padding,
             reverse: widget.reverse,
+            physics: widget.physics,
             itemCount: itemCount,
             itemExtent: widget.itemExtent,
             itemBuilder: _itemBuilder,
