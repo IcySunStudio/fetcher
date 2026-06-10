@@ -101,10 +101,12 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
   Widget build(BuildContext context) {
     return FetchBuilder<PagedData<T, P>>(
       controller: widget.controller,
-      task: _fetchNextPage,
+      task: _fetchFirstPage,
       onSuccess: (pagedData) {
-        items.clear();
-        _updatePagedData(pagedData);
+        setState(() {
+          items.clear();
+          _updatePagedData(pagedData);
+        });
       },
       builder: (context, _) {
         final itemCount = items.length + (isLastPageLoaded ? 0 : 1);
@@ -134,6 +136,11 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
         }
       },
     );
+  }
+
+  Future<PagedData<T, P>> _fetchFirstPage() {
+    nextPageId = null;
+    return _fetchNextPage();
   }
 
   Future<PagedData<T, P>> _fetchNextPage() => widget.task(nextPageId);

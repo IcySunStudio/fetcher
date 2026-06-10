@@ -1,5 +1,7 @@
 ## 4.5.0
 * New `fadeOnDataChange` parameter on `FetcherConfig`. When set to `false`, data updates rebuild the child widget in-place (preserving subtree state) instead of triggering a fade transition. Transitions between fetch states (loading, error, data) still animate naturally. Useful when the builder returns a stateful widget that must survive data changes. Defaults to `true` for backward compatibility.
+* Fix `PagedListViewFetcher.refresh()` reloading the wrong page: now refresh always reloads from the first page.
+* New `physics` parameter on `PagedListViewFetcher`, forwarded to the internal `ListView`. Use `AlwaysScrollableScrollPhysics` to enable pull-to-refresh even when the list doesn't fill the screen.
 
 ## 4.4.0
 * New `scrollToFirstInvalidField` feature on `SubmitFormBuilder`: automatically scrolls to the first invalid field when form validation fails. Disabled by default.
