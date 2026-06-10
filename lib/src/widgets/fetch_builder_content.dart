@@ -54,27 +54,27 @@ class FetchBuilderContent<T> extends StatelessWidget {
     } ();
 
     if (config.fadeDuration != null && config.fadeDuration! > Duration.zero) {
+      // AnimatedSwitcher requires a key change to detect that the child has changed and animate
+      // the outgoing widget. Without a key, only the incoming widget is animated.
+      //
       // When fadeOnDataChange is true (default), wrap the child in a KeyedSubtree keyed on the
       // full snapshot so that AnimatedSwitcher always detects a change and plays the fade —
       // including data-to-data transitions. The trade-off is that the child subtree is destroyed
       // and recreated on every data update, which causes stateful children to lose their state.
       //
-      // When fadeOnDataChange is false, the child is passed directly without a key. Flutter
-      // reconciles the widget tree naturally: transitions between fetch states (loading, error,
-      // data) still animate because the child widget type changes, while data updates rebuild
-      // the child in-place, preserving subtree state.
-      //
-      // Note: fadeOnDataChange has no effect when fadeDuration is null or Duration.zero,
-      // since the FadedAnimatedSwitcher is not used in that case (see guard above).
+      // When fadeOnDataChange is false, use a key that changes only on fetch state category
+      // transitions (none → loading → data ↔ error). This ensures AnimatedSwitcher properly
+      // animates outgoing widgets (e.g. the loader fades out) on state changes, while data
+      // updates rebuild the child in-place, preserving subtree state.
       final fadeOnDataChange = config.fadeOnDataChange ?? true;
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
-        child: fadeOnDataChange
-            ? KeyedSubtree(
-                key: ValueKey(snapshot),
-                child: child,
-              )
-            : child,
+        child: KeyedSubtree(
+          key: fadeOnDataChange || !snapshot.hasData
+              ? ValueKey(snapshot)
+              : const ValueKey('data'),
+          child: child,
+        ),
       );
     }
 
