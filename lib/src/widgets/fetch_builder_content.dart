@@ -54,16 +54,27 @@ class FetchBuilderContent<T> extends StatelessWidget {
     } ();
 
     if (config.fadeDuration != null && config.fadeDuration! > Duration.zero) {
+      // When fadeOnDataChange is true (default), wrap the child in a KeyedSubtree keyed on the
+      // full snapshot so that AnimatedSwitcher always detects a change and plays the fade —
+      // including data-to-data transitions. The trade-off is that the child subtree is destroyed
+      // and recreated on every data update, which causes stateful children to lose their state.
+      //
+      // When fadeOnDataChange is false, the child is passed directly without a key. Flutter
+      // reconciles the widget tree naturally: transitions between fetch states (loading, error,
+      // data) still animate because the child widget type changes, while data updates rebuild
+      // the child in-place, preserving subtree state.
+      //
+      // Note: fadeOnDataChange has no effect when fadeDuration is null or Duration.zero,
+      // since the FadedAnimatedSwitcher is not used in that case (see guard above).
+      final fadeOnDataChange = config.fadeOnDataChange ?? true;
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
-        child: KeyedSubtree(
-          // Ensure proper AnimatedSwitcher transition between states.
-          // Without this, transition doesn't work when data isn't cleared first (same widget type), and in any case the outgoing widget isn't animated.
-          // Use ValueKey instead of ObjectKey to use the == operator of AsyncSnapshot instead of the identical operator:
-          // new instance of AsyncSnapshot may be created at each build, and using identical operator will force unnecessary rebuilds.
-          key: ValueKey(snapshot),
-          child: child,
-        ),
+        child: fadeOnDataChange
+            ? KeyedSubtree(
+                key: ValueKey(snapshot),
+                child: child,
+              )
+            : child,
       );
     }
 

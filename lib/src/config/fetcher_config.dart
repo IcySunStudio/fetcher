@@ -9,6 +9,7 @@ class FetcherConfig {
   const FetcherConfig({
     this.isDense,
     this.fadeDuration,
+    this.fadeOnDataChange,
     this.fetchingBuilder,
     this.fetchErrorBuilder,
     this.onUnsavedFormPop,
@@ -39,6 +40,21 @@ class FetcherConfig {
   /// (If it's lower, you may see the non-loading state before next page is displayed).
   /// (If it's higher, you may see the loading state for a short time when page is popped (because animation is paused when a route is displayed above)).
   final Duration? fadeDuration;
+
+  /// Whether to animate data-to-data transitions with a fade.
+  ///
+  /// When `true` (default), every data change triggers a fade transition via [AnimatedSwitcher].
+  /// This gives smooth visual feedback but forces the child subtree to be destroyed and recreated
+  /// on each data update, which causes stateful child widgets to lose their state.
+  ///
+  /// When `false`, data updates rebuild the child in-place (preserving subtree state), while
+  /// transitions between fetch states (none, loading, error, data) still animate naturally
+  /// because the child widget type changes. Use this when the builder returns a stateful widget
+  /// that must survive data changes (e.g. a widget with expensive initialisation or internal state
+  /// that is updated via [State.didUpdateWidget]).
+  ///
+  /// Has no effect when [fadeDuration] is null or [Duration.zero].
+  final bool? fadeOnDataChange;
 
   /// Widget to display while fetching.
   final WidgetBuilder? fetchingBuilder;
@@ -77,6 +93,7 @@ class FetcherConfig {
     return FetcherConfig(
       isDense: config.isDense ?? isDense,
       fadeDuration: config.fadeDuration ?? fadeDuration,
+      fadeOnDataChange: config.fadeOnDataChange ?? fadeOnDataChange,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
       onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
@@ -93,6 +110,7 @@ class FetcherConfig {
     return other is FetcherConfig
         && other.isDense == isDense
         && other.fadeDuration == fadeDuration
+        && other.fadeOnDataChange == fadeOnDataChange
         && other.fetchingBuilder == fetchingBuilder
         && other.fetchErrorBuilder == fetchErrorBuilder
         && other.onUnsavedFormPop == onUnsavedFormPop
@@ -106,6 +124,7 @@ class FetcherConfig {
   int get hashCode =>
       isDense.hashCode ^
       fadeDuration.hashCode ^
+      fadeOnDataChange.hashCode ^
       fetchingBuilder.hashCode ^
       fetchErrorBuilder.hashCode ^
       onUnsavedFormPop.hashCode ^

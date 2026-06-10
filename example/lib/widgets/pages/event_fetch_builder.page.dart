@@ -182,6 +182,9 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
           padding: const EdgeInsets.all(20),
           child: EventFetchBuilder<String>(
             stream: animalStream,
+            config: const FetcherConfig(
+              fadeOnDataChange: false,
+            ),
             builder: (context, data) => _HeavyInitWidget(data: data),
           ),
         ),
