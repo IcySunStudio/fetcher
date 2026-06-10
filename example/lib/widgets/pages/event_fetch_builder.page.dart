@@ -21,6 +21,19 @@ class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Caption
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text(
+            'EventFetchBuilder listen to an EventStream and display data. '
+                'It\'s like FetchBuilder but instead of directly calling a task once, it will listen to a stream and his updates. '
+                'Handle all possible states: loading, loaded, errors.\n'
+                'This example fetches the current time every 5 seconds, and display it. It also display a nullable stream that emit null and int values.',
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ),
+
         // Settings
         CheckboxListTile(
           title: const Text('With initial value'),
@@ -81,6 +94,10 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
   static const _nullableStreamValues = [ null, 1, 2, null, 3, null, 5, 6, 7, 8, null, 9];
   int _nullableStreamIndex = 0;
 
+  late final animalStream = EventStream<String>();
+  static const _animalValues = ['Cat', 'Dog', 'Elephant', 'Lion', 'Tiger', 'Giraffe', 'Zebra', 'Penguin'];
+  int _animalIndex = 0;
+
   Timer? _timer;
 
   Future<String> fetchTask() async {
@@ -93,6 +110,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
     final value = await fetchTask();
     stream.add(value, skipIfClosed: true);
     nullableStream.add(_nullableStreamValues[_nullableStreamIndex++ % _nullableStreamValues.length], skipIfClosed: true);
+    animalStream.add(_animalValues[_animalIndex++ % _animalValues.length], skipIfClosed: true);
     debugPrint('new fetch - over');
   }
 
@@ -122,7 +140,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Data is fetched :',
+                    'Fetched data:',
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -146,7 +164,7 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Nullable data is fetched :',
+                    'Fetched nullable data:',
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
@@ -159,6 +177,14 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
             },
           ),
         ),
+        const Separator(),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: EventFetchBuilder<String>(
+            stream: animalStream,
+            builder: (context, data) => _HeavyInitWidget(data: data),
+          ),
+        ),
       ],
     );
   }
@@ -168,6 +194,69 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
     _timer?.cancel();
     stream.close();
     nullableStream.close();
+    animalStream.close();
     super.dispose();
+  }
+}
+
+/// A stateful widget that simulates a heavy one-time initialisation (2 seconds),
+/// then updates its display via [didUpdateWidget] when [data] changes —
+/// without re-running the expensive init.
+///
+/// Used to demonstrate that the fade animation must NOT destroy the subtree
+/// on data updates: [_initCount] must stay at 1 and [_computedValue] must
+/// persist across animal changes.
+class _HeavyInitWidget extends StatefulWidget {
+  const _HeavyInitWidget({required this.data});
+
+  final String data;
+
+  @override
+  State<_HeavyInitWidget> createState() => _HeavyInitWidgetState();
+}
+
+class _HeavyInitWidgetState extends State<_HeavyInitWidget> {
+  /// Simulates a value computed once during heavy init
+  String? _computedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    // Simulate heavy one-time computation
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          _computedValue = '42';
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          'Stateful widget',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          'keep state while fading between data updates',
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Input value: ${widget.data}',
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'State value: ${_computedValue ?? 'computing…'}',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: _computedValue != null ? Colors.green : Colors.orange),
+        ),
+      ],
+    );
   }
 }
