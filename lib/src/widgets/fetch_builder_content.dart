@@ -2,6 +2,7 @@ import 'package:fetcher/src/config/default_fetcher_config.dart';
 import 'package:fetcher/src/exceptions/fetch_exception.dart';
 import 'package:fetcher/src/config/fetcher_config.dart';
 import 'package:fetcher/src/models/fetch_error_data.dart';
+import 'package:fetcher/src/utils/data_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream_flutter/value_stream_flutter.dart';
 
@@ -20,7 +21,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
   final FetcherConfig? config;
 
   /// Data snapshot
-  final AsyncSnapshot<T> snapshot;
+  final AsyncSnapshot<DataWrapper<T>?> snapshot;
 
   /// Widget to display when snapshot is in [ConnectionState.none] state (before fetching has started).
   final WidgetBuilder? initBuilder;
@@ -48,7 +49,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       }
       // If data is available
       else {
-        return builder?.call(context, snapshot.data as T) ?? const SizedBox();
+        return builder?.call(context, snapshot.data!.data) ?? const SizedBox();
       }
     } ();
 

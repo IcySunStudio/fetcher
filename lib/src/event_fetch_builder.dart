@@ -26,15 +26,15 @@ class EventFetchBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EventStreamBuilder<DataWrapper<T>>.fromStream(   // OPTI use default EventStreamBuilder constructor instead (cleaner). But need to a implement EventStream.map method, which is no easy task.
-      stream: stream.innerStream.map(DataWrapper.new),    // OPTI avoid using .map as it creates a new stream at each build. But using a stateful widget will be more complex...
-      initialData: stream.valueOrNull != null ? DataWrapper(stream.valueOrNull as T) : null,
+    return EventStreamBuilder.fromStream(   // OPTI use default EventStreamBuilder constructor instead (cleaner). But need to a implement EventStream.map method, which is no easy task.
+      stream: stream.innerStream.map(DataWrapper.new),    // .map creates a new Stream object each build, but churn is harmless: innerStream is a broadcast stream and initialData re-seeds the snapshot immediately.
+      initialData: stream.valueOrNull != null ? DataWrapper(stream.valueOrNull as T) : null,   // TODO: this misses the case where T is nullable and initial value is null (EventStream<T?>(null)) — fix requires a hasValue getter on EventStream (upstream)
       initialError: stream.error,
       builder: (context, snapshot) {
-        return FetchBuilderContent<DataWrapper<T>>(
+        return FetchBuilderContent(
           config: config,
           snapshot: snapshot,
-          builder: builder != null ? (context, value) => builder!(context, value.data) : null,
+          builder: builder,
         );
       },
     );

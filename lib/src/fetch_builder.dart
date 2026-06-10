@@ -133,14 +133,14 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
   @override
   Widget build(BuildContext context) {
-    return EventStreamBuilder<DataWrapper<R>?>(
-      stream: _stream,   // Use nullable stream: when it's null, the snapshot's state will be ConnectionState.none.
+    return EventStreamBuilder(
+      stream: _stream,   // Use private nullable stream: when it's null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
-        return FetchBuilderContent<DataWrapper<R>?>(
+        return FetchBuilderContent(
           config: config,     // Use config from state, not from widget, to force field to be initialized at init. Otherwise, if an error occurs in _fetch while state is unmounted, accessing the config will throw an error because context is unmounted.
           snapshot: snapshot,
           initBuilder: widget.initBuilder,
-          builder: widget.builder == null ? null : (context, data) => widget.builder!.call(context, data!.data),
+          builder: widget.builder,
         );
       },
     );
