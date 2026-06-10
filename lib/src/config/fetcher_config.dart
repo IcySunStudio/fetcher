@@ -1,6 +1,6 @@
 import 'package:fetcher/src/models/fetch_error_data.dart';
 import 'package:fetcher/src/widgets/fetch_builder_error_widget.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 /// Configuration for fetcher widgets.
 @immutable
@@ -27,6 +27,18 @@ class FetcherConfig {
     fetchingBuilder: (_) => const SizedBox(),
     fetchErrorBuilder: (_, __) => const SizedBox(),
     onDisplayError: (_, __) {},
+  );
+
+  /// Default [FetcherConfig] values.
+  static FetcherConfig defaultConfig = FetcherConfig(
+    isDense: false,
+    fadeDuration: const Duration(milliseconds: 250),
+    fadeOnDataChange: true,
+    fetchingBuilder: (_) => const Center(child: CircularProgressIndicator()),
+    fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
+    scrollToFirstInvalidField: false,
+    onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
+    onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
   );
 
   /// Whether fetcher is in a low space environment.
