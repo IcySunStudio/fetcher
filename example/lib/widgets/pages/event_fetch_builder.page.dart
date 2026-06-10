@@ -119,10 +119,9 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
     super.initState();
     if (widget.initialError != null) {
       stream.addError(widget.initialError!);
-    } else {
-      _timer = Timer.periodic(const Duration(seconds: 5), (timer) => tick());
-      tick();
     }
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) => tick());
+    tick();
   }
 
   @override
