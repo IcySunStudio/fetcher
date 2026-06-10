@@ -19,8 +19,10 @@ class DefaultFetcherConfig extends InheritedWidget {
   static FetcherConfig defaultConfig = FetcherConfig(
     isDense: false,
     fadeDuration: const Duration(milliseconds: 250),
+    fadeOnDataChange: true,
     fetchingBuilder: (_) => const Center(child: CircularProgressIndicator()),
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
+    scrollToFirstInvalidField: false,
     onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
     onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
   );

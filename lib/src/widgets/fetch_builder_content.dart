@@ -41,7 +41,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       // If an error occurred
       else if (snapshot.hasError) {
         final error = snapshot.error!;
-        return config.fetchErrorBuilder!(context, FetchErrorData(error is FetchException ? error.innerException : error, config.isDense == true, error is FetchException ? error.retry : null));
+        return config.fetchErrorBuilder!(context, FetchErrorData(error is FetchException ? error.innerException : error, config.isDense!, error is FetchException ? error.retry : null));
       }
       // If data is loading
       else if (!snapshot.hasData) {
@@ -53,7 +53,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       }
     } ();
 
-    if (config.fadeDuration != null && config.fadeDuration! > Duration.zero) {
+    if (config.fadeDuration! > Duration.zero) {
       // AnimatedSwitcher requires a key change to detect that the child has changed and animate
       // the outgoing widget. Without a key, only the incoming widget is animated.
       //
@@ -66,11 +66,10 @@ class FetchBuilderContent<T> extends StatelessWidget {
       // transitions (none → loading → data ↔ error). This ensures AnimatedSwitcher properly
       // animates outgoing widgets (e.g. the loader fades out) on state changes, while data
       // updates rebuild the child in-place, preserving subtree state.
-      final fadeOnDataChange = config.fadeOnDataChange ?? true;
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
         child: KeyedSubtree(
-          key: fadeOnDataChange || !snapshot.hasData
+          key: config.fadeOnDataChange! || !snapshot.hasData
               ? ValueKey(snapshot)
               : const ValueKey('data'),
           child: child,
