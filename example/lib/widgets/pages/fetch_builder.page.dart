@@ -217,10 +217,76 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
                 initBuilder: (_) => const Text('Press Fetch to start'),
               ),
             ),
+
+            // Search field (rapid clearDataFirst during fade)
+            const Separator(),
+            const _Title(title: 'Search field with quick fetch & clear repeat cycles'),
+            const Text('Type quickly to trigger rapid fetches with clearDataFirst: true'),
+            const Padding(
+              padding: contentPadding,
+              child: _SearchFieldExample(),
+            ),
             const SizedBox(height: 20),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Reproduces the "Duplicate keys found" crash:
+/// every keystroke triggers a quick fetch with `clearDataFirst: true`, which emits
+/// repeated identical `null` snapshots while a fade transition is still in progress.
+class _SearchFieldExample extends StatefulWidget {
+  const _SearchFieldExample();
+
+  @override
+  State<_SearchFieldExample> createState() => _SearchFieldExampleState();
+}
+
+class _SearchFieldExampleState extends State<_SearchFieldExample> {
+  final _textController = TextEditingController();
+  final _fetchController = FetchBuilderController<String>();
+  final _random = Random();
+
+  Future<String> _search(String query) async {
+    // Quick mocked fetch (<50ms)
+    await Future.delayed(const Duration(milliseconds: 30));
+    return 'Result #${_random.nextInt(1000000)} for "$query"';
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextField(
+          controller: _textController,
+          decoration: const InputDecoration(
+            labelText: 'Type to search',
+            hintText: 'Type quickly to trigger rapid fetches',
+          ),
+          // No debounce: fire a fetch on every keystroke.
+          onChanged: (_) => _fetchController.refresh(clearDataFirst: true),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 80,
+          child: FetchBuilder<String>(
+            controller: _fetchController,
+            fetchAtInit: false,
+            task: () => _search(_textController.text),
+            initBuilder: (_) => const Center(child: Text('Type something to search')),
+            builder: (context, data) => Center(child: Text(data)),
+          ),
+        ),
+      ],
     );
   }
 }
