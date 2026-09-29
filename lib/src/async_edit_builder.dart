@@ -62,7 +62,7 @@ class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
     return FetchBuilderWithParameter<T, T>(
       controller: _fetcherController,
       config: _fetchBuilderConfig,
-      task: (value) async => value ?? await widget.fetchTask(),
+      task: (value) => value ?? widget.fetchTask(),  // Not `async`: skips the loader when `value` is already available (see [FetchBuilder]).
       builder: (context, data) {
         return SubmitBuilder<T>(
           config: widget.config,

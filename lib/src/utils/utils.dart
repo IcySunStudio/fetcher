@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-typedef ParameterizedAsyncTask<T, R> = Future<R> Function(T? param);
+/// Task used by fetcher widgets to fetch data.
+/// May return the value directly (not a [Future]) to skip the loader: see `FetchBuilder`.
+typedef ParameterizedAsyncTask<T, R> = FutureOr<R> Function(T? param);
 
 /// Scrolls to the first invalid [FormField] in the subtree rooted at [formContext].
 /// Must be called after [Form.validate] so that [FormFieldState.hasError] is up to date.

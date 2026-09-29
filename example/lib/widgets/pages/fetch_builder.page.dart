@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:example/utils/message.dart';
@@ -22,18 +23,25 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   bool withCachedValue = true;
   FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
 
-  Future<String> fetchTask(String taskName, bool? withError, {bool instant = false}) async {
+  Future<String> fetchTask(String taskName, bool? withError) async {
     // Simulate a network request
     debugPrint('[$taskName] Fetching data...');
-    if (!instant) {
-      await Future.delayed(Duration(milliseconds: 1000 + (_random.nextDouble() * 2000).round()));
-    }
+    await Future.delayed(Duration(milliseconds: 1000 + (_random.nextDouble() * 2000).round()));
 
     // Simulate an error
     if (withError == true) throw Exception('Error !');
 
     // Return simulated data
     return 'taskName: ${DateTime.now().toIso8601String()}';
+  }
+
+  // Not `async`: when `withCachedValue` is true, returns the value directly (no Future), so FetchBuilder skips the loader entirely.
+  FutureOr<String> fetchTaskParameterized(bool? withError) {
+    if (withCachedValue) {
+      if (withError == true) throw Exception('Error !');
+      return 'Cached: ${DateTime.now().toIso8601String()}';
+    }
+    return fetchTask('Parameterized', withError);
   }
 
   void _printControllerMountedState() {
@@ -125,7 +133,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
             ),
             CheckboxListTile(
               title: const Text('With cached (instant) value'),
-              subtitle: const Text('Simulates a cache hit: task resolves synchronously.'),
+              subtitle: const Text('Simulates a cache hit: task returns the value directly (not a Future), so the loader is skipped entirely — even on the very first frame.'),
               dense: true,
               value: withCachedValue,
               onChanged: (value) {
@@ -160,7 +168,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
               height: 200,
               child: FetchBuilderWithParameter<bool, String>(
                 controller: _fetchController1,
-                task: (withError) => fetchTask('Parameterized', withError, instant: withCachedValue),
+                task: fetchTaskParameterized,
                 config: const FetcherConfig(
                   // fadeDuration: Duration.zero,    // Disable fade
                   fadeDuration: Duration(seconds: 1),   // Long fade

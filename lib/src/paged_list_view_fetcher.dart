@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fetcher/extra.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,7 @@ class PagedListViewFetcher<T, P> extends StatefulWidget {
   final FetchBuilderController<PagedData<T, P>>? controller;
 
   /// Task that fetch and return the data, with pageId as parameter.
+  /// Return the page directly (not a [Future]) when it's already available, to skip the loader: see [FetchBuilder].
   final ParameterizedAsyncTask<P, PagedData<T, P>> task;
 
   /// A widget to display between each item.
@@ -138,12 +141,12 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
     );
   }
 
-  Future<PagedData<T, P>> _fetchFirstPage() {
+  FutureOr<PagedData<T, P>> _fetchFirstPage() {
     nextPageId = null;
     return _fetchNextPage();
   }
 
-  Future<PagedData<T, P>> _fetchNextPage() => widget.task(nextPageId);
+  FutureOr<PagedData<T, P>> _fetchNextPage() => widget.task(nextPageId);
 
   Widget _itemBuilder(BuildContext context, int index) {
     if (!isLastPageLoaded && index == items.length) {

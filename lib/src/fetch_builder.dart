@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:fetcher/src/config/default_fetcher_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:value_stream_flutter/value_stream_flutter.dart';
 
@@ -13,12 +14,31 @@ part 'fetch_refresher.dart';
 
 /// Widget that fetch data asynchronously, and display it when available.
 /// Handle all possible states: loading, loaded, errors.
+///
+/// ## Skipping the loader when data is already available
+/// If the data may already be known synchronously (e.g. from a cache), return it directly from `task`
+/// instead of a [Future]: the loader is then skipped entirely, even on the first frame.
+/// Don't mark the task `async`: an `async` function always returns a [Future], even if it never awaits,
+/// so the loader would still be displayed for one frame.
+///
+/// ```dart
+/// // BAD: loader is displayed for one frame, even when `cachedValue` is already set.
+/// FetchBuilder<Data>(task: () async => cachedValue ?? await fetchData(), ...)
+///
+/// // GOOD: no loader at all when `cachedValue` is already set.
+/// FetchBuilder<Data>(task: () => cachedValue ?? fetchData(), ...)
+/// ```
+///
+/// The GOOD version requires Dart 3.4+ and an explicit type argument (otherwise the data type is inferred as `Object`).
 class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
   FetchBuilder({
     super.key,
     super.config,
     FetchBuilderController<T>? controller,
-    required AsyncValueGetter<T> task,
+    /// Task that fetch and return the data.
+    /// If task throws, it will be properly handled (message displayed + report error)
+    /// Return the value directly (not a [Future]) when it's already available, to skip the loader: see [FetchBuilder].
+    required FutureOr<T> Function() task,
     super.fetchAtInit = true,
     super.initBuilder,
     super.builder,
@@ -65,6 +85,7 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
 
   /// Task that fetch and return the data, with optional parameter
   /// If task throws, it will be properly handled (message displayed + report error)
+  /// Return the value directly (not a [Future]) when it's already available, to skip the loader: see [FetchBuilder].
   final ParameterizedAsyncTask<T, R> task;
 
   /// Whether to automatically start [task] when widget is initialised
@@ -163,8 +184,10 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
     // Start process
     try {
-      // Run task
-      final result = await widget.task(param);
+      // Run task.
+      // If it resolves synchronously (a plain value, not a Future — see [ParameterizedAsyncTask]), skip the await entirely so the result is available before the first build.
+      final taskResult = widget.task(param);
+      final result = taskResult is Future<R> ? await taskResult : taskResult;
 
       // If task is still valid
       if (isTaskValid()) {

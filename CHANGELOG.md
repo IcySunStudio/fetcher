@@ -1,3 +1,7 @@
+## 4.6.0
+* Minimum required Dart SDK is now `3.4.0`.
+* `task` (on `FetchBuilder`, `FetchBuilderWithParameter` and `PagedListViewFetcher`) now accepts `FutureOr<T>` instead of `Future<T>`: return the value directly, instead of wrapping it in a `Future`, when it's already known synchronously (e.g. from a cache), to skip the loading indicator entirely. See `FetchBuilder` doc for an example.
+
 ## 4.5.0
 * New `fadeOnDataChange` parameter on `FetcherConfig`. When set to `false`, data updates rebuild the child widget in-place (preserving subtree state) instead of triggering a fade transition. Transitions between fetch states (loading, error, data) still animate naturally. Useful when the builder returns a stateful widget that must survive data changes. Defaults to `true` for backward compatibility.
 * Fix `PagedListViewFetcher.refresh()` reloading the wrong page: now refresh always reloads from the first page.
