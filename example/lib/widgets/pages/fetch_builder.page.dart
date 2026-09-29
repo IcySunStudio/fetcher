@@ -18,13 +18,16 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   final _random = Random();
 
   bool withError = false;
-  bool dataClear = false;
+  bool dataClear = true;
+  bool withCachedValue = true;
   FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
 
-  Future<String> fetchTask(String taskName, bool? withError) async {
+  Future<String> fetchTask(String taskName, bool? withError, {bool instant = false}) async {
     // Simulate a network request
     debugPrint('[$taskName] Fetching data...');
-    await Future.delayed(Duration(milliseconds: 1000 + (_random.nextDouble() * 2000).round()));
+    if (!instant) {
+      await Future.delayed(Duration(milliseconds: 1000 + (_random.nextDouble() * 2000).round()));
+    }
 
     // Simulate an error
     if (withError == true) throw Exception('Error !');
@@ -101,7 +104,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
 
             // Settings
             CheckboxListTile(
-              title: const Text('Clear data first'),
+              title: const Text('Clear data on refresh'),
               dense: true,
               value: dataClear,
               onChanged: (value) {
@@ -111,12 +114,23 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
               },
             ),
             CheckboxListTile(
-              title: const Text('With error'),
+              title: const Text('Fetch error'),
               dense: true,
               value: withError,
               onChanged: (value) {
                 setState(() {
                   withError = value!;
+                });
+              },
+            ),
+            CheckboxListTile(
+              title: const Text('With cached (instant) value'),
+              subtitle: const Text('Simulates a cache hit: task resolves synchronously.'),
+              dense: true,
+              value: withCachedValue,
+              onChanged: (value) {
+                setState(() {
+                  withCachedValue = value!;
                 });
               },
             ),
@@ -146,7 +160,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
               height: 200,
               child: FetchBuilderWithParameter<bool, String>(
                 controller: _fetchController1,
-                task: (withError) => fetchTask('Parameterized', withError),
+                task: (withError) => fetchTask('Parameterized', withError, instant: withCachedValue),
                 config: const FetcherConfig(
                   // fadeDuration: Duration.zero,    // Disable fade
                   fadeDuration: Duration(seconds: 1),   // Long fade
@@ -280,6 +294,9 @@ class _SearchFieldExampleState extends State<_SearchFieldExample> {
           height: 80,
           child: FetchBuilder<String>(
             controller: _fetchController,
+            config: const FetcherConfig(
+              fadeDuration: Duration(seconds: 1),   // Long fade to increase the chance of overlapping fetches during the transition.
+            ),
             fetchAtInit: false,
             task: () => _search(_textController.text),
             initBuilder: (_) => const Center(child: Text('Type something to search')),

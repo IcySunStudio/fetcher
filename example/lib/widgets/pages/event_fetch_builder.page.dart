@@ -37,6 +37,7 @@ class _EventFetchBuilderPageState extends State<EventFetchBuilderPage> {
         // Settings
         CheckboxListTile(
           title: const Text('With initial value'),
+          subtitle: const Text('Value will be displayed immediately, no loader'),
           value: withInitialValue,
           onChanged: (value) {
             setState(() {
