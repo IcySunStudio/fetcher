@@ -97,7 +97,7 @@ class _SubmitBuilderState<T> extends State<SubmitBuilder<T>> {
     return ActivityBarrier(
       duration: config.fadeDuration!,
       barrierColor: widget.barrierColor,
-      busyBuilder: config.fetchingBuilder!,
+      busyBuilder: config.submittingBuilder ?? config.fetchingBuilder!,
       isBusy: _isBusy,
       child: widget.builder(context, _runTask),
     );

@@ -63,12 +63,12 @@ class _PageContent extends StatelessWidget {
                 fetchTask: () => Future.delayed(const Duration(seconds: 2), () => false),
                 submitTask: (data) => Future.delayed(const Duration(seconds: 1)),
                 onEditSuccess: (data) => showMessage(context, 'Submit success : $data'),
-                fetchingBuilder: (context) => const _FavoriteButton(
-                  key: ValueKey('fetching'),    // Avoid fade blinking
-                  selected: false,
-                ),
                 config: FetcherConfig(
-                  fetchingBuilder: (context) => const SizedBox(   // Force CircularProgressIndicator to be at the border
+                  fetchingBuilder: (context) => const _FavoriteButton(
+                    key: ValueKey('fetching'),    // Avoid fade blinking
+                    selected: false,
+                  ),
+                  submittingBuilder: (context) => const SizedBox(   // Force CircularProgressIndicator to be at the border
                     width: iconButtonSize - iconButtonLoadingStrokeWidth / 2,
                     height: iconButtonSize - iconButtonLoadingStrokeWidth / 2,
                     child: CircularProgressIndicator(

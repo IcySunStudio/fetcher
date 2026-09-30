@@ -10,11 +10,11 @@ typedef DataEditWidgetBuilder<T> = Widget Function(BuildContext context, T value
 /// Typically used for component that needs to fetch a value and then edit that value.
 /// DON'T use this if fetch and submit tasks are not related (prefer using separate [FetchBuilder] and [SubmitBuilder]).
 /// Example : an async switch, that fetch the current value, and then can submit the new value.
+/// Use [FetcherConfig.fetchingBuilder] and [FetcherConfig.submittingBuilder] on [config] to customize each loading widget.
 class AsyncEditBuilder<T> extends StatefulWidget {
   const AsyncEditBuilder({
     super.key,
     this.config,
-    this.fetchingBuilder,
     required this.fetchTask,
     required this.submitTask,
     required this.builder,
@@ -24,11 +24,6 @@ class AsyncEditBuilder<T> extends StatefulWidget {
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   /// Config is applied to both [FetchBuilder] and [SubmitBuilder]
   final FetcherConfig? config;
-
-  /// Widget to display while fetching
-  /// Default to [config.fetchingBuilder]
-  /// If you want to change the submit widget, you should use [config.fetchingBuilder] instead.
-  final WidgetBuilder? fetchingBuilder;
 
   /// Task that fetch value
   /// If task throws, it will be properly handled
@@ -51,17 +46,12 @@ class AsyncEditBuilder<T> extends StatefulWidget {
 
 class _AsyncEditBuilderState<T> extends State<AsyncEditBuilder<T>> {
   final _fetcherController = FetchBuilderWithParameterController<T, T>();
-  late final _fetchBuilderConfig = () {
-    if (widget.fetchingBuilder == null) return widget.config;
-    final fetchingBuilderConfig = FetcherConfig(fetchingBuilder: widget.fetchingBuilder);
-    return widget.config == null ? fetchingBuilderConfig : widget.config!.apply(fetchingBuilderConfig);
-  } ();
 
   @override
   Widget build(BuildContext context) {
     return FetchBuilderWithParameter<T, T>(
       controller: _fetcherController,
-      config: _fetchBuilderConfig,
+      config: widget.config,
       task: (value) => value ?? widget.fetchTask(),  // Not `async`: skips the loader when `value` is already available (see [FetchBuilder]).
       builder: (context, data) {
         return SubmitBuilder<T>(

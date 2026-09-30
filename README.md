@@ -452,7 +452,7 @@ Widget build(BuildContext context) {
 ```
 
 `task` is executed when `runTask` (in `builder`) is called (usually from a button).
-While `task` is executed, a barrier with a loader is displayed, blocking user interaction (that's why we need the `SubmitBuilder` to be relatively high in the widget tree).
+While `task` is executed, a barrier with a loader (customizable with `FetcherConfig.submittingBuilder`) is displayed, blocking user interaction (that's why we need the `SubmitBuilder` to be relatively high in the widget tree).
 If `task` throws, a message is displayed, and state is reverted, so user can retry.
 When `task` is completed with success, `onSuccess` is called. This is where you should put navigation logic (all logic that needs a `BuildContext`).
 

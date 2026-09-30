@@ -12,6 +12,7 @@ class FetcherConfig {
     this.fadeOnDataChange,
     this.fadeAlignment,
     this.fetchingBuilder,
+    this.submittingBuilder,
     this.fetchErrorBuilder,
     this.onUnsavedFormPop,
     this.scrollToFirstInvalidField,
@@ -79,7 +80,14 @@ class FetcherConfig {
   final AlignmentGeometry? fadeAlignment;
 
   /// Widget to display while fetching.
+  /// Used by [FetchBuilder], [EventFetchBuilder] and [PagedListViewFetcher], in place of the content.
+  /// Also used as a fallback for [submittingBuilder].
   final WidgetBuilder? fetchingBuilder;
+
+  /// Widget to display on top of the barrier while submitting.
+  /// Used by [SubmitBuilder] and [SubmitFormBuilder], above the content (that remains visible behind the barrier).
+  /// Default to [fetchingBuilder].
+  final WidgetBuilder? submittingBuilder;
 
   /// Widget to display on fetch error.
   /// Replace whole widget content.
@@ -118,6 +126,7 @@ class FetcherConfig {
       fadeOnDataChange: config.fadeOnDataChange ?? fadeOnDataChange,
       fadeAlignment: config.fadeAlignment ?? fadeAlignment,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
+      submittingBuilder: config.submittingBuilder ?? submittingBuilder,
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
       onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
       scrollToFirstInvalidField: config.scrollToFirstInvalidField ?? scrollToFirstInvalidField,
@@ -136,6 +145,7 @@ class FetcherConfig {
         && other.fadeOnDataChange == fadeOnDataChange
         && other.fadeAlignment == fadeAlignment
         && other.fetchingBuilder == fetchingBuilder
+        && other.submittingBuilder == submittingBuilder
         && other.fetchErrorBuilder == fetchErrorBuilder
         && other.onUnsavedFormPop == onUnsavedFormPop
         && other.scrollToFirstInvalidField == scrollToFirstInvalidField
@@ -151,6 +161,7 @@ class FetcherConfig {
       fadeOnDataChange.hashCode ^
       fadeAlignment.hashCode ^
       fetchingBuilder.hashCode ^
+      submittingBuilder.hashCode ^
       fetchErrorBuilder.hashCode ^
       onUnsavedFormPop.hashCode ^
       scrollToFirstInvalidField.hashCode ^
