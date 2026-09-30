@@ -10,6 +10,7 @@ class FetcherConfig {
     this.isDense,
     this.fadeDuration,
     this.fadeOnDataChange,
+    this.fadeAlignment,
     this.fetchingBuilder,
     this.fetchErrorBuilder,
     this.onUnsavedFormPop,
@@ -34,6 +35,7 @@ class FetcherConfig {
     isDense: false,
     fadeDuration: const Duration(milliseconds: 250),
     fadeOnDataChange: false,
+    fadeAlignment: Alignment.topLeft,
     fetchingBuilder: (_) => const Center(child: CircularProgressIndicator()),
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
     scrollToFirstInvalidField: false,
@@ -66,6 +68,15 @@ class FetcherConfig {
   ///
   /// Has no effect when [fadeDuration] is null or [Duration.zero].
   final bool? fadeOnDataChange;
+
+  /// How to align the outgoing and incoming children relative to each other during the fade transition.
+  ///
+  /// Only matters while the transition is running, and only when both children have different sizes:
+  /// outside of a transition, a single child is displayed, and it defines the widget size.
+  /// Default to [Alignment.topLeft].
+  ///
+  /// Has no effect when [fadeDuration] is null or [Duration.zero].
+  final AlignmentGeometry? fadeAlignment;
 
   /// Widget to display while fetching.
   final WidgetBuilder? fetchingBuilder;
@@ -105,6 +116,7 @@ class FetcherConfig {
       isDense: config.isDense ?? isDense,
       fadeDuration: config.fadeDuration ?? fadeDuration,
       fadeOnDataChange: config.fadeOnDataChange ?? fadeOnDataChange,
+      fadeAlignment: config.fadeAlignment ?? fadeAlignment,
       fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
       fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
       onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
@@ -122,6 +134,7 @@ class FetcherConfig {
         && other.isDense == isDense
         && other.fadeDuration == fadeDuration
         && other.fadeOnDataChange == fadeOnDataChange
+        && other.fadeAlignment == fadeAlignment
         && other.fetchingBuilder == fetchingBuilder
         && other.fetchErrorBuilder == fetchErrorBuilder
         && other.onUnsavedFormPop == onUnsavedFormPop
@@ -136,6 +149,7 @@ class FetcherConfig {
       isDense.hashCode ^
       fadeDuration.hashCode ^
       fadeOnDataChange.hashCode ^
+      fadeAlignment.hashCode ^
       fetchingBuilder.hashCode ^
       fetchErrorBuilder.hashCode ^
       onUnsavedFormPop.hashCode ^

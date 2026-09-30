@@ -65,6 +65,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       // fade too, at the cost of destroying and recreating the child subtree on every data update.
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
+        alignment: config.fadeAlignment!,
         child: KeyedSubtree(
           key: config.fadeOnDataChange! || !snapshot.hasData
               ? ValueKey(snapshot)

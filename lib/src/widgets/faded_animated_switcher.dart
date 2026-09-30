@@ -5,10 +5,14 @@ class FadedAnimatedSwitcher extends StatelessWidget {
   const FadedAnimatedSwitcher({
     super.key,
     required this.duration,
+    this.alignment = Alignment.topLeft,
     this.child,
   });
 
   final Duration duration;
+
+  /// How to align the outgoing and incoming children relative to each other during the transition.
+  final AlignmentGeometry alignment;
 
   /// The current child widget to display
   final Widget? child;
@@ -17,12 +21,12 @@ class FadedAnimatedSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: duration,
-      layoutBuilder: _animatedSwitcherLayoutBuilder,
+      layoutBuilder: _layoutBuilder,
       child: child,
     );
   }
 
-  static Widget _animatedSwitcherLayoutBuilder(Widget? currentChild, List<Widget> previousChildren) {
+  Widget _layoutBuilder(Widget? currentChild, List<Widget> previousChildren) {
     // AnimatedSwitcher only hides outgoing children sharing the current child's key, not outgoing children
     // sharing a key with each other, which throws "Duplicate keys found" on rapid changes.
     // Keep only the most recent one: older duplicates were already hidden by AnimatedSwitcher.
@@ -31,7 +35,7 @@ class FadedAnimatedSwitcher extends StatelessWidget {
 
     return Stack(
       fit: StackFit.passthrough,
-      alignment: Alignment.topLeft,
+      alignment: alignment,
       children: <Widget>[
         ...uniquePreviousChildren,
         if (currentChild != null) currentChild,
