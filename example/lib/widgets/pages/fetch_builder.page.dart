@@ -256,7 +256,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   }
 }
 
-/// Reproduces the "Duplicate keys found" crash:
+/// Stress test for rapid state changes (previously caused a "Duplicate keys found" crash):
 /// every keystroke triggers a quick fetch with `clearDataFirst: true`, which emits
 /// repeated identical `null` snapshots while a fade transition is still in progress.
 class _SearchFieldExample extends StatefulWidget {

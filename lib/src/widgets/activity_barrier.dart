@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'faded_animated_switcher.dart';
+
 /// A widget that add an activity indicator overlay that prevents the user from interacting with widgets behind itself.
 class ActivityBarrier extends StatelessWidget {
   /// Creates a widget that add an activity indicator overlay that prevents the user from interacting with widgets behind itself.
@@ -38,7 +40,7 @@ class ActivityBarrier extends StatelessWidget {
 
         // Modal barrier
         Positioned.fill(
-          child: AnimatedSwitcher(
+          child: FadedAnimatedSwitcher(
             duration: duration,
             child: isBusy
               ? Container(

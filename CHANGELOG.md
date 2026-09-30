@@ -1,3 +1,6 @@
+## 4.6.1
+* Fix "Duplicate keys found" crash when fetch states change rapidly during a fade transition (e.g. repeated `refresh(clearDataFirst: true)` calls), on `FetchBuilder`, `EventFetchBuilder`, `SubmitBuilder` and `ActivityBarrier`.
+
 ## 4.6.0
 * Minimum required Dart SDK is now `3.4.0`.
 * `task` (on `FetchBuilder`, `FetchBuilderWithParameter` and `PagedListViewFetcher`) now accepts `FutureOr<T>` instead of `Future<T>`: return the value directly, instead of wrapping it in a `Future`, when it's already known synchronously (e.g. from a cache), to skip the loading indicator entirely. See `FetchBuilder` doc for an example.
