@@ -59,6 +59,11 @@ class SubmitBuilder<T> extends StatefulWidget {
     FetcherConfig? config,
     ValueSetter<T>? onSuccess,
   }) async {
+    // Resolve config before running the task, as context may be unmounted when it ends (to ensure onError is called)
+    if (context.mounted) {
+      config = DefaultFetcherConfig.of(context).merge(config);
+    }
+
     try {
       // Run task
       final result = await task();
@@ -66,11 +71,6 @@ class SubmitBuilder<T> extends StatefulWidget {
       // Success callback
       if (context.mounted) onSuccess?.call(result);
     } catch(e, s) {
-      // Get default config if context is mounted
-      if (context.mounted) {
-        config = DefaultFetcherConfig.of(context).merge(config);
-      }
-
       // Error callback
       config?.onError?.call(e, s);
 
