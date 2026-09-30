@@ -57,15 +57,12 @@ class FetchBuilderContent<T> extends StatelessWidget {
       // AnimatedSwitcher requires a key change to detect that the child has changed and animate
       // the outgoing widget. Without a key, only the incoming widget is animated.
       //
-      // When fadeOnDataChange is true (default), wrap the child in a KeyedSubtree keyed on the
-      // full snapshot so that AnimatedSwitcher always detects a change and plays the fade —
-      // including data-to-data transitions. The trade-off is that the child subtree is destroyed
-      // and recreated on every data update, which causes stateful children to lose their state.
+      // When fadeOnDataChange is false (default), all data snapshots share the same key: data
+      // updates rebuild the child in-place, preserving subtree state, while any other snapshot
+      // change (none, loading, error, data) fades.
       //
-      // When fadeOnDataChange is false, use a key that changes only on fetch state category
-      // transitions (none → loading → data ↔ error). This ensures AnimatedSwitcher properly
-      // animates outgoing widgets (e.g. the loader fades out) on state changes, while data
-      // updates rebuild the child in-place, preserving subtree state.
+      // When fadeOnDataChange is true, the key is the full snapshot, so data-to-data transitions
+      // fade too, at the cost of destroying and recreating the child subtree on every data update.
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
         child: KeyedSubtree(

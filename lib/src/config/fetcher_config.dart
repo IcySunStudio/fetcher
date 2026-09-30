@@ -33,7 +33,7 @@ class FetcherConfig {
   static FetcherConfig defaultConfig = FetcherConfig(
     isDense: false,
     fadeDuration: const Duration(milliseconds: 250),
-    fadeOnDataChange: true,
+    fadeOnDataChange: false,
     fetchingBuilder: (_) => const Center(child: CircularProgressIndicator()),
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
     scrollToFirstInvalidField: false,
@@ -55,15 +55,14 @@ class FetcherConfig {
 
   /// Whether to animate data-to-data transitions with a fade.
   ///
-  /// When `true` (default), every data change triggers a fade transition via [AnimatedSwitcher].
-  /// This gives smooth visual feedback but forces the child subtree to be destroyed and recreated
-  /// on each data update, which causes stateful child widgets to lose their state.
+  /// When `false` (default), data updates rebuild the child in-place, preserving subtree state
+  /// (e.g. scroll position, text fields, animations, platform views), while transitions between
+  /// fetch states (none, loading, error, data) still fade.
   ///
-  /// When `false`, data updates rebuild the child in-place (preserving subtree state), while
-  /// transitions between fetch states (none, loading, error, data) still animate naturally
-  /// because the child widget type changes. Use this when the builder returns a stateful widget
-  /// that must survive data changes (e.g. a widget with expensive initialisation or internal state
-  /// that is updated via [State.didUpdateWidget]).
+  /// When `true`, every data change also triggers a fade transition. The child subtree is then
+  /// destroyed and recreated on each data update, so stateful child widgets lose their state.
+  /// The old and new children are also mounted together during the fade: a [GlobalKey] used
+  /// inside the builder would then be duplicated and throw.
   ///
   /// Has no effect when [fadeDuration] is null or [Duration.zero].
   final bool? fadeOnDataChange;

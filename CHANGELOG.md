@@ -1,3 +1,7 @@
+## 5.0.0
+* BREAKING: `FetcherConfig.fadeOnDataChange` now defaults to `false`: data updates rebuild the child in-place, preserving its state (scroll position, text fields, animations, platform views, etc.), instead of fading and recreating it. Transitions between fetch states (loading, error, data) still fade. Set `fadeOnDataChange: true` to restore the previous behavior.
+* BREAKING: `FadedAnimatedSwitcher` is no longer exported by `extra.dart`, and its `sizeAnimation` parameter was removed.
+
 ## 4.6.1
 * Fix "Duplicate keys found" crash when fetch states change rapidly during a fade transition (e.g. repeated `refresh(clearDataFirst: true)` calls), on `FetchBuilder`, `EventFetchBuilder`, `SubmitBuilder` and `ActivityBarrier`.
 

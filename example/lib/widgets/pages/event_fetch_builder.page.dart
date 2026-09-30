@@ -134,6 +134,9 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
           padding: const EdgeInsets.all(20),
           child: EventFetchBuilder<String>(
             stream: stream,
+            config: const FetcherConfig(
+              fadeOnDataChange: true,
+            ),
             builder: (context, data) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -182,9 +185,6 @@ class _EventFetchBuilderPageContentState extends State<_EventFetchBuilderPageCon
           padding: const EdgeInsets.all(20),
           child: EventFetchBuilder<String>(
             stream: animalStream,
-            config: const FetcherConfig(
-              fadeOnDataChange: false,
-            ),
             builder: (context, data) => _HeavyInitWidget(data: data),
           ),
         ),
