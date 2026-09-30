@@ -37,9 +37,11 @@ extension ExtendedBuildContext on BuildContext {
   /// This is the cleanest, official way.
   void clearFocus() => FocusScope.of(this).unfocus();
 
-  /// Validate the enclosing [Form].
+  /// Validate the enclosing [Form], and save it if valid.
+  /// Returns whether the form is valid, like [FormState.validate].
+  /// [onValidated] is called if the form is valid, after it has been saved.
   /// If [scrollToFirstInvalid] is true and validation fails, scrolls to the first invalid field.
-  void validateForm({VoidCallback? onSuccess, bool scrollToFirstInvalid = false}) {
+  bool validateForm({VoidCallback? onValidated, bool scrollToFirstInvalid = false}) {
     // Clear current focus
     clearFocus();
 
@@ -50,9 +52,11 @@ extension ExtendedBuildContext on BuildContext {
     // Validate form
     if (form.validate()) {
       form.save();
-      onSuccess?.call();
-    } else if (scrollToFirstInvalid) {
-      scrollToFirstInvalidField(this);
+      onValidated?.call();
+      return true;
     }
+
+    if (scrollToFirstInvalid) scrollToFirstInvalidField(this);
+    return false;
   }
 }

@@ -3,6 +3,7 @@
 * New `fadeAlignment` parameter on `FetcherConfig`, to control how outgoing and incoming children are aligned during the fade transition (e.g. when the loader and the content have different sizes). Defaults to `Alignment.topLeft` (previous behavior).
 * New `submittingBuilder` parameter on `FetcherConfig`, to customize the loader displayed on the barrier by `SubmitBuilder` and `SubmitFormBuilder`, independently of the `fetchingBuilder`. Defaults to `fetchingBuilder` (previous behavior).
 * BREAKING: `AsyncEditBuilder.fetchingBuilder` was removed. Use `config: FetcherConfig(fetchingBuilder: ..., submittingBuilder: ...)` instead, to customize the fetching and submitting widgets independently.
+* BREAKING: `validateForm`'s `onSuccess` parameter was renamed to `onValidated`, to avoid confusion with the task `onSuccess` of `SubmitBuilder`. `validateForm` now also returns whether the form is valid, like `FormState.validate`.
 * BREAKING: `FadedAnimatedSwitcher` is no longer exported by `extra.dart`, and its `sizeAnimation` parameter was removed.
 
 ## 4.6.1
