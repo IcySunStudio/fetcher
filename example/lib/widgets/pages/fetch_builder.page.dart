@@ -16,12 +16,18 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   final _refreshController = FetchRefresherController();
   final _fetchController1 = FetchBuilderWithParameterController<bool, String>();
   final _fetchController2 = FetchBuilderController<String>();
+  final _nestedFetchController = FetchBuilderController<String>();
   final _random = Random();
 
   bool withError = false;
   bool dataClear = true;
   bool withCachedValue = true;
   FetchErrorDisplayMode errorDisplayMode = FetchErrorDisplayMode.values.first;
+  bool nestedIsDense = true;
+
+  // Static method (not an inline closure): its tear-off is always the same instance, so the nested config stays equal
+  // across page rebuilds, and doesn't needlessly rebuild the fetchers below (see DefaultFetcherConfig doc).
+  static Widget _greenLoader(BuildContext context) => const Center(child: CircularProgressIndicator(color: Colors.green));
 
   Future<String> fetchTask(String taskName, bool? withError) async {
     // Simulate a network request
@@ -45,7 +51,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   }
 
   void _printControllerMountedState() {
-    debugPrint('Controller are mounted: ${_refreshController.isMounted}, ${_fetchController1.isMounted}, ${_fetchController2.isMounted}');
+    debugPrint('Controller are mounted: ${_refreshController.isMounted}, ${_fetchController1.isMounted}, ${_fetchController2.isMounted}, ${_nestedFetchController.isMounted}');
   }
 
   @override
@@ -202,6 +208,64 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
                 isDense: true,
               ),
               builder: (context, data) => throw StateError('Should never reach this code'),
+            ),
+
+            // Nested DefaultFetcherConfig
+            const Separator(),
+            const _Title(title: 'Nested DefaultFetcherConfig'),
+            const Padding(
+              padding: contentPadding,
+              child: Text('Level 1 overrides the loader (green), level 2 overrides density. '
+                  'Both inherit the global config: 1s fade, and red snackbar on displayed error.'),
+            ),
+            SwitchListTile(
+              title: const Text('Level 2: dense'),
+              subtitle: const Text('Error widget should update instantly, without refetching'),
+              dense: true,
+              value: nestedIsDense,
+              onChanged: (value) {
+                setState(() {
+                  nestedIsDense = value;
+                });
+              },
+            ),
+            Padding(
+              padding: contentPadding,
+              child: ElevatedButton(
+                onPressed: () => _nestedFetchController.refresh(errorDisplayMode: FetchErrorDisplayMode.onDisplay),
+                child: const Text('Refresh level 2 (should display a red snackbar)'),
+              ),
+            ),
+            const SizedBox(height: 10),
+            DefaultFetcherConfig(
+              config: const FetcherConfig(
+                fetchingBuilder: _greenLoader,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Level 1 fetcher
+                  SizedBox(
+                    height: 60,
+                    child: FetchBuilder<String>(
+                      task: () => fetchTask('Nested level 1', false),
+                      builder: (context, data) => Center(child: Text('Level 1: $data')),
+                    ),
+                  ),
+
+                  // Level 2 fetcher
+                  DefaultFetcherConfig(
+                    config: FetcherConfig(
+                      isDense: nestedIsDense,
+                    ),
+                    child: FetchBuilder<String>(
+                      controller: _nestedFetchController,
+                      task: () => fetchTask('Nested level 2', true),
+                      builder: (context, data) => throw StateError('Should never reach this code'),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             // Delayed Fetcher without builder
