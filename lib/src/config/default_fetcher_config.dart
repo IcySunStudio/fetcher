@@ -12,7 +12,8 @@ class DefaultFetcherConfig extends InheritedWidget {
 
   /// Returns the closest [FetcherConfig] which encloses the given context.
   /// If not found, return [FetcherConfig.defaultConfig].
-  static FetcherConfig of(BuildContext context) => context.getInheritedWidgetOfExactType<DefaultFetcherConfig>()?.config ?? FetcherConfig.defaultConfig;
+  /// [context] will be rebuilt when the config changes.
+  static FetcherConfig of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<DefaultFetcherConfig>()?.config ?? FetcherConfig.defaultConfig;
 
   /// Default [FetcherConfig] values.
   static FetcherConfig get defaultConfig => FetcherConfig.defaultConfig;

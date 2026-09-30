@@ -110,7 +110,13 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
 }
 
 class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParameter<T, R>> {
-  late final FetcherConfig config = DefaultFetcherConfig.of(context).apply(widget.config);
+  /// Resolved config.
+  /// Kept in the state (rather than resolved on use), so it's still available if an async task ends after the widget is unmounted.
+  late FetcherConfig config;
+
+  void _updateConfig() => config = DefaultFetcherConfig.of(context).apply(widget.config);
+
+  bool _isInitialized = false;
 
   /// Because BuildContext is unmounted when dispose() is called, we need to keep a reference to the _FetchRefresherState we've registered to
   _FetchRefresherState? _refresherState;
@@ -138,13 +144,24 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
     // Register to closest FetchRefresher
     _refresherState = FetchRefresher._maybeOf(context);
     _refresherState?._register(this);
+  }
 
-    // Fetch
-    if (widget.fetchAtInit) _fetch();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateConfig();
+
+    // Initial fetch is done here rather than in initState, because it may use the config synchronously,
+    // which can't be read from initState (inherited widgets can't be listened to there).
+    if (!_isInitialized) {
+      _isInitialized = true;
+      if (widget.fetchAtInit) _fetch();
+    }
   }
 
   @override
   void didUpdateWidget(covariant FetchBuilderWithParameter<T, R> oldWidget) {
+    _updateConfig();
     if (widget.controller != oldWidget.controller) {
       oldWidget.controller?._unmountState(this);
       widget.controller?._mountState(this);
@@ -158,7 +175,7 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
       stream: _stream,   // Use private nullable stream: when it's null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
         return FetchBuilderContent(
-          config: config,     // Use config from state, not from widget, to force field to be initialized at init. Otherwise, if an error occurs in _fetch while state is unmounted, accessing the config will throw an error because context is unmounted.
+          config: config,
           snapshot: snapshot,
           initBuilder: widget.initBuilder,
           builder: widget.builder,

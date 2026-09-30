@@ -50,12 +50,13 @@ class SubmitFormBuilder<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final config = DefaultFetcherConfig.of(context);
     return ClearFocusBackground(
       child: GuardedForm(
         onChanged: onChanged,
         // It's NOT the same to pass null VS ignoreFormPopCallback directly: using ignoreFormPopCallback might trigger pop several times on pages that uses several SubmitFormBuilder.
         // So we explicitly check if the callback is ignoreFormPopCallback, and pass null instead, to properly disable behavior.
-        onUnsavedFormPop: onUnsavedFormPop == ignoreFormPopCallback ? null : (onUnsavedFormPop ?? DefaultFetcherConfig.of(context).onUnsavedFormPop),
+        onUnsavedFormPop: onUnsavedFormPop == ignoreFormPopCallback ? null : (onUnsavedFormPop ?? config.onUnsavedFormPop),
         child: Builder(
           builder: (context) {
             return SubmitBuilder<T>(
@@ -63,7 +64,7 @@ class SubmitFormBuilder<T> extends StatelessWidget {
               onSuccess: onSuccess,
               builder: (context, runTask) => builder(context, ([task]) => context.validateForm(
                 onValidated: () => runTask(task),
-                scrollToFirstInvalid: scrollToFirstInvalidField ?? DefaultFetcherConfig.of(context).scrollToFirstInvalidField!,
+                scrollToFirstInvalid: scrollToFirstInvalidField ?? config.scrollToFirstInvalidField!,
               )),
             );
           },

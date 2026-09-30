@@ -81,15 +81,29 @@ class SubmitBuilder<T> extends StatefulWidget {
 }
 
 class _SubmitBuilderState<T> extends State<SubmitBuilder<T>> {
-  late final config = DefaultFetcherConfig.of(context).apply(widget.config);
+  late FetcherConfig config;
   bool _isBusy = false;
+  bool _isInitialized = false;
+
+  void _updateConfig() => config = DefaultFetcherConfig.of(context).apply(widget.config);
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.runTaskOnStart) {
-      _runTask();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateConfig();
+
+    // Task is run on start here rather than in initState, because it uses the config,
+    // which can't be read from initState (inherited widgets can't be listened to there).
+    if (!_isInitialized) {
+      _isInitialized = true;
+      if (widget.runTaskOnStart) _runTask();
     }
+  }
+
+  @override
+  void didUpdateWidget(covariant SubmitBuilder<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateConfig();
   }
 
   @override
