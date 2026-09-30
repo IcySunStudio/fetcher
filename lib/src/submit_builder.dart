@@ -68,7 +68,7 @@ class SubmitBuilder<T> extends StatefulWidget {
     } catch(e, s) {
       // Get default config if context is mounted
       if (context.mounted) {
-        config = DefaultFetcherConfig.of(context).apply(config);
+        config = DefaultFetcherConfig.of(context).merge(config);
       }
 
       // Error callback
@@ -85,7 +85,7 @@ class _SubmitBuilderState<T> extends State<SubmitBuilder<T>> {
   bool _isBusy = false;
   bool _isInitialized = false;
 
-  void _updateConfig() => config = DefaultFetcherConfig.of(context).apply(widget.config);
+  void _updateConfig() => config = DefaultFetcherConfig.of(context).merge(widget.config);
 
   @override
   void didChangeDependencies() {

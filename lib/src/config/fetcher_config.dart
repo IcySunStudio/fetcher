@@ -31,8 +31,9 @@ class FetcherConfig {
     onDisplayError: (_, __) {},
   );
 
-  /// Default [FetcherConfig] values.
-  static FetcherConfig defaultConfig = FetcherConfig(
+  /// Default [FetcherConfig] values, used when no [DefaultFetcherConfig] is found.
+  /// To customize it, wrap your app with a [DefaultFetcherConfig].
+  static final FetcherConfig defaultConfig = FetcherConfig(
     isDense: false,
     fadeDuration: const Duration(milliseconds: 250),
     fadeOnDataChange: false,
@@ -117,22 +118,23 @@ class FetcherConfig {
   /// Can be used to add cross-cutting concerns like logging, analytics, or custom behaviors
   final void Function(dynamic result)? onFetchSuccess;
 
-  /// Creates a copy of this config where each fields are overridden by each non-null field of [config].
-  FetcherConfig apply(FetcherConfig? config) {
-    if (config == null) return this;
+  /// Creates a copy of this config where each field is overridden by the corresponding non-null field of [other].
+  /// In other words, [other] takes precedence over this config (like [TextStyle.merge]).
+  FetcherConfig merge(FetcherConfig? other) {
+    if (other == null) return this;
     return FetcherConfig(
-      isDense: config.isDense ?? isDense,
-      fadeDuration: config.fadeDuration ?? fadeDuration,
-      fadeOnDataChange: config.fadeOnDataChange ?? fadeOnDataChange,
-      fadeAlignment: config.fadeAlignment ?? fadeAlignment,
-      fetchingBuilder: config.fetchingBuilder ?? fetchingBuilder,
-      submittingBuilder: config.submittingBuilder ?? submittingBuilder,
-      fetchErrorBuilder: config.fetchErrorBuilder ?? fetchErrorBuilder,
-      onUnsavedFormPop: config.onUnsavedFormPop ?? onUnsavedFormPop,
-      scrollToFirstInvalidField: config.scrollToFirstInvalidField ?? scrollToFirstInvalidField,
-      onError: config.onError ?? onError,
-      onDisplayError: config.onDisplayError ?? onDisplayError,
-      onFetchSuccess: config.onFetchSuccess ?? onFetchSuccess,
+      isDense: other.isDense ?? isDense,
+      fadeDuration: other.fadeDuration ?? fadeDuration,
+      fadeOnDataChange: other.fadeOnDataChange ?? fadeOnDataChange,
+      fadeAlignment: other.fadeAlignment ?? fadeAlignment,
+      fetchingBuilder: other.fetchingBuilder ?? fetchingBuilder,
+      submittingBuilder: other.submittingBuilder ?? submittingBuilder,
+      fetchErrorBuilder: other.fetchErrorBuilder ?? fetchErrorBuilder,
+      onUnsavedFormPop: other.onUnsavedFormPop ?? onUnsavedFormPop,
+      scrollToFirstInvalidField: other.scrollToFirstInvalidField ?? scrollToFirstInvalidField,
+      onError: other.onError ?? onError,
+      onDisplayError: other.onDisplayError ?? onDisplayError,
+      onFetchSuccess: other.onFetchSuccess ?? onFetchSuccess,
     );
   }
 

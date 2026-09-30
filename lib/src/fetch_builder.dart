@@ -114,7 +114,7 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
   /// Kept in the state (rather than resolved on use), so it's still available if an async task ends after the widget is unmounted.
   late FetcherConfig config;
 
-  void _updateConfig() => config = DefaultFetcherConfig.of(context).apply(widget.config);
+  void _updateConfig() => config = DefaultFetcherConfig.of(context).merge(widget.config);
 
   bool _isInitialized = false;
 

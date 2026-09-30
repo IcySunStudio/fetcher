@@ -5,6 +5,10 @@
 * BREAKING: `AsyncEditBuilder.fetchingBuilder` was removed. Use `config: FetcherConfig(fetchingBuilder: ..., submittingBuilder: ...)` instead, to customize the fetching and submitting widgets independently.
 * BREAKING: `validateForm`'s `onSuccess` parameter was renamed to `onValidated`, to avoid confusion with the task `onSuccess` of `SubmitBuilder`. `validateForm` now also returns whether the form is valid, like `FormState.validate`.
 * Fix config changes being ignored by already built widgets: `FetchBuilder` and `SubmitBuilder` used to freeze their config (both `DefaultFetcherConfig` and `config` parameter) on first build. All widgets now rebuild when the enclosing `DefaultFetcherConfig` changes.
+* BREAKING: nested `DefaultFetcherConfig`s are now merged: a `DefaultFetcherConfig` now only overrides the non-null fields of the closest `DefaultFetcherConfig` ancestor, instead of resetting all other fields to the library defaults.
+* BREAKING: `FetcherConfig.apply` was renamed to `merge` (same behavior, like `TextStyle.merge`).
+* BREAKING: `FetcherConfig.defaultConfig` is now `final`. Use a `DefaultFetcherConfig` at the root of your app to customize the global config.
+* BREAKING: `DefaultFetcherConfig.defaultConfig` was removed, use `FetcherConfig.defaultConfig` instead.
 * BREAKING: `FadedAnimatedSwitcher` is no longer exported by `extra.dart`, and its `sizeAnimation` parameter was removed.
 
 ## 4.6.1

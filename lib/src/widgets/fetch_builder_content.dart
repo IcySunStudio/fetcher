@@ -31,7 +31,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = DefaultFetcherConfig.of(context).apply(this.config);
+    final config = DefaultFetcherConfig.of(context).merge(this.config);
 
     final child = () {
       // If source stream is null
