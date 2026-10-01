@@ -1,4 +1,3 @@
-import 'package:fetcher/src/config/default_fetcher_config.dart';
 import 'package:fetcher/src/exceptions/fetch_exception.dart';
 import 'package:fetcher/src/config/fetcher_config.dart';
 import 'package:fetcher/src/models/fetch_error_data.dart';
@@ -11,14 +10,14 @@ import 'faded_animated_switcher.dart';
 class FetchBuilderContent<T> extends StatelessWidget {
   const FetchBuilderContent({
     super.key,
-    this.config,
+    required this.config,
     required this.snapshot,
     this.initBuilder,
     this.builder,
   });
 
-  /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
-  final FetcherConfig? config;
+  /// Resolved widget configuration (already merged with the one provided by [DefaultFetcherConfig])
+  final FetcherConfig config;
 
   /// Data snapshot
   final AsyncSnapshot<DataWrapper<T>?> snapshot;
@@ -31,8 +30,6 @@ class FetchBuilderContent<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final config = DefaultFetcherConfig.of(context).merge(this.config);
-
     final child = () {
       // If source stream is null
       if (snapshot.connectionState == ConnectionState.none) {
