@@ -66,6 +66,10 @@ class FetcherConfig {
   /// When `false` (default), data updates rebuild the child in-place, preserving subtree state
   /// (e.g. scroll position, text fields, animations, platform views), while transitions between
   /// fetch states (none, loading, error, data) still fade.
+  /// Beware of state derived from data, which is then kept across data updates: fields initialized from the data
+  /// in `initState` (or `late` fields), `initialValue` of form fields, or unkeyed stateful children in a list
+  /// (whose state would be associated to the wrong item when items are inserted or removed).
+  /// Either handle updates in `didUpdateWidget`, add keys (e.g. `ValueKey(item.id)`), or set this to `true`.
   ///
   /// When `true`, every data change also triggers a fade transition. The child subtree is then
   /// destroyed and recreated on each data update, so stateful child widgets lose their state.
