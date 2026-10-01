@@ -13,6 +13,7 @@
 * BREAKING: `FetcherConfig.defaultConfig` is now `final`. Use a `DefaultFetcherConfig` at the root of your app to customize the global config.
 * BREAKING: `DefaultFetcherConfig.defaultConfig` was removed, use `FetcherConfig.defaultConfig` instead.
 * BREAKING: `FadedAnimatedSwitcher` is no longer exported by `extra.dart`, and its `sizeAnimation` parameter was removed.
+* Fix `PagedListViewFetcher` throwing "setState() or markNeedsBuild() called during build" when `task` returns synchronously for next pages.
 
 ## 4.6.1
 * Fix "Duplicate keys found" crash when fetch states change rapidly during a fade transition (e.g. repeated `refresh(clearDataFirst: true)` calls), on `FetchBuilder`, `EventFetchBuilder`, `SubmitBuilder` and `ActivityBarrier`.
