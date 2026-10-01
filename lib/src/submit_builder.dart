@@ -61,7 +61,7 @@ class SubmitBuilder<T> extends StatefulWidget {
   }) async {
     // Resolve config before running the task, as context may be unmounted when it ends (to ensure onError is called)
     if (context.mounted) {
-      config = DefaultFetcherConfig.of(context).merge(config);
+      config = DefaultFetcherConfig.of(context, listen: false).merge(config);
     }
 
     try {

@@ -26,8 +26,18 @@ class DefaultFetcherConfig extends StatelessWidget {
 
   /// Returns the [FetcherConfig] provided by the closest [DefaultFetcherConfig] which encloses the given context.
   /// If not found, return [FetcherConfig.defaultConfig].
-  /// [context] will be rebuilt when the config changes.
-  static FetcherConfig of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<_InheritedFetcherConfig>()?.config ?? FetcherConfig.defaultConfig;
+  ///
+  /// If [listen] is true (default), [context] will be rebuilt when the config changes.
+  /// Use it when the config is used to build the widget (e.g. in `build` or `didChangeDependencies`).
+  ///
+  /// If [listen] is false, the config is only read once, without registering a dependency.
+  /// Use it when the config is used outside of the build phase (e.g. in `initState` or in a callback like `onPressed`).
+  static FetcherConfig of(BuildContext context, {bool listen = true}) {
+    final inherited = listen
+        ? context.dependOnInheritedWidgetOfExactType<_InheritedFetcherConfig>()
+        : context.getInheritedWidgetOfExactType<_InheritedFetcherConfig>();
+    return inherited?.config ?? FetcherConfig.defaultConfig;
+  }
 
   @override
   Widget build(BuildContext context) {
