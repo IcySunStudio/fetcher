@@ -64,6 +64,10 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
   P? nextPageId;
   bool get isLastPageLoaded => nextPageId == null;
 
+  /// Incremented on each first page fetch (initial fetch or refresh).
+  /// Used to key the [_loader], so that a loader started before a refresh is disposed (and its result ignored) once refresh is done.
+  int _generation = 0;
+
   late final Widget _loader;
 
   @override
@@ -142,6 +146,7 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
   }
 
   FutureOr<PagedData<T, P>> _fetchFirstPage() {
+    _generation++;
     nextPageId = null;
     return _fetchNextPage();
   }
@@ -150,7 +155,10 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
 
   Widget _itemBuilder(BuildContext context, int index) {
     if (!isLastPageLoaded && index == items.length) {
-      return _loader;
+      return KeyedSubtree(
+        key: ValueKey(_generation),
+        child: _loader,
+      );
     } else {
       return widget.itemBuilder(context, items[index]);
     }
