@@ -27,6 +27,7 @@ class FetcherConfig {
     isDense: true,
     fadeDuration: fadeDuration,
     fetchingBuilder: (_) => const SizedBox(),
+    submittingBuilder: (_) => const SizedBox(),
     fetchErrorBuilder: (_, __) => const SizedBox(),
     onDisplayError: (_, __) {},
   );
