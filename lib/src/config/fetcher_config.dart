@@ -122,6 +122,7 @@ class FetcherConfig {
 
   /// Called when any [FetchBuilder]'s task ends successfully.
   /// Can be used to add cross-cutting concerns like logging, analytics, or custom behaviors
+  /// May be called during the build phase, see [FetchBuilder.onSuccess].
   final void Function(dynamic result)? onFetchSuccess;
 
   /// Creates a copy of this config where each field is overridden by the corresponding non-null field of [other].

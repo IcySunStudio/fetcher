@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fetcher/extra.dart';
 import 'package:fetcher/fetcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:value_stream_flutter/value_stream_flutter.dart';
 
 /// A widget that fetch a paginated list of data, page by page.
@@ -81,9 +82,16 @@ class _PagedListViewFetcherState<T, P> extends State<PagedListViewFetcher<T, P>>
         child: FetchBuilder<PagedData<T, P>>(
           task: _fetchNextPage,
           onSuccess: (pagedData) {
-            setState(() {
-              _updatePagedData(pagedData);
-            });
+            void update() => setState(() => _updatePagedData(pagedData));
+
+            // Loader is built during list layout: if task returned synchronously, defer update after the frame (see [FetchBuilder.onSuccess])
+            if (SchedulerBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+              SchedulerBinding.instance.addPostFrameCallback((_) {
+                if (mounted) update();
+              });
+            } else {
+              update();
+            }
           },
           config: FetcherConfig(
             isDense: true,

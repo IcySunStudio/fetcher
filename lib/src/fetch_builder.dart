@@ -103,6 +103,10 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
   /// Ignored if widget is unmounted.
   /// Usually used to navigate to another page.
   /// If it throws, it will be handled as if [task] has thrown.
+  ///
+  /// If [task] returns synchronously (a plain value, not a [Future]) on initial fetch, it's called during the build phase,
+  /// like [ImageStreamListener]'s `synchronousCall`: navigation or calling `setState` on an ancestor would then throw.
+  /// In that case, defer them using [WidgetsBinding.addPostFrameCallback].
   final ValueSetter<R>? onSuccess;
 
   @override
