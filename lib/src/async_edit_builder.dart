@@ -10,7 +10,7 @@ typedef DataEditWidgetBuilder<T> = Widget Function(BuildContext context, T value
 /// Typically used for component that needs to fetch a value and then edit that value.
 /// DON'T use this if fetch and submit tasks are not related (prefer using separate [FetchBuilder] and [SubmitBuilder]).
 /// Example : an async switch, that fetch the current value, and then can submit the new value.
-/// Use [FetcherConfig.fetchingBuilder] and [FetcherConfig.submittingBuilder] on [config] to customize each loading widget.
+/// Use [FetcherConfig.fetchingBuilder] (while fetching) and [FetcherConfig.submittingBuilder] (while submitting) on [config] to customize each loading widget independently.
 class AsyncEditBuilder<T> extends StatefulWidget {
   const AsyncEditBuilder({
     super.key,

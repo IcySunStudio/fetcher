@@ -39,12 +39,15 @@ class FetcherConfig {
     fadeDuration: const Duration(milliseconds: 250),
     fadeOnDataChange: false,
     fadeAlignment: Alignment.topLeft,
-    fetchingBuilder: (_) => const Center(child: CircularProgressIndicator()),
+    fetchingBuilder: _buildDefaultLoader,
+    submittingBuilder: _buildDefaultLoader,
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
     scrollToFirstInvalidField: false,
     onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
     onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
   );
+
+  static Widget _buildDefaultLoader(BuildContext context) => const Center(child: CircularProgressIndicator());
 
   /// Whether fetcher is in a low space environment.
   /// Will affect default error widget density.
@@ -81,14 +84,12 @@ class FetcherConfig {
   /// Has no effect when [fadeDuration] is null or [Duration.zero].
   final AlignmentGeometry? fadeAlignment;
 
-  /// Widget to display while fetching.
-  /// Used by [FetchBuilder], [EventFetchBuilder] and [PagedListViewFetcher], in place of the content.
-  /// Also used as a fallback for [submittingBuilder].
+  /// Widget to display while fetching, in place of the content (usually a loader or a placeholder of the content).
+  /// Used by [FetchBuilder], [EventFetchBuilder] and [PagedListViewFetcher].
   final WidgetBuilder? fetchingBuilder;
 
-  /// Widget to display on top of the barrier while submitting.
-  /// Used by [SubmitBuilder] and [SubmitFormBuilder], above the content (that remains visible behind the barrier).
-  /// Default to [fetchingBuilder].
+  /// Widget to display on top of the barrier while submitting, above the content that remains visible behind the barrier (usually a loader).
+  /// Used by [SubmitBuilder] and [SubmitFormBuilder].
   final WidgetBuilder? submittingBuilder;
 
   /// Widget to display on fetch error.

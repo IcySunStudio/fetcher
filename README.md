@@ -178,6 +178,7 @@ See [the example project](https://github.com/IcySunStudio/fetcher/tree/master/ex
 DefaultFetcherConfig(
   config: FetcherConfig(
     fetchingBuilder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)),
+    submittingBuilder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)),
     onDisplayError: (context, error) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(error.toString()),
       backgroundColor: Colors.red,
