@@ -18,6 +18,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   final _fetchController2 = FetchBuilderController<String>();
   final _nestedFetchController = FetchBuilderController<String>();
   final _snapshotFetchController = FetchBuilderController<String>();
+  final _fadeSizeFetchController = FetchBuilderController<String>();
   final _random = Random();
 
   bool withError = false;
@@ -331,6 +332,41 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
                   child: Text('Action'),
                 ),
               ),
+            ),
+
+            // Fade size Fetcher
+            const Separator(),
+            const _Title(title: 'Silent Fetcher with animated size'),
+            const Padding(
+              padding: contentPadding,
+              child: Text('FetcherConfig.silent(fadeSize: true) hides the loader and the error (nothing is displayed on error, uses the "Fetch error" setting above), '
+                  'and animates the height while the content fades in, so that the widgets below move smoothly instead of jumping.'),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: contentPadding,
+              child: ElevatedButton(
+                onPressed: () => _fadeSizeFetchController.refresh(clearDataFirst: true),
+                child: const Text('Refresh'),
+              ),
+            ),
+            Padding(
+              padding: contentPadding,
+              child: FetchBuilder<String>(
+                controller: _fadeSizeFetchController,
+                task: () => fetchTask('Fade size', withError),
+                config: FetcherConfig.silent(fadeSize: true),
+                builder: (context, data) => Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text('Data is fetched, and this card grows to its size:\n$data\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+                  ),
+                ),
+              ),
+            ),
+            const Padding(
+              padding: contentPadding,
+              child: Text('☝️ This text is displayed below the fetcher ☝️'),
             ),
 
             // Search field (rapid clearDataFirst during fade)
