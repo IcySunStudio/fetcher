@@ -17,6 +17,7 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
   final _fetchController1 = FetchBuilderWithParameterController<bool, String>();
   final _fetchController2 = FetchBuilderController<String>();
   final _nestedFetchController = FetchBuilderController<String>();
+  final _snapshotFetchController = FetchBuilderController<String>();
   final _random = Random();
 
   bool withError = false;
@@ -301,6 +302,34 @@ class _FetchBuilderPageState extends State<FetchBuilderPage> {
                   )));
                 },
                 initBuilder: (_) => const Text('Press Fetch to start'),
+              ),
+            ),
+
+            // Snapshot Fetcher
+            const Separator(),
+            const _Title(title: 'Snapshot Fetcher (button disabled until data is available)'),
+            const Padding(
+              padding: contentPadding,
+              child: Text('FetchBuilder.snapshot gives an AsyncSnapshot to handle loading and error states yourself: '
+                  'the button stays displayed, and is just disabled while loading or on error (uses the "Fetch error" setting above).'),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: contentPadding,
+              child: ElevatedButton(
+                onPressed: () => _snapshotFetchController.refresh(clearDataFirst: true),
+                child: const Text('Refresh'),
+              ),
+            ),
+            Center(
+              child: FetchBuilder<String>.snapshot(
+                controller: _snapshotFetchController,
+                task: () => fetchTask('Snapshot', withError),
+                snapshotBuilder: (context, snapshot) => ElevatedButton(
+                  // `data` is null while loading or on error
+                  onPressed: snapshot.hasData ? () => showMessage(context, 'Button pressed with: ${snapshot.data}', backgroundColor: Colors.green) : null,
+                  child: Text('Action'),
+                ),
               ),
             ),
 
