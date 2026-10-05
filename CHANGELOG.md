@@ -1,3 +1,6 @@
+## 5.1.0
+* New `FetchBuilder.snapshot` constructor, taking a single `snapshotBuilder` that receives an `AsyncSnapshot` (like `FutureBuilder`), to handle loading and error states yourself instead of using the loader and error widget from the config (e.g. a button that stays displayed but disabled until data is available). No fade transition is applied.
+
 ## 5.0.0
 * BREAKING: `FetcherConfig.fadeOnDataChange` now defaults to `false`: data updates rebuild the child in-place, preserving its state (scroll position, text fields, animations, platform views, etc.), instead of fading and recreating it. Transitions between fetch states (loading, error, data) still fade. Set `fadeOnDataChange: true` to restore the previous behavior.
   Beware of state derived from data, which is now kept across data updates (e.g. `refresh()` without `clearDataFirst`, new `EventFetchBuilder` event): fields initialized from the data in `initState` (or `late` fields), `initialValue` of form fields, or unkeyed stateful children in a list (state would be associated to the wrong item when items are inserted/removed). Either handle updates in `didUpdateWidget`, add keys (e.g. `ValueKey(item.id)`), or set `fadeOnDataChange: true`.

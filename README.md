@@ -493,6 +493,24 @@ In a FetchBuilder, if you need to call a task programmatically (for instance to 
 2. Pass instance to `controller` parameter of `FetchBuilder`
 3. Call `controller.refresh()` from a function
 
+### Handle loading and error states yourself
+
+By default, `FetchBuilder` replaces its content with the loader and the error widget from the config.
+If you need to keep your own widget in every state (for instance a button that is disabled until data is available), use `FetchBuilder.snapshot`: it gives you an `AsyncSnapshot`, like `FutureBuilder`.
+
+```dart
+FetchBuilder<String?>.snapshot(
+  task: () => api.getTrailerUrl(movieId),
+  snapshotBuilder: (context, snapshot) => TextButton(
+    // `data` is null while loading, on error, or when the movie has no trailer
+    onPressed: snapshot.data != null ? () => openTrailer(snapshot.data!) : null,
+    child: const Text('Trailer'),
+  ),
+)
+```
+
+Errors are still reported through `FetcherConfig.onError`. No fade transition is applied: wrap your widget in an `AnimatedSwitcher` if you need one.
+
 ### FetchBuilder with extra argument
 
 For advanced usage, you can use `FetchBuilderWithParameter` widget to pass an object to the task.

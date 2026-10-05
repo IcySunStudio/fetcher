@@ -30,6 +30,10 @@ part 'fetch_refresher.dart';
 /// ```
 ///
 /// The GOOD version requires Dart 3.4+ and an explicit type argument (otherwise the data type is inferred as `Object`).
+///
+/// ## Handling loading and error states yourself
+/// Use [FetchBuilder.snapshot] when the loader and the error widget of the config don't fit,
+/// for instance to keep a (disabled) button displayed while loading or on error.
 class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
   FetchBuilder({
     super.key,
@@ -47,6 +51,47 @@ class FetchBuilder<T> extends FetchBuilderWithParameter<Never, T> {
     controller: controller,
     task: (_) => task(),
   );
+
+  /// A [FetchBuilder] that gives you the whole fetch state through an [AsyncSnapshot], like [FutureBuilder].
+  /// You decide what to display while loading, on error and when data is available.
+  ///
+  /// Unlike the default constructor, [FetcherConfig.fetchingBuilder], [FetcherConfig.fetchErrorBuilder]
+  /// and the fade transition are not used. Errors are still reported through [FetcherConfig.onError].
+  ///
+  /// The [AsyncSnapshot] given to [snapshotBuilder] is:
+  /// * [ConnectionState.waiting] without data while [task] is running
+  /// * [ConnectionState.done] with data when [task] has succeeded (immediately, on the first build, if [task] returns synchronously)
+  /// * [ConnectionState.done] with error when [task] has thrown ([AsyncSnapshot.error] is the thrown object)
+  /// * [ConnectionState.none] before [task] is started, when [fetchAtInit] is false
+  ///
+  /// Example: keep a trailer button displayed, but disabled until the trailer is known.
+  ///
+  /// ```dart
+  /// FetchBuilder<String?>.snapshot(
+  ///   task: () => api.getTrailerUrl(movieId),
+  ///   snapshotBuilder: (context, snapshot) => TextButton(
+  ///     // `data` is null while loading, on error, or when the movie has no trailer
+  ///     onPressed: snapshot.data != null ? () => openTrailer(snapshot.data!) : null,
+  ///     child: const Text('Trailer'),
+  ///   ),
+  /// )
+  /// ```
+  FetchBuilder.snapshot({
+    super.key,
+    super.config,
+    FetchBuilderController<T>? controller,
+    /// Task that fetch and return the data.
+    /// If task throws, it will be properly handled (error reported, and given to [snapshotBuilder])
+    /// Return the value directly (not a [Future]) when it's already available, to skip the loading state: see [FetchBuilder].
+    required FutureOr<T> Function() task,
+    super.fetchAtInit = true,
+    required AsyncWidgetBuilder<T> snapshotBuilder,
+    super.onSuccess,
+  }) : super._(
+    controller: controller,
+    task: (_) => task(),
+    snapshotBuilder: snapshotBuilder,
+  );
 }
 
 /// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
@@ -60,8 +105,9 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.fetchAtInit = true,
     this.initBuilder,
     this.builder,
+    this.snapshotBuilder,
     this.onSuccess,
-  });
+  }) : assert(builder == null || snapshotBuilder == null, 'builder and snapshotBuilder are mutually exclusive');
 
   /// A [FetchBuilder] where the refresh method of the controller takes a parameter, passed to [task].
   /// Useful for advanced use cases.
@@ -75,7 +121,7 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
     this.builder,
     this.onSuccess,
   // ignore: prefer_initializing_formals    // We force subtype to be used
-  }) : controller = controller;
+  }) : controller = controller, snapshotBuilder = null;
 
   /// Widget configuration, that will override the one provided by [DefaultFetcherConfig]
   final FetcherConfig? config;
@@ -98,6 +144,10 @@ class FetchBuilderWithParameter<T, R> extends StatefulWidget {
   /// Child to display when data is available
   /// May be null if you only want to fetch data without displaying it (in that case you usually want to use [onSuccess] to navigate out of current page).
   final DataWidgetBuilder<R>? builder;
+
+  /// Builder of the whole widget, given the fetch state as an [AsyncSnapshot], when set (see [FetchBuilder.snapshot]).
+  /// Replaces [initBuilder], [builder], and the loader, error widget and fade transition from the config.
+  final AsyncWidgetBuilder<R>? snapshotBuilder;
 
   /// Called when [task] has successfully completed.
   /// Ignored if widget is unmounted.
@@ -178,6 +228,9 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
     return EventStreamBuilder(
       stream: _stream,   // Use private nullable stream: when it's null, the snapshot's state will be ConnectionState.none.
       builder: (context, snapshot) {
+        final snapshotBuilder = widget.snapshotBuilder;
+        if (snapshotBuilder != null) return snapshotBuilder(context, _toAsyncSnapshot(snapshot));
+
         return FetchBuilderContent(
           config: config,
           snapshot: snapshot,
@@ -255,6 +308,20 @@ class _FetchBuilderWithParameterState<T, R> extends State<FetchBuilderWithParame
 
     // Exit with no result
     return null;
+  }
+
+  /// Convert internal stream snapshot to the public one, given to [FetchBuilderWithParameter.snapshotBuilder].
+  AsyncSnapshot<R> _toAsyncSnapshot(AsyncSnapshot<DataWrapper<R>?> snapshot) {
+    if (snapshot.connectionState == ConnectionState.none) {
+      return AsyncSnapshot<R>.nothing();
+    } else if (snapshot.hasError) {
+      final error = snapshot.error!;
+      return AsyncSnapshot<R>.withError(ConnectionState.done, error is FetchException ? error.innerException : error, snapshot.stackTrace ?? StackTrace.empty);
+    } else if (!snapshot.hasData) {
+      return AsyncSnapshot<R>.waiting();
+    } else {
+      return AsyncSnapshot<R>.withData(ConnectionState.done, snapshot.data!.data);
+    }
   }
 
   @override
