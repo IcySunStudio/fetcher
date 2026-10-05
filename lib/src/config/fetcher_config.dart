@@ -11,6 +11,7 @@ class FetcherConfig {
     this.fadeDuration,
     this.fadeOnDataChange,
     this.fadeAlignment,
+    this.fadeSize,
     this.fetchingBuilder,
     this.submittingBuilder,
     this.fetchErrorBuilder,
@@ -23,9 +24,10 @@ class FetcherConfig {
 
   /// Fetcher configuration for silent mode.
   /// Use this configuration to hide loader & error.
-  FetcherConfig.silent({Duration? fadeDuration}) : this(
+  FetcherConfig.silent({Duration? fadeDuration, bool? fadeSize}) : this(
     isDense: true,
     fadeDuration: fadeDuration,
+    fadeSize: fadeSize,
     fetchingBuilder: (_) => const SizedBox(),
     submittingBuilder: (_) => const SizedBox(),
     fetchErrorBuilder: (_, __) => const SizedBox(),
@@ -39,6 +41,7 @@ class FetcherConfig {
     fadeDuration: const Duration(milliseconds: 250),
     fadeOnDataChange: false,
     fadeAlignment: Alignment.topLeft,
+    fadeSize: false,
     fetchingBuilder: _buildDefaultLoader,
     submittingBuilder: _buildDefaultLoader,
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
@@ -88,6 +91,16 @@ class FetcherConfig {
   /// Has no effect when [fadeDuration] is null or [Duration.zero].
   final AlignmentGeometry? fadeAlignment;
 
+  /// Whether to also animate the height during the fade transition (with a [SizeTransition]), so that the widget
+  /// smoothly grows or shrinks when its content changes size (e.g. from an empty loader to the loaded content).
+  /// Only the height is animated. [fadeAlignment] defines how the content is anchored while the height changes.
+  ///
+  /// Be aware that this adds a clip around the children during the transition.
+  /// Only used by [FetchBuilder], [EventFetchBuilder] and [PagedListViewFetcher]. Default to `false`.
+  ///
+  /// Has no effect when [fadeDuration] is null or [Duration.zero].
+  final bool? fadeSize;
+
   /// Widget to display while fetching, in place of the content (usually a loader or a placeholder of the content).
   /// Used by [FetchBuilder], [EventFetchBuilder] and [PagedListViewFetcher].
   final WidgetBuilder? fetchingBuilder;
@@ -134,6 +147,7 @@ class FetcherConfig {
       fadeDuration: other.fadeDuration ?? fadeDuration,
       fadeOnDataChange: other.fadeOnDataChange ?? fadeOnDataChange,
       fadeAlignment: other.fadeAlignment ?? fadeAlignment,
+      fadeSize: other.fadeSize ?? fadeSize,
       fetchingBuilder: other.fetchingBuilder ?? fetchingBuilder,
       submittingBuilder: other.submittingBuilder ?? submittingBuilder,
       fetchErrorBuilder: other.fetchErrorBuilder ?? fetchErrorBuilder,
@@ -153,6 +167,7 @@ class FetcherConfig {
         && other.fadeDuration == fadeDuration
         && other.fadeOnDataChange == fadeOnDataChange
         && other.fadeAlignment == fadeAlignment
+        && other.fadeSize == fadeSize
         && other.fetchingBuilder == fetchingBuilder
         && other.submittingBuilder == submittingBuilder
         && other.fetchErrorBuilder == fetchErrorBuilder
@@ -169,6 +184,7 @@ class FetcherConfig {
       fadeDuration.hashCode ^
       fadeOnDataChange.hashCode ^
       fadeAlignment.hashCode ^
+      fadeSize.hashCode ^
       fetchingBuilder.hashCode ^
       submittingBuilder.hashCode ^
       fetchErrorBuilder.hashCode ^

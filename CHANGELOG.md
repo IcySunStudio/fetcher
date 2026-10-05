@@ -1,3 +1,7 @@
+## 5.2.0
+* Minimum required Flutter is now `3.41.0` (Dart `3.11.0`).
+* New `fadeSize` parameter on `FetcherConfig` (also available on `FetcherConfig.silent`), to also animate the height during the fade transition, so that the widget smoothly grows or shrinks when its content changes size (e.g. from a silent loader to the loaded content). `fadeAlignment` defines how the content is anchored during the transition. Defaults to `false` (previous behavior).
+
 ## 5.1.0
 * New `FetchBuilder.snapshot` constructor, taking a single `snapshotBuilder` that receives an `AsyncSnapshot` (like `FutureBuilder`), to handle loading and error states yourself instead of using the loader and error widget from the config (e.g. a button that stays displayed but disabled until data is available). No fade transition is applied.
 

@@ -63,6 +63,7 @@ class FetchBuilderContent<T> extends StatelessWidget {
       return FadedAnimatedSwitcher(
         duration: config.fadeDuration!,
         alignment: config.fadeAlignment!,
+        sizeAnimation: config.fadeSize!,
         child: KeyedSubtree(
           key: config.fadeOnDataChange! || !snapshot.hasData
               ? ValueKey(snapshot)

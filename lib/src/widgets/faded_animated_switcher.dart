@@ -6,6 +6,7 @@ class FadedAnimatedSwitcher extends StatelessWidget {
     super.key,
     required this.duration,
     this.alignment = Alignment.topLeft,
+    this.sizeAnimation = false,
     this.child,
   });
 
@@ -14,6 +15,10 @@ class FadedAnimatedSwitcher extends StatelessWidget {
   /// How to align the outgoing and incoming children relative to each other during the transition.
   final AlignmentGeometry alignment;
 
+  /// Whether to also animate the height with a [SizeTransition], in addition to the fade.
+  /// Be aware that this adds a [ClipRect] around the children during the transition.
+  final bool sizeAnimation;
+
   /// The current child widget to display
   final Widget? child;
 
@@ -21,8 +26,20 @@ class FadedAnimatedSwitcher extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: duration,
+      transitionBuilder: sizeAnimation ? _sizeTransitionBuilder : AnimatedSwitcher.defaultTransitionBuilder,
       layoutBuilder: _layoutBuilder,
       child: child,
+    );
+  }
+
+  Widget _sizeTransitionBuilder(Widget child, Animation<double> animation) {
+    return FadeTransition(
+      opacity: animation,
+      child: SizeTransition(
+        sizeFactor: animation,
+        alignment: alignment,
+        child: child,
+      ),
     );
   }
 
