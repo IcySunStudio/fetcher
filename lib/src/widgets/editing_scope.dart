@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:value_stream_flutter/value_stream_flutter.dart';
 
 /// Tracks elements being edited in its subtree (e.g. a [GuardedForm] with changes).
 /// May be used to delay a data update while user is editing, so that the input isn't lost when the subtree is recreated.
@@ -99,4 +100,62 @@ class _EditingScopeScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_EditingScopeScope oldWidget) => false;
+}
+
+/// Builds [builder] with [value], recreating its subtree (its state is lost) each time [value] changes,
+/// except while an element is being edited in it (see [EditingScope]): the displayed value is then kept,
+/// and updated to the latest [value] when editing ends.
+/// Values are compared with ==: a subtree won't be recreated after a save if the new value equals the previous one.
+/// Inside a [FetchBuilder] or [EventFetchBuilder], keep [FetcherConfig.fadeOnDataChange] to false (default):
+/// otherwise this widget is recreated on each data and can't keep the displayed value.
+/// Loading and error states also replace this widget (e.g. stream error, refresh with clearDataFirst).
+class EditingValueBuilder<T> extends StatefulWidget {
+  const EditingValueBuilder({
+    super.key,
+    required this.value,
+    required this.builder,
+  });
+
+  /// Latest value.
+  final T value;
+
+  /// Subtree builder, called with the displayed value.
+  final DataWidgetBuilder<T> builder;
+
+  @override
+  State<EditingValueBuilder<T>> createState() => _EditingValueBuilderState<T>();
+}
+
+class _EditingValueBuilderState<T> extends State<EditingValueBuilder<T>> {
+  late T _value = widget.value;
+  bool _isEditing = false;
+
+  @override
+  void didUpdateWidget(covariant EditingValueBuilder<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _update();
+  }
+
+  /// Updates the displayed value to the latest one, unless editing.
+  /// Returns whether it was updated.
+  bool _update() {
+    if (_isEditing || widget.value == _value) return false;
+    _value = widget.value;
+    return true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return EditingScope(
+      onChanged: (isEditing) {
+        _isEditing = isEditing;
+        if (_update()) setState(() {});
+      },
+      child: KeyedSubtree(
+        key: ValueKey(_value),
+        // Builder so that the builder's context is below the scope (e.g. for manual register)
+        child: Builder(builder: (context) => widget.builder(context, _value)),
+      ),
+    );
+  }
 }

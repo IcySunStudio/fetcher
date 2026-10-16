@@ -513,22 +513,26 @@ Errors are still reported through `FetcherConfig.onError`. No fade transition is
 
 ### Keep user input while data updates
 
-If your page displays live data (for instance a database stream) and is recreated on each update, user input in a form would be lost.
-Wrap it in an `EditingScope` (from `extra.dart`): `SubmitFormBuilder` (and `GuardedForm`) automatically registers to it when changed, until submitted with success or disposed.
-Keep displaying the same version while the scope is editing, then switch to the latest one:
+If your page displays live data (for instance a database stream), and its state is initialized from the data (for instance `initialValue` of form fields), you may want to recreate it on each update, but without losing user input in a form.
+Use `EditingValueBuilder` (from `extra.dart`): it recreates its subtree (its state is lost) each time `value` changes, except while an element is being edited in it.
+`SubmitFormBuilder` (and `GuardedForm`) automatically marks the subtree as being edited when changed, until submitted with success or disposed. The latest value is then displayed.
 
 ```dart
-EditingScope(
-  onChanged: (isEditing) => setState(() => this.isEditing = isEditing),
-  child: KeyedSubtree(
-    key: ObjectKey(displayedItem),    // displayedItem is only updated to the latest item when isEditing is false
-    child: ItemPage(item: displayedItem),
+EventFetchBuilder<Item>(
+  stream: bloc.item,
+  builder: (context, item) => EditingValueBuilder<Item>(
+    value: item,
+    builder: (context, item) => ItemPage(item: item),
   ),
 )
 ```
 
-`EditingScope` must be placed above the recreated subtree. Nested scopes are supported: an element being edited also protects all ancestor scopes.
-You may also call `EditingScope.maybeOf(context)?.register(owner)` (and `unregister`) to protect any other element (for instance an expanded card), and `clear()` to forget all elements after an action that makes current input useless (for instance when the edited item is deleted).
+* Values are compared with `==`: the subtree won't be recreated after a save if the new value equals the previous one.
+* Inside a `FetchBuilder` or `EventFetchBuilder`, keep `fadeOnDataChange` to `false` (default): otherwise `EditingValueBuilder` is recreated on each data and can't keep the displayed value.
+* Loading and error states also replace the content (for instance on a stream error, or `refresh(clearDataFirst: true)`).
+
+`EditingValueBuilder` is based on `EditingScope`, which you may use directly for specific cases: it tracks elements being edited in its subtree, and notifies changes through `onChanged`. Nested scopes are supported: an element being edited also protects all ancestor scopes.
+You may call `EditingScope.maybeOf(context)?.register(owner)` (and `unregister`) to protect any other element (for instance an expanded card), and `clear()` to forget all elements after an action that makes current input useless (for instance when the edited item is deleted).
 
 ### FetchBuilder with extra argument
 

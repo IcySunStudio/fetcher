@@ -1,5 +1,6 @@
 ## 5.3.0
-* New `EditingScope` widget (in `extra.dart`), that tracks elements being edited in its subtree. `GuardedForm` (and so `SubmitFormBuilder`) automatically registers to the closest `EditingScope` when changed, until saved or disposed. May be used to delay a live data update while a form is being edited, so that the input isn't lost when the subtree is recreated. Nested scopes are supported.
+* New `EditingValueBuilder` widget (in `extra.dart`), that recreates its subtree on each new value, except while an element is being edited in it: the displayed value is then kept, and updated to the latest one when editing ends. Usually used to display live data (e.g. a database stream) without losing user input in a form.
+* New `EditingScope` widget (in `extra.dart`), base of `EditingValueBuilder`, that tracks elements being edited in its subtree. `GuardedForm` (and so `SubmitFormBuilder`) automatically registers to the closest `EditingScope` when changed, until saved or disposed. Other elements may be registered manually. Nested scopes are supported.
 * New `GuardedForm.markAsSaved`, to allow pop again after changes have been saved. Automatically called by `SubmitFormBuilder` on success.
 * Fix `SubmitFormBuilder` still asking confirmation on pop after a successful submission, when the page stays open.
 
