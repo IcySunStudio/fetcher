@@ -511,6 +511,25 @@ FetchBuilder<String?>.snapshot(
 
 Errors are still reported through `FetcherConfig.onError`. No fade transition is applied: wrap your widget in an `AnimatedSwitcher` if you need one.
 
+### Keep user input while data updates
+
+If your page displays live data (for instance a database stream) and is recreated on each update, user input in a form would be lost.
+Wrap it in an `EditingScope` (from `extra.dart`): `SubmitFormBuilder` (and `GuardedForm`) automatically registers to it when changed, until submitted with success or disposed.
+Keep displaying the same version while the scope is editing, then switch to the latest one:
+
+```dart
+EditingScope(
+  onChanged: (isEditing) => setState(() => this.isEditing = isEditing),
+  child: KeyedSubtree(
+    key: ObjectKey(displayedItem),    // displayedItem is only updated to the latest item when isEditing is false
+    child: ItemPage(item: displayedItem),
+  ),
+)
+```
+
+`EditingScope` must be placed above the recreated subtree. Nested scopes are supported: an element being edited also protects all ancestor scopes.
+You may also call `EditingScope.maybeOf(context)?.register(owner)` (and `unregister`) to protect any other element (for instance an expanded card), and `clear()` to forget all elements after an action that makes current input useless (for instance when the edited item is deleted).
+
 ### FetchBuilder with extra argument
 
 For advanced usage, you can use `FetchBuilderWithParameter` widget to pass an object to the task.

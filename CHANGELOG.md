@@ -1,3 +1,8 @@
+## 5.3.0
+* New `EditingScope` widget (in `extra.dart`), that tracks elements being edited in its subtree. `GuardedForm` (and so `SubmitFormBuilder`) automatically registers to the closest `EditingScope` when changed, until saved or disposed. May be used to delay a live data update while a form is being edited, so that the input isn't lost when the subtree is recreated. Nested scopes are supported.
+* New `GuardedForm.markAsSaved`, to allow pop again after changes have been saved. Automatically called by `SubmitFormBuilder` on success.
+* Fix `SubmitFormBuilder` still asking confirmation on pop after a successful submission, when the page stays open.
+
 ## 5.2.0
 * Minimum required Flutter is now `3.41.0` (Dart `3.11.0`).
 * New `fadeSize` parameter on `FetcherConfig` (also available on `FetcherConfig.silent`), to also animate the height during the fade transition, so that the widget smoothly grows or shrinks when its content changes size (e.g. from a silent loader to the loaded content). `fadeAlignment` defines how the content is anchored during the transition. Defaults to `false` (previous behavior).

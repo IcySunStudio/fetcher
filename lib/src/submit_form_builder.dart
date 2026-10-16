@@ -61,7 +61,10 @@ class SubmitFormBuilder<T> extends StatelessWidget {
           builder: (context) {
             return SubmitBuilder<T>(
               task: onValidated,
-              onSuccess: onSuccess,
+              onSuccess: (result) {
+                GuardedForm.markAsSaved(context);
+                onSuccess?.call(result);
+              },
               builder: (context, runTask) => builder(context, ([task]) => context.validateForm(
                 onValidated: () => runTask(task),
                 scrollToFirstInvalid: scrollToFirstInvalidField ?? config.scrollToFirstInvalidField!,
