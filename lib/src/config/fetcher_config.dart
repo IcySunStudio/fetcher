@@ -45,7 +45,7 @@ class FetcherConfig {
     fetchingBuilder: _buildDefaultLoader,
     submittingBuilder: _buildDefaultLoader,
     fetchErrorBuilder: (_, data) => FetchBuilderErrorWidget(isDense: data.isDense, onRetry: data.retry),
-    scrollToFirstInvalidField: false,
+    scrollToFirstInvalidField: true,
     onError: (e, s, {reason}) => debugPrint('[Fetcher] onError: $e'),
     onDisplayError: (_, error) => debugPrint('[Fetcher] onDisplayError: $error'),
   );
@@ -122,7 +122,7 @@ class FetcherConfig {
   /// Current implementation just track if form has been modified (calling [Form.save()] doesn't reset status).
   final Future<bool?> Function()? onUnsavedFormPop;
 
-  /// On a page with [SubmitFormBuilder], whether to scroll to the first invalid field when form validation fails.
+  /// Whether to scroll to the first invalid field when form validation fails, with [SubmitFormBuilder] or `validateForm`.
   final bool? scrollToFirstInvalidField;
 
   /// Called when an error occurred.

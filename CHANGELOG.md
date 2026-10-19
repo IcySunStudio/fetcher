@@ -1,3 +1,8 @@
+## 5.4.0
+* BREAKING: `FetcherConfig.scrollToFirstInvalidField` now defaults to `true`: `SubmitFormBuilder` scrolls to the first invalid field when form validation fails. Set `scrollToFirstInvalidField: false` in your `DefaultFetcherConfig` to restore the previous behavior.
+* `validateForm`'s `scrollToFirstInvalid` parameter is now nullable, and defaults to the closest `DefaultFetcherConfig`'s `scrollToFirstInvalidField` (so it now scrolls by default too).
+* Fix `scrollToFirstInvalidField` accessing an unmounted context when the form is disposed before the next frame.
+
 ## 5.3.0
 * New `EditingValueBuilder` widget (in `extra.dart`), that recreates its subtree on each new value, except while an element is being edited in it: the displayed value is then kept, and updated to the latest one when editing ends. Usually used to display live data (e.g. a database stream) without losing user input in a form.
 * New `EditingScope` widget (in `extra.dart`), base of `EditingValueBuilder`, that tracks elements being edited in its subtree. `GuardedForm` (and so `SubmitFormBuilder`) automatically registers to the closest `EditingScope` when changed, until saved or disposed. Other elements may be registered manually. Nested scopes are supported.

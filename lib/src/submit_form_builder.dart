@@ -67,7 +67,7 @@ class SubmitFormBuilder<T> extends StatelessWidget {
               },
               builder: (context, runTask) => builder(context, ([task]) => context.validateForm(
                 onValidated: () => runTask(task),
-                scrollToFirstInvalid: scrollToFirstInvalidField ?? config.scrollToFirstInvalidField!,
+                scrollToFirstInvalid: scrollToFirstInvalidField,
               )),
             );
           },

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:fetcher/src/config/default_fetcher_config.dart';
+
 /// Task used by fetcher widgets to fetch data.
 /// May return the value directly (not a [Future]) to skip the loader: see `FetchBuilder`.
 typedef ParameterizedAsyncTask<T, R> = FutureOr<R> Function(T? param);
@@ -11,6 +13,7 @@ typedef ParameterizedAsyncTask<T, R> = FutureOr<R> Function(T? param);
 /// Must be called after [Form.validate] so that [FormFieldState.hasError] is up to date.
 void scrollToFirstInvalidField(BuildContext formContext) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!formContext.mounted) return;
     bool found = false;
     void visitor(Element element) {
       if (found) return;
@@ -41,7 +44,8 @@ extension ExtendedBuildContext on BuildContext {
   /// Returns whether the form is valid, like [FormState.validate].
   /// [onValidated] is called if the form is valid, after it has been saved.
   /// If [scrollToFirstInvalid] is true and validation fails, scrolls to the first invalid field.
-  bool validateForm({VoidCallback? onValidated, bool scrollToFirstInvalid = false}) {
+  /// If null, will use closest [DefaultFetcherConfig]'s value.
+  bool validateForm({VoidCallback? onValidated, bool? scrollToFirstInvalid}) {
     // Clear current focus
     clearFocus();
 
@@ -56,7 +60,7 @@ extension ExtendedBuildContext on BuildContext {
       return true;
     }
 
-    if (scrollToFirstInvalid) scrollToFirstInvalidField(this);
+    if (scrollToFirstInvalid ?? DefaultFetcherConfig.of(this, listen: false).scrollToFirstInvalidField!) scrollToFirstInvalidField(this);
     return false;
   }
 }
